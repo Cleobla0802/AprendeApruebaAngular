@@ -1,1 +1,77 @@
-<p>sigin works!</p>
+<div
+  class="d-flex justify-content-center align-items-center min-vh-100 text-white text-center position-relative"
+>
+  <div>
+
+    <h1>¡REGISTRATE Y EXPERIMENTA EL SIGUIENTE NIVEL DE APREDIZAJE!</h1>
+
+    <img src="/assets/Vector4.png" class="position-absolute bottom-0 start-0" />
+    <img src="/assets/Vector3.png" class="position-absolute top-0 end-0" />
+
+    <div class="container d-flex justify-content-center mt-5">
+      <div class="col-12 col-md-6 col-lg-4">
+        <form>
+          <div class="mb-3">
+            <label for="email" class="form-label">Correo electrónico</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              placeholder="Introduce tu email"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="password" class="form-label">Contraseña</label>
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              placeholder="Introduce tu contraseña"
+            />
+          </div>
+
+          <div class="d-flex justify-content-center mt-5 mb-5">
+            <button
+              type="button"
+              class="btn btn-primary btn-lg rounded-pill px-5"
+              routerLink="/componentes/auth/login"
+            >
+              Iniciar sesión
+            </button>
+          </div>
+
+          <div class="text-center mt-3">
+            <a
+              routerLink="/componentes/auth/recuperar-contraseña"
+              class="text-primary"
+            >
+              He olvidado mi contraseña
+            </a>
+            <p class="mt-5 mb-5">o</p>
+
+            <div class="d-flex flex-column gap-3">
+              <button
+                type="button"
+                class="btn btn-outline-light btn-lg rounded-pill w-100 d-flex align-items-center justify-content-center gap-2"
+                routerLink="/componentes/auth/login"
+              >
+                <i class="bi bi-google fs-4"></i>
+                Seguir con Google
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-outline-light btn-lg rounded-pill w-100 d-flex align-items-center justify-content-center gap-2"
+                routerLink="/componentes/auth/login"
+              >
+                <i class="bi bi-facebook fs-4"></i>
+                Seguir con Facebook
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

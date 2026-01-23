@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -13,9 +14,4 @@ loginForm = new FormGroup({
   password: new FormControl('', [Validators.required, Validators.minLength(9)])
 });
 
-onSubmit() {
-  if (this.loginForm.valid) {
-    console.log("Buenos dias")
-  }
-}
 }
