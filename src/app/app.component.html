@@ -6,11 +6,11 @@
   />
 
   <div class="min-vh-100 d-flex flex-column position-relative">
-
+      <app-navbar *ngIf="showNavbar"></app-navbar>
     <div class="flex-grow-1 d-flex flex-column">
       <router-outlet></router-outlet>
     </div>
 
-    <app-footer></app-footer>
+    <app-footer *ngIf="showFooter"></app-footer>
   </div>
 </div>

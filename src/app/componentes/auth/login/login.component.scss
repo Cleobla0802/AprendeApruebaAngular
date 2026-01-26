@@ -1,36 +1,50 @@
-    .floating-input {
-      position: relative;
-      width: 100%;
+  .card-bg-gradient {
+    background: linear-gradient(160deg, #808080, #0042f7);
+  }
+    
+  .decorative-img {
+    opacity: 0.6;
+    max-width: 300px;
+    pointer-events: none;
+    
+    @media (max-width: 768px) {
+      max-width: 150px;
     }
-
-    .floating-input input {
-      width: 100%;
-      padding: 1.2rem 0.75rem 0.4rem 0.75rem;
-      background: transparent;
-      border: none;
-      border-bottom: 2px solid rgba(255, 255, 255, 0.5);
-      color: #fff;
-      font-size: 1rem;
-      outline: none;
-      transition: border-color 0.3s;
+  }
+  
+  .card {
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.4) !important;
     }
-
-    .floating-input input:focus {
-      border-color: #0d6efd;
+  }
+  
+  .form-control {
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    
+    &:focus {
+      border-color: var(--bs-primary);
+      box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+      background-color: #1a1a2e;
     }
-
-    .floating-input input:focus + label,
-    .floating-input input:not(:placeholder-shown) + label {
-      transform: translateY(-1.6rem) scale(0.85);
-      color: #0d6efd;
+    
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.4);
     }
-
-    .floating-input label {
-      position: absolute;
-      left: 0.75rem;
-      top: 1.2rem;
-      color: rgba(255, 255, 255, 0.7);
-      font-size: 1rem;
-      pointer-events: none;
-      transition: all 0.3s ease;
+  }
+  
+  .btn {
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
     }
+    
+    &:active {
+      transform: translateY(0);
+    }
+  }

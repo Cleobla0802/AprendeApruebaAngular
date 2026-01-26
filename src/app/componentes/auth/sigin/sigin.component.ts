@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-sigin',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './sigin.component.html',
   styleUrl: './sigin.component.scss'
 })
