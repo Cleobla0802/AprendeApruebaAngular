@@ -20,18 +20,20 @@ componentes:
 
 ## Justificacion del scss
 
-En mi caso he aplicado scss en casi toda la app con motivos interactivos para poder añadirle vida a la app, sobretodo en los casos en los que el usuario navega por toda la app
+Hover y Estéticas Específicas
+
+La mayoría de los elementos de la aplicación (aproximadamente un 90%) cuentan con interacciones visuales al pasar el cursor (hover), diseñadas para mejorar la experiencia del usuario y aportar dinamismo a la interfaz.
 
 ### Hover y esteticas especificas
 
-Practicamente el 90% de la app tiene interacciones (hover) con transform y sombras o colores
+Por ejemplo, un efecto típico de hover aplicado a botones o tarjetas se ve así:
 
 :hover {
       transform: translateY(-2px);
       box-shadow: 0 0.5rem 1rem rgba(13, 110, 253, 0.3);
     }
 
-Y ciertos casos mas esteticos mas especificos
+Además de los efectos de interacción, la aplicación incluye elementos estéticos más específicos y personalizados que aportan identidad visual y destacan información importante.
 
 .texto-gradiente{
   background: linear-gradient(to right, #00c1f6, #800080); // azul a morado
