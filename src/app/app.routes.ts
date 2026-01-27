@@ -5,11 +5,13 @@ import { SiginComponent } from './componentes/auth/sigin/sigin.component';
 import { ApuntesComponent } from './componentes/apuntes/apuntes.component';
 import { VisualizarApuntesComponent } from './componentes/apuntes/visualizar-apuntes/visualizar-apuntes.component';
 import { CrearApuntesComponent } from './componentes/apuntes/crear-apuntes/crear-apuntes.component';
+import { NavbarComponent } from './componentes/navbar/navbar.component';
 
 export const routes: Routes = [
     {path: 'componentes/presentacion' ,component:PresentacionComponent},
     {path: 'componentes/auth/login' ,component:LoginComponent},
     {path: 'componentes/auth/sigin' ,component:SiginComponent},
+    {path: 'componentes/auth/navbar' ,component:NavbarComponent},
     {path: 'componentes/apuntes' ,component:ApuntesComponent,
         children: [
       { path: 'componentes/apuntes/visualizar-apuntes', component: VisualizarApuntesComponent },
