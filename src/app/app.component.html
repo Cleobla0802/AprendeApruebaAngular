@@ -5,12 +5,25 @@
     alt=""
   />
 
+  <!-- Added: reusable templates for navbar and footer -->
+  <ng-template #navbarTpl>
+    <app-navbar></app-navbar>
+  </ng-template>
+
+  <ng-template #footerTpl>
+    <app-footer></app-footer>
+  </ng-template>
+  <!-- ... existing code ... -->
+
   <div class="min-vh-100 d-flex flex-column position-relative">
-      <app-navbar *ngIf="showNavbar"></app-navbar>
+
+    <ng-container *ngTemplateOutlet="showNavbar ? navbarTpl : null"></ng-container>
+
     <div class="flex-grow-1 d-flex flex-column">
       <router-outlet></router-outlet>
     </div>
+    
+    <ng-container *ngTemplateOutlet="showFooter ? footerTpl : null"></ng-container>
 
-    <app-footer *ngIf="showFooter"></app-footer>
   </div>
 </div>

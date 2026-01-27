@@ -1,0 +1,175 @@
+<div class="container py-5">
+
+  <div class="d-flex flex-column flex-lg-row gap-3 mb-4">
+    <div class="input-group input-group-lg flex-fill shadow-sm border rounded-3 bg-white">
+      <span class="input-group-text bg-white border-0 text-muted">
+        <i class="bi bi-search"></i>
+      </span>
+      <input type="text" class="form-control border-0" placeholder="Buscar apuntes">
+    </div>
+  </div>
+
+  <div class="d-flex flex-wrap gap-2 mb-4">
+    <input type="checkbox" class="btn-check" id="f-matematicas">
+    <label class="btn btn-outline-secondary btn-sm rounded-3" for="f-matematicas">
+      <i class="bi bi-calculator me-1"></i> Matemáticas
+    </label>
+
+    <input type="checkbox" class="btn-check" id="f-ciencias">
+    <label class="btn btn-outline-secondary btn-sm rounded-3" for="f-ciencias">
+      <i class="bi bi-flask me-1"></i> Ciencias
+    </label>
+
+    <input type="checkbox" class="btn-check" id="f-ingles">
+    <label class="btn btn-outline-secondary btn-sm rounded-3" for="f-ingles">
+      <i class="bi bi-translate me-1"></i> Inglés
+    </label>
+
+    <input type="checkbox" class="btn-check" id="f-historia">
+    <label class="btn btn-outline-secondary btn-sm rounded-3" for="f-historia">
+      <i class="bi bi-hourglass-split me-1"></i> Historia
+    </label>
+
+    <input type="checkbox" class="btn-check" id="f-tecnologia">
+    <label class="btn btn-outline-secondary btn-sm rounded-3" for="f-tecnologia">
+      <i class="bi bi-cpu me-1"></i> Tecnología
+    </label>
+  </div>
+
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+
+    <div class="col">
+      <a routerLink="/apuntes/visualizar" class="card h-100 shadow-sm border-0 rounded-4 hover-lift position-relative overflow-hidden text-reset text-decoration-none d-block" role="link" aria-label="Ver apuntes">
+        <div class="accent-left accent-purple"></div>
+
+        <div class="ratio ratio-16x9 bg-light">
+          <div class="d-flex align-items-center justify-content-center text-primary fw-semibold">Miniatura</div>
+        </div>
+
+        <div class="position-absolute top-0 start-0 p-2 d-flex gap-2">
+          <span class="badge bg-white text-primary border rounded-3">Matemáticas</span>
+          <span class="badge bg-light text-secondary border rounded-3">Intermedio</span>
+        </div>
+
+        <div class="card-body">
+          <h5 class="fw-semibold mb-2">Álgebra básica</h5>
+          <p class="text-secondary small mb-3">
+            Fórmulas, ejemplos resueltos y notas rápidas para repasar.
+          </p>
+
+          <div class="d-flex flex-wrap gap-3 small text-muted mb-3">
+            <span><i class="bi bi-journal-bookmark me-1"></i>24</span>
+            <span><i class="bi bi-clock me-1"></i>12 h</span>
+            <span><i class="bi bi-bar-chart me-1"></i>45%</span>
+          </div>
+
+          <div class="progress mb-3">
+            <div class="progress-bar bg-primary" style="width:45%"></div>
+          </div>
+
+          <div class="d-flex justify-content-between small text-muted">
+            <span>Creado por mí</span>
+            <span>3 días</span>
+          </div>
+        </div>
+
+        <div class="card-footer bg-white border-0 pt-0">
+          <a href="#" class="btn btn-primary w-100 rounded-3">Abrir</a>
+        </div>
+      </a>
+    </div>
+
+    <div class="col">
+      <a routerLink="/apuntes/visualizar" class="card h-100 shadow-sm border-0 rounded-4 hover-lift position-relative overflow-hidden text-reset text-decoration-none d-block" role="link" aria-label="Ver apuntes">
+        <div class="accent-left accent-green"></div>
+
+        <div class="ratio ratio-16x9 bg-light">
+          <div class="d-flex align-items-center justify-content-center text-success fw-semibold">Miniatura</div>
+        </div>
+
+        <div class="position-absolute top-0 start-0 p-2 d-flex gap-2">
+          <span class="badge bg-white text-success border rounded-3">Ciencias</span>
+          <span class="badge bg-light text-secondary border rounded-3">Básico</span>
+        </div>
+
+        <div class="card-body">
+          <h5 class="fw-semibold mb-2">Física básica</h5>
+          <p class="text-secondary small mb-3">
+            Esquemas, fórmulas esenciales y ejercicios resueltos.
+          </p>
+
+          <div class="d-flex flex-wrap gap-3 small text-muted mb-3">
+            <span><i class="bi bi-journal-bookmark me-1"></i>18</span>
+            <span><i class="bi bi-clock me-1"></i>9 h</span>
+            <span><i class="bi bi-bar-chart me-1"></i>30%</span>
+          </div>
+
+          <div class="progress mb-3">
+            <div class="progress-bar bg-success" style="width:30%"></div>
+          </div>
+
+          <div class="d-flex justify-content-between small text-muted">
+            <span>Actualizado</span>
+            <span>1 semana</span>
+          </div>
+        </div>
+
+        <div class="card-footer bg-white border-0 pt-0">
+          <a href="#" class="btn btn-primary w-100 rounded-3">Abrir</a>
+        </div>
+      </a>
+    </div>
+
+    <div class="col">
+      <a routerLink="/apuntes/visualizar" class="card h-100 shadow-sm border-0 rounded-4 hover-lift position-relative overflow-hidden text-reset text-decoration-none d-block" role="link" aria-label="Ver apuntes">
+        <div class="accent-left accent-blue"></div>
+
+        <div class="ratio ratio-16x9 bg-light">
+          <div class="d-flex align-items-center justify-content-center text-info fw-semibold">Miniatura</div>
+        </div>
+
+        <div class="position-absolute top-0 start-0 p-2 d-flex gap-2">
+          <span class="badge bg-white text-info border rounded-3">Inglés</span>
+          <span class="badge bg-light text-secondary border rounded-3">Avanzado</span>
+        </div>
+
+        <div class="card-body">
+          <h5 class="fw-semibold mb-2">Inglés conversacional</h5>
+          <p class="text-secondary small mb-3">
+            Vocabulario, frases útiles y práctica de fluidez.
+          </p>
+
+          <div class="d-flex flex-wrap gap-3 small text-muted mb-3">
+            <span><i class="bi bi-journal-bookmark me-1"></i>32</span>
+            <span><i class="bi bi-clock me-1"></i>15 h</span>
+            <span><i class="bi bi-bar-chart me-1"></i>70%</span>
+          </div>
+
+          <div class="progress mb-3">
+            <div class="progress-bar bg-info" style="width:70%"></div>
+          </div>
+
+          <div class="d-flex justify-content-between small text-muted">
+            <span>Creado por mí</span>
+            <span>1 mes</span>
+          </div>
+        </div>
+
+        <div class="card-footer bg-white border-0 pt-0">
+          <a href="#" class="btn btn-primary w-100 rounded-3">Abrir</a>
+        </div>
+      </a>
+    </div>
+
+  </div>
+
+  <div class="d-flex justify-content-center gap-3 mt-5">
+    <button class="btn btn-outline-danger btn-lg rounded-3">
+      <i class="bi bi-trash me-2"></i>Eliminar apuntes
+    </button>s
+    <button class="btn btn-primary btn-lg rounded-3 text-white">
+      <i class="bi bi-plus-lg me-2"></i>Crear apuntes
+    </button>
+  </div>
+
+</div>

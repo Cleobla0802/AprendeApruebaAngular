@@ -1,0 +1,110 @@
+<div class="container py-5">
+
+  <div class="row g-4">
+
+    <div class="col-lg-4">
+      <div class="card shadow-sm rounded-4 border-0 h-100">
+        <div class="accent-left accent-purple"></div>
+
+        <div class="card-body">
+          <h5 class="fw-semibold mb-3">Información del apunte</h5>
+
+          <div class="mb-3">
+            <label class="form-label small text-muted">Título</label>
+            <input type="text" class="form-control rounded-3" placeholder="Título del apunte">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small text-muted">Categoría</label>
+            <select class="form-select rounded-3">
+              <option>Matemáticas</option>
+              <option>Ciencias</option>
+              <option>Inglés</option>
+              <option>Tecnología</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small text-muted">Nivel</label>
+            <select class="form-select rounded-3">
+              <option>Básico</option>
+              <option>Intermedio</option>
+              <option>Avanzado</option>
+            </select>
+          </div>
+
+          <div class="d-grid gap-2">
+            <button class="btn btn-primary rounded-3">Guardar</button>
+            <button class="btn btn-outline-secondary rounded-3">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-8">
+      <div class="card shadow-sm rounded-4 border-0 h-100 overflow-hidden">
+
+        <div class="card-header bg-white border-0 pb-0">
+          <div class="d-flex flex-wrap gap-2 editor-toolbar">
+            <button class="btn btn-light btn-sm"><i class="bi bi-type-bold"></i></button>
+            <button class="btn btn-light btn-sm"><i class="bi bi-type-italic"></i></button>
+            <button class="btn btn-light btn-sm"><i class="bi bi-type-underline"></i></button>
+            <button class="btn btn-light btn-sm"><i class="bi bi-list-ul"></i></button>
+            <button class="btn btn-light btn-sm"><i class="bi bi-list-ol"></i></button>
+            <button class="btn btn-light btn-sm"><i class="bi bi-link-45deg"></i></button>
+            <button class="btn btn-light btn-sm"><i class="bi bi-image"></i></button>
+            <button class="btn btn-light btn-sm"><i class="bi bi-code-slash"></i></button>
+          </div>
+        </div>
+
+        <div class="card-body pt-3">
+          <div
+            class="editor-area rounded-3 p-3"
+            contenteditable="true"
+          >
+            <h4>Empieza a escribir tu apunte</h4>
+            <p>Usa este editor para crear contenido estructurado, claro y fácil de repasar.</p>
+            <ul>
+              <li>Fórmulas</li>
+              <li>Explicaciones</li>
+              <li>Ejemplos</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="mt-5">
+    <h5 class="fw-semibold mb-3">Vista previa</h5>
+
+    <div class="card shadow-sm rounded-4 border-0 position-relative overflow-hidden">
+      <div class="accent-left accent-purple"></div>
+
+      <div class="ratio ratio-16x9 bg-light">
+        <div class="d-flex align-items-center justify-content-center text-primary fw-semibold">
+          Miniatura
+        </div>
+      </div>
+
+      <div class="position-absolute top-0 start-0 p-2 d-flex gap-2">
+        <span class="badge bg-white text-primary border rounded-3">Matemáticas</span>
+        <span class="badge bg-light text-secondary border rounded-3">Intermedio</span>
+      </div>
+
+      <div class="card-body">
+        <h5 class="fw-semibold">Título del apunte</h5>
+        <div class="text-secondary small">
+          Aquí se renderizaría el contenido del editor.
+        </div>
+      </div>
+
+      <div class="card-footer bg-white border-0">
+        <button class="btn btn-primary w-100 rounded-3">Abrir</button>
+      </div>
+    </div>
+  </div>
+
+</div>
