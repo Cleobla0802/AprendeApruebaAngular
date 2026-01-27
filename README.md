@@ -20,13 +20,18 @@ componentes:
 
 ## Justificacion del scss
 
-### App
+En mi caso he aplicado scss en casi toda la app con motivos interactivos para poder añadirle vida a la app, sobretodo en los casos en los que el usuario navega por toda la app
 
+### Hover y esteticas especificas
 
+Practicamente el 90% de la app tiene interacciones (hover) con transform y sombras o colores
 
-### Presentacion
+:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0.5rem 1rem rgba(13, 110, 253, 0.3);
+    }
 
-<p class="texto-gradiente display-6 mt-5">Somos tu mejor maestro</p>
+Y ciertos casos mas esteticos mas especificos
 
 .texto-gradiente{
   background: linear-gradient(to right, #00c1f6, #800080); // azul a morado
