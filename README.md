@@ -6,17 +6,23 @@ Aplicación diseñada para facilitar y optimizar el proceso de estudio de los es
 
 ## Estructura de los componentes
 
-componentes:
-  - presentacion
-  - auth
-      - Login
-      - Sigin
-      - recuperar-password
-  - Apuntes
-      - Crear-apuntes
-      - visualizar-apuntes
-  - navbar
-  - footer
+{
+  "componentes": {
+    "presentacion": {},
+    "auth": {
+      "Login": {},
+      "Sigin": {},
+      "recuperar-password": {}
+    },
+    "Apuntes": {
+      "Crear-apuntes": {},
+      "visualizar-apuntes": {}
+    },
+    "navbar": {},
+    "footer": {}
+  }
+}
+
 
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.19.
