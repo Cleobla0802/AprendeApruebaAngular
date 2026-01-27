@@ -6,23 +6,26 @@ Aplicación diseñada para facilitar y optimizar el proceso de estudio de los es
 
 ## Estructura de los componentes
 
-{
-  "componentes": {
-    "presentacion": {},
-    "auth": {
-      "Login": {},
-      "Sigin": {},
-      "recuperar-password": {}
-    },
-    "Apuntes": {
-      "Crear-apuntes": {},
-      "visualizar-apuntes": {}
-    },
-    "navbar": {},
-    "footer": {}
-  }
+componentes:
+  - presentacion
+  - auth
+      - Login
+      - Sigin
+      - recuperar-password
+  - Apuntes
+      - Crear-apuntes
+      - visualizar-apuntes
+  - navbar
+  - footer
+
+## Justificacion del scss
+
+### Presentacion
+
+.texto-gradiente{
+  background: linear-gradient(to right, #00c1f6, #800080); // azul a morado
+  -webkit-text-fill-color: transparent;
+  background-clip: text; // Determina el lugar de pintado de fondo
 }
-
-
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.19.
