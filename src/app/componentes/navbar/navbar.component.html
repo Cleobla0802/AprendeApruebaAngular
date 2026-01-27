@@ -1,28 +1,28 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">
-      <img src="path-to-your-logo.png" alt="A&A" width="30" height="30" class="d-inline-block align-text-top">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm navbar-custom">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand fw-bold" href="#">
+      <img src="/assets/logoTfg.png" alt="A&A" width="35" height="35" class="d-inline-block align-text-top me-2">
       Aprende & Aprueba
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav me-auto">
+      <ul class="navbar-nav mx-auto gap-4">
         <li class="nav-item">
-          <a class="nav-link" href="#">Apuntes</a>
+          <a routerLink="/componentes/apuntes" class="nav-link text-white">Apuntes</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Resumen</a>
+          <a class="nav-link text-white" href="#">Resumen</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Pruebas</a>
+          <a class="nav-link text-white" href="#">Pruebas</a>
         </li>
       </ul>
-      <div class="d-flex">
-        <button class="btn btn-primary me-2">Login</button>
-        <button class="btn btn-primary me-2">Sign In</button>
-        <button class="btn btn-danger">Logout</button>
+      <div class="d-flex gap-2">
+        <a routerLink="/componentes/autenticacion/login" class="btn btn-primary rounded-pill px-4">Login</a>
+        <a routerLink="/componentes/autenticacion/sigin" class="btn btn-primary rounded-pill px-4">Sign In</a>
+        <button class="btn btn-danger rounded-pill px-4">Logout</button>
       </div>
     </div>
   </div>

@@ -1,8 +1,7 @@
 export interface Apunte {
-    id: string;
+    id: number;
     titulo: string;
+    descripcion: string;
     contenido: string;
-    etiquetas?: string[];
-    actualizadoEn: string;
-    autorId: string;
+    categoria: string;
   }

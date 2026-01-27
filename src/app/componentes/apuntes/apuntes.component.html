@@ -39,7 +39,7 @@
   <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
 
     <div class="col">
-      <a routerLink="/apuntes/visualizar" class="card h-100 shadow-sm border-0 rounded-4 hover-lift position-relative overflow-hidden text-reset text-decoration-none d-block" role="link" aria-label="Ver apuntes">
+      <a routerLink="/componentes/apuntes/visualizar-apuntes" class="card h-100 shadow-sm border-0 rounded-4 hover-lift position-relative overflow-hidden text-reset text-decoration-none d-block" role="link" aria-label="Ver apuntes">
         <div class="accent-left accent-purple"></div>
 
         <div class="ratio ratio-16x9 bg-light">
@@ -64,7 +64,7 @@
           </div>
 
           <div class="progress mb-3">
-            <div class="progress-bar bg-primary" style="width:45%"></div>
+            <div class="progress-bar bg-primary progress-bar-45"></div>
           </div>
 
           <div class="d-flex justify-content-between small text-muted">
@@ -74,13 +74,13 @@
         </div>
 
         <div class="card-footer bg-white border-0 pt-0">
-          <a href="#" class="btn btn-primary w-100 rounded-3">Abrir</a>
+          <a routerLink="componentes/apuntes/visualizar-apuntes" class="btn btn-primary w-100 rounded-3">Abrir</a>
         </div>
       </a>
     </div>
 
     <div class="col">
-      <a routerLink="/apuntes/visualizar" class="card h-100 shadow-sm border-0 rounded-4 hover-lift position-relative overflow-hidden text-reset text-decoration-none d-block" role="link" aria-label="Ver apuntes">
+      <a routerLink="/componentes/apuntes/visualizar-apuntes" class="card h-100 shadow-sm border-0 rounded-4 hover-lift position-relative overflow-hidden text-reset text-decoration-none d-block" role="link" aria-label="Ver apuntes">
         <div class="accent-left accent-green"></div>
 
         <div class="ratio ratio-16x9 bg-light">
@@ -105,7 +105,7 @@
           </div>
 
           <div class="progress mb-3">
-            <div class="progress-bar bg-success" style="width:30%"></div>
+            <div class="progress-bar bg-success progress-bar-30"></div>
           </div>
 
           <div class="d-flex justify-content-between small text-muted">
@@ -115,13 +115,13 @@
         </div>
 
         <div class="card-footer bg-white border-0 pt-0">
-          <a href="#" class="btn btn-primary w-100 rounded-3">Abrir</a>
+          <a routerLink="/componentes/apuntes/visualizar-apuntes" class="btn btn-primary w-100 rounded-3">Abrir</a>
         </div>
       </a>
     </div>
 
     <div class="col">
-      <a routerLink="/apuntes/visualizar" class="card h-100 shadow-sm border-0 rounded-4 hover-lift position-relative overflow-hidden text-reset text-decoration-none d-block" role="link" aria-label="Ver apuntes">
+      <a routerLink="/componentes/apuntes/visualizar-apuntes" class="card h-100 shadow-sm border-0 rounded-4 hover-lift position-relative overflow-hidden text-reset text-decoration-none d-block" role="link" aria-label="Ver apuntes">
         <div class="accent-left accent-blue"></div>
 
         <div class="ratio ratio-16x9 bg-light">
@@ -146,7 +146,7 @@
           </div>
 
           <div class="progress mb-3">
-            <div class="progress-bar bg-info" style="width:70%"></div>
+            <div class="progress-bar bg-info progress-bar-70"></div>
           </div>
 
           <div class="d-flex justify-content-between small text-muted">
@@ -156,7 +156,7 @@
         </div>
 
         <div class="card-footer bg-white border-0 pt-0">
-          <a href="#" class="btn btn-primary w-100 rounded-3">Abrir</a>
+          <a routerLink="/componentes/apuntes/visualizar-apuntes" class="btn btn-primary w-100 rounded-3">Abrir</a>
         </div>
       </a>
     </div>
@@ -166,10 +166,12 @@
   <div class="d-flex justify-content-center gap-3 mt-5">
     <button class="btn btn-outline-danger btn-lg rounded-3">
       <i class="bi bi-trash me-2"></i>Eliminar apuntes
-    </button>s
-    <button class="btn btn-primary btn-lg rounded-3 text-white">
-      <i class="bi bi-plus-lg me-2"></i>Crear apuntes
     </button>
+    <a routerLink="/componentes/apuntes/crear-apuntes" class="btn btn-primary btn-lg rounded-3 text-white">
+      <i class="bi bi-plus-lg me-2"></i>Crear apuntes
+    </a>
   </div>
 
 </div>
+
+<router-outlet></router-outlet>
