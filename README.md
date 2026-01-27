@@ -8,7 +8,7 @@ Aplicación diseñada para facilitar y optimizar el proceso de estudio de los es
 
 componentes:
   - presentacion
-  - auth
+  - autenticacion
       - Login
       - Sigin
       - recuperar-password
@@ -20,7 +20,13 @@ componentes:
 
 ## Justificacion del scss
 
+### App
+
+
+
 ### Presentacion
+
+<p class="texto-gradiente display-6 mt-5">Somos tu mejor maestro</p>
 
 .texto-gradiente{
   background: linear-gradient(to right, #00c1f6, #800080); // azul a morado
