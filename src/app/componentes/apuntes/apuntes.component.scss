@@ -1,39 +1,163 @@
-.hover-lift {
-  transition: transform .2s ease, box-shadow .2s ease;
-  &:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 1rem 2rem rgba(0, 0, 0, .12);
+// Color Variables
+$purple: #9b6fff;
+$purple-glow: rgba(155, 111, 255, 0.2);
+$purple-soft: rgba(155, 111, 255, 0.15);
+
+$green: #4ade80;
+$green-glow: rgba(74, 222, 128, 0.2);
+$green-soft: rgba(74, 222, 128, 0.15);
+
+$blue: #3b82f6;
+$blue-glow: rgba(59, 130, 246, 0.2);
+$blue-soft: rgba(59, 130, 246, 0.15);
+
+$dark-bg: #1a1a1a;
+$dark-card: #242424;
+$dark-subtle: #2a2a2a;
+
+// Search wrapper
+.search-wrapper {
+  background: $dark-card;
+  
+  .form-control {
+    &::placeholder {
+      color: #6b7280;
+    }
+    
+    &:focus {
+      background-color: $dark-card;
+      color: white;
+      box-shadow: none;
+    }
   }
 }
 
-.accent-left {
+// Filter buttons
+.btn-check:checked + .btn-outline-light {
+  background-color: white;
+  color: #1a1a1a;
+  border-color: white;
+}
+
+// Card Note
+.card-note {
+  background: $dark-card;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  
+  &:hover {
+    transform: translateY(-8px);
+    
+    .card-note-glow {
+      opacity: 1;
+    }
+  }
+}
+
+// Glow effect
+.card-note-glow {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 6px;
-  height: 100%;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: -1;
 }
 
-.accent-purple {
-  background: linear-gradient(180deg, #6f42c1, #9a7bdc);
+.glow-purple {
+  background: linear-gradient(135deg, $purple-glow, transparent);
+  box-shadow: 0 0 30px $purple-glow;
 }
 
-.accent-green {
-  background: linear-gradient(180deg, #198754, #45c38b);
+.glow-green {
+  background: linear-gradient(135deg, $green-glow, transparent);
+  box-shadow: 0 0 30px $green-glow;
 }
 
-.accent-blue {
-  background: linear-gradient(180deg, #0dcaf0, #6edff6);
+.glow-blue {
+  background: linear-gradient(135deg, $blue-glow, transparent);
+  box-shadow: 0 0 30px $blue-glow;
 }
 
-.progress-bar-45 {
-  width: 45%;
+// Card content
+.card-note-content {
+  position: relative;
+  z-index: 1;
 }
 
-.progress-bar-30 {
-  width: 30%;
+// Thumbnail
+.thumbnail-dark {
+  background: linear-gradient(135deg, $dark-subtle 0%, #1f1f1f 100%);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.progress-bar-70 {
-  width: 70%;
+// Badges
+.bg-purple-soft {
+  background-color: $purple-soft;
+}
+
+.bg-green-soft {
+  background-color: $green-soft;
+}
+
+.bg-blue-soft {
+  background-color: $blue-soft;
+}
+
+.text-purple {
+  color: $purple;
+}
+
+.text-green {
+  color: $green;
+}
+
+.text-blue {
+  color: $blue;
+}
+
+// Progress bars
+.bg-purple {
+  background: linear-gradient(90deg, $purple, lighten($purple, 10%));
+}
+
+.bg-green {
+  background: linear-gradient(90deg, $green, lighten($green, 10%));
+}
+
+.bg-blue {
+  background: linear-gradient(90deg, $blue, lighten($blue, 10%));
+}
+
+.bg-dark-subtle {
+  background-color: $dark-subtle;
+}
+
+// Progress wrapper animation
+.progress-wrapper {
+  .progress-bar {
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+// Buttons hover effects
+.btn-outline-danger {
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+  }
+}
+
+.btn-primary {
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+  }
 }
