@@ -28,7 +28,7 @@
         <!-- Card del formulario -->
         <div class="card card-bg-gradient bg-opacity-75 border-0 shadow-lg rounded-4">
           <div class="card-body p-4 p-md-5">
-            <form>
+            <form [formGroup]="loginForm" (ngSubmit)="login()">
               <!-- Campo de email -->
               <div class="mb-4">
                 <label for="email" class="form-label fw-semibold">
@@ -38,8 +38,10 @@
                   type="email"
                   class="form-control form-control-lg rounded-3 bg-dark text-white border-secondary"
                   id="email"
+                  formControlName="email"
                   placeholder="ejemplo@correo.com"
                   aria-label="Correo electrónico"
+                  [(ngModel)]="userLogin.email"
                 />
               </div>
 
@@ -54,7 +56,9 @@
                     class="form-control form-control-lg rounded-3 bg-dark text-white border-secondary"
                     id="password"
                     placeholder="Introduce tu contraseña"
+                    formControlName="password"
                     aria-label="Contraseña"
+                    [(ngModel)]="userLogin.password"
                   />
                 </div>
                 <div class="form-text text-white-50 mt-2">
@@ -67,7 +71,7 @@
                 <button
                   type="button"
                   class="btn btn-primary btn-lg rounded-pill py-3 fw-semibold shadow-sm"
-                  routerLink="/componentes/apuntes"
+                  (click)="login()"
                 >
                   Iniciar sesión
                 </button>
@@ -96,7 +100,7 @@
                 <button
                   type="button"
                   class="btn btn-outline-light btn-lg rounded-pill d-flex align-items-center justify-content-center gap-3 py-3"
-                  routerLink="/componentes/auth/login"
+                  (click)="loginWithGoogle()"
                 >
                   <i class="bi bi-google fs-5"></i>
                   <span class="fw-medium">Continuar con Google</span>
@@ -105,7 +109,6 @@
                 <button
                   type="button"
                   class="btn btn-outline-light btn-lg rounded-pill d-flex align-items-center justify-content-center gap-3 py-3"
-                  routerLink="/componentes/auth/login"
                 >
                   <i class="bi bi-facebook fs-5"></i>
                   <span class="fw-medium">Continuar con Facebook</span>
