@@ -1,27 +1,14 @@
 <div class="min-vh-100 position-relative overflow-hidden">
   <img
-    src="/assets/fondoPantalla.png"
+    src="/assets/fondo.png"
     class="position-fixed top-0 start-0 w-100 h-100 object-fit-cover z-n1"
     alt=""
   />
 
-  <ng-template #navbarTpl>
-    <app-navbar></app-navbar>
-  </ng-template>
+  <app-navbar></app-navbar>
 
-  <ng-template #footerTpl>
-    <app-footer></app-footer>
-  </ng-template>
+  <router-outlet></router-outlet>
 
-  <div class="min-vh-100 d-flex flex-column position-relative">
+  <app-footer></app-footer>
 
-    <ng-container *ngTemplateOutlet="showNavbar ? navbarTpl : null"></ng-container>
-
-    <div class="flex-grow-1 d-flex flex-column">
-      <router-outlet></router-outlet>
-    </div>
-    
-    <ng-container *ngTemplateOutlet="showFooter ? footerTpl : null"></ng-container>
-
-  </div>
 </div>
