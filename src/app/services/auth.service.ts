@@ -8,9 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class AuthService {
 
-
   constructor(private db: Database, private auth: Auth) { }
-
 
   register(email: string, password: string) {
     return createUserWithEmailAndPassword(this.auth, email, password);
