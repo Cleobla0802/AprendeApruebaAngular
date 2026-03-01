@@ -1,9 +1,10 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-recuperar-password',
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './recuperar-password.component.html',
   styleUrl: './recuperar-password.component.scss'
 })
