@@ -12,7 +12,7 @@ export const routes: Routes = [
     {path: 'componentes/presentacion' ,component:PresentacionComponent},
     {path: 'componentes/autenticacion/login' ,component:LoginComponent},
     {path: 'componentes/autenticacion/sigin' ,component:SiginComponent},
-    {path: 'componentes/autenticacion/recuperar-password' ,component:RecuperarPasswordComponent, ...canActivate(()=>redirectUnauthorizedTo('/login'))},
+    {path: 'componentes/autenticacion/recuperar-password' ,component:RecuperarPasswordComponent},
     {path: 'componentes/apuntes' ,component:ApuntesComponent, ...canActivate(()=>redirectUnauthorizedTo('/login'))},
     {path: 'componentes/apuntes/visualizar-apuntes', component: VisualizarApuntesComponent},
     {path: 'componentes/apuntes/crear-apuntes', component: CrearApuntesComponent },
