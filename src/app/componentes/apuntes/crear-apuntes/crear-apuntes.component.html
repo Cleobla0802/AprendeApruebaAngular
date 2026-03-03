@@ -1,381 +1,149 @@
-<div class="container py-5">
-  <div class="row">
-    <div class="col-lg-8 mx-auto">
-      
+<div class="container-fluid min-vh-100 py-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-8 col-xl-7">
+
       <!-- Header -->
-      <div class="mb-5 text-center">
-        <div class="d-flex align-items-center justify-content-center gap-4 mb-4">
-          <div class="decorative-line"></div>
-          <i class="bi bi-journal-plus header-icon text-primary" style="font-size: 2.5rem;"></i>
-          <div class="decorative-line"></div>
-        </div>
-        <h1 class="display-4 fw-bold text-white mb-3 animate-slide-up">Crear Apuntes</h1>
-        <p class="text-secondary lead animate-slide-up" style="animation-delay: 0.1s;">
-          Completa el formulario para crear tus nuevos apuntes
-        </p>
+      <div class="text-center mb-5">
+        <i class="bi bi-journal-plus text-primary mb-3 d-block" style="font-size: 3rem;"></i>
+        <h1 class="fw-bold text-light">Crear Apuntes</h1>
+        <p class="text-secondary mb-0">Completa el formulario para crear tus nuevos apuntes</p>
       </div>
 
-      <!-- Form -->
-      <form
-        class="form-container rounded-4 p-4 p-md-5 position-relative overflow-hidden needs-validation"
-        (ngSubmit)="crearApuntes()"
-        #formulario="ngForm"
-      >
-        
-        <!-- Nombre del apunte -->
-        <div class="mb-4 animate-slide-up" style="animation-delay: 0.2s;">
-          <label for="nombreApunte" class="form-label text-white fw-semibold mb-3">
-            <i class="bi bi-pencil-fill me-2 text-primary fs-5"></i>
-            Nombre del apunte
-          </label>
-          <input
-            type="text"
-            class="form-control form-control-lg input-dark rounded-3"
-            id="nombreApunte"
-            placeholder="Ej: Álgebra básica, Física cuántica, Inglés B2..."
-            required
-          />
-        </div>
+      <!-- Card principal -->
+      <div class="card bg-dark border border-secondary shadow-lg rounded-4">
+        <div class="card-body p-4 p-md-5">
 
-        <!-- Descripción -->
-        <div class="mb-4 animate-slide-up" style="animation-delay: 0.3s;">
-          <label for="descripcion" class="form-label text-white fw-semibold mb-3">
-            <i class="bi bi-card-text me-2 text-primary fs-5"></i>
-            Descripción
-          </label>
-          <textarea
-            class="form-control input-dark rounded-3"
-            id="descripcion"
-            rows="4"
-            placeholder="Describe brevemente el contenido del apunte, objetivos de estudio, temas principales..."
-            required
-          ></textarea>
-        </div>
+          <form (ngSubmit)="crearApuntes()" #formulario="ngForm">
 
-        <!-- Row: Categoría y Dificultad -->
-        <div class="row animate-slide-up" style="animation-delay: 0.4s;">
-          
-          <!-- Categoría -->
-          <div class="col-md-6">
+            <!-- Nombre -->
             <div class="mb-4">
-              <div class="d-flex justify-content-between align-items-center mb-3">
-                <label for="categoria" class="form-label text-white fw-semibold mb-0">
-                  <i class="bi bi-folder-fill me-2 text-primary fs-5"></i>
+              <label class="form-label fw-semibold text-light">
+                <i class="bi bi-pencil-fill text-primary me-2"></i>
+                Nombre del apunte
+              </label>
+              <input type="text"
+                     class="form-control form-control-lg bg-black text-light border-secondary rounded-3"
+                     placeholder="Ej: Álgebra básica..."
+                     required />
+            </div>
+
+            <!-- Descripción -->
+            <div class="mb-4">
+              <label class="form-label fw-semibold text-light">
+                <i class="bi bi-card-text text-primary me-2"></i>
+                Descripción
+              </label>
+              <textarea class="form-control bg-black text-light border-secondary rounded-3"
+                        rows="4"
+                        placeholder="Describe el contenido..."
+                        required></textarea>
+            </div>
+
+            <!-- Categoría y dificultad -->
+            <div class="row">
+              <div class="col-12 col-md-6 mb-4">
+                <label class="form-label fw-semibold text-light">
+                  <i class="bi bi-folder-fill text-primary me-2"></i>
                   Categoría
                 </label>
-                <button
-                  type="button"
-                  class="btn btn-sm btn-outline-primary rounded-pill px-3"
-                  (click)="toggleCrearCategoria()"
-                >
-                  <i class="bi bi-plus-lg me-1"></i>Nueva
-                </button>
+                <select class="form-select form-select-lg bg-black text-light border-secondary rounded-3" required>
+                  <option value="">Selecciona una categoría</option>
+                  <option *ngFor="let cat of categorias" [value]="cat.valor">{{ cat.nombre }}</option>
+                </select>
               </div>
-
-              <select
-                class="form-select form-select-lg input-dark rounded-3"
-                id="categoria"
-                required
-              >
-                <option value="">Selecciona una categoría</option>
-                <option *ngFor="let cat of categorias" [value]="cat.valor">
-                  {{ cat.nombre }}
-                </option>
-              </select>
-
-              <!-- Nueva categoría -->
-              <div
-                *ngIf="mostrarCrearCategoria"
-                class="nueva-categoria-card rounded-3 p-3 mt-3"
-              >
-                <div class="mb-3">
-                  <input
-                    type="text"
-                    class="form-control input-dark rounded-3"
-                    placeholder="Nombre de la nueva categoría"
-                    [(ngModel)]="nuevaCategoria"
-                    (keyup.enter)="agregarCategoria()"
-                  />
-                </div>
-                <div class="d-flex justify-content-end gap-2">
-                  <button
-                    type="button"
-                    class="btn btn-outline-secondary rounded-pill px-3"
-                    (click)="toggleCrearCategoria()"
-                  >
-                    Cancelar
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-primary rounded-pill px-3"
-                    (click)="agregarCategoria()"
-                    [disabled]="!nuevaCategoria.trim()"
-                  >
-                    <i class="bi bi-plus-lg me-1"></i>Crear
-                  </button>
-                </div>
+              <div class="col-12 col-md-6 mb-4">
+                <label class="form-label fw-semibold text-light">
+                  <i class="bi bi-speedometer2 text-primary me-2"></i>
+                  Nivel de dificultad
+                </label>
+                <select class="form-select form-select-lg bg-black text-light border-secondary rounded-3" required>
+                  <option value="">Selecciona el nivel</option>
+                  <option value="basico">🟢 Básico</option>
+                  <option value="intermedio">🟡 Intermedio</option>
+                  <option value="avanzado">🔴 Avanzado</option>
+                </select>
               </div>
             </div>
-          </div>
 
-          <!-- Nivel de dificultad -->
-          <div class="col-md-6">
-            <div class="mb-4">
-              <label for="dificultad" class="form-label text-white fw-semibold mb-3">
-                <i class="bi bi-speedometer2 me-2 text-primary fs-5"></i>
-                Nivel de dificultad
+            <!-- Colores -->
+            <div class="mb-5">
+              <label class="form-label fw-semibold text-light mb-3">
+                <i class="bi bi-palette-fill text-primary me-2"></i>
+                Color de la tarjeta
               </label>
-              <select
-                class="form-select form-select-lg input-dark rounded-3"
-                id="dificultad"
-                required
-              >
-                <option value="">Selecciona el nivel</option>
-                <option value="basico">🟢 Básico</option>
-                <option value="intermedio">🟡 Intermedio</option>
-                <option value="avanzado">🔴 Avanzado</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <!-- Color de la tarjeta -->
-        <div class="mb-4 animate-slide-up" style="animation-delay: 0.5s;">
-          <label class="form-label text-white fw-semibold mb-3">
-            <i class="bi bi-palette-fill me-2 text-primary fs-5"></i>
-            Color de la tarjeta
-          </label>
-          <p class="text-secondary small mb-3">
-            Elige un color distintivo para identificar fácilmente este apunte
-          </p>
-          
-          <div class="color-picker-container rounded-3 p-4">
-            <div class="row g-3">
-              <!-- Purple -->
-              <div class="col-6 col-sm-4 col-md-3">
-                <input type="radio" class="btn-check" name="cardColor" id="color-purple" value="purple" checked>
-                <label class="color-option color-purple d-flex flex-column align-items-center gap-3 p-3 rounded-3 w-100 position-relative" for="color-purple">
-                  <span class="color-preview rounded-circle position-relative"></span>
-                  <span class="color-name small fw-medium">Púrpura</span>
-                  <i class="bi bi-check-circle-fill check-icon position-absolute top-0 end-0 m-2 fs-5"></i>
-                </label>
-              </div>
-
-              <!-- Blue -->
-              <div class="col-6 col-sm-4 col-md-3">
-                <input type="radio" class="btn-check" name="cardColor" id="color-blue" value="blue">
-                <label class="color-option color-blue d-flex flex-column align-items-center gap-3 p-3 rounded-3 w-100 position-relative" for="color-blue">
-                  <span class="color-preview rounded-circle position-relative"></span>
-                  <span class="color-name small fw-medium">Azul</span>
-                  <i class="bi bi-check-circle-fill check-icon position-absolute top-0 end-0 m-2 fs-5"></i>
-                </label>
-              </div>
-
-              <!-- Green -->
-              <div class="col-6 col-sm-4 col-md-3">
-                <input type="radio" class="btn-check" name="cardColor" id="color-green" value="green">
-                <label class="color-option color-green d-flex flex-column align-items-center gap-3 p-3 rounded-3 w-100 position-relative" for="color-green">
-                  <span class="color-preview rounded-circle position-relative"></span>
-                  <span class="color-name small fw-medium">Verde</span>
-                  <i class="bi bi-check-circle-fill check-icon position-absolute top-0 end-0 m-2 fs-5"></i>
-                </label>
-              </div>
-
-              <!-- Orange -->
-              <div class="col-6 col-sm-4 col-md-3">
-                <input type="radio" class="btn-check" name="cardColor" id="color-orange" value="orange">
-                <label class="color-option color-orange d-flex flex-column align-items-center gap-3 p-3 rounded-3 w-100 position-relative" for="color-orange">
-                  <span class="color-preview rounded-circle position-relative"></span>
-                  <span class="color-name small fw-medium">Naranja</span>
-                  <i class="bi bi-check-circle-fill check-icon position-absolute top-0 end-0 m-2 fs-5"></i>
-                </label>
-              </div>
-
-              <!-- Pink -->
-              <div class="col-6 col-sm-4 col-md-3">
-                <input type="radio" class="btn-check" name="cardColor" id="color-pink" value="pink">
-                <label class="color-option color-pink d-flex flex-column align-items-center gap-3 p-3 rounded-3 w-100 position-relative" for="color-pink">
-                  <span class="color-preview rounded-circle position-relative"></span>
-                  <span class="color-name small fw-medium">Rosa</span>
-                  <i class="bi bi-check-circle-fill check-icon position-absolute top-0 end-0 m-2 fs-5"></i>
-                </label>
-              </div>
-
-              <!-- Cyan -->
-              <div class="col-6 col-sm-4 col-md-3">
-                <input type="radio" class="btn-check" name="cardColor" id="color-cyan" value="cyan">
-                <label class="color-option color-cyan d-flex flex-column align-items-center gap-3 p-3 rounded-3 w-100 position-relative" for="color-cyan">
-                  <span class="color-preview rounded-circle position-relative"></span>
-                  <span class="color-name small fw-medium">Cyan</span>
-                  <i class="bi bi-check-circle-fill check-icon position-absolute top-0 end-0 m-2 fs-5"></i>
-                </label>
-              </div>
-
-              <!-- Red -->
-              <div class="col-6 col-sm-4 col-md-3">
-                <input type="radio" class="btn-check" name="cardColor" id="color-red" value="red">
-                <label class="color-option color-red d-flex flex-column align-items-center gap-3 p-3 rounded-3 w-100 position-relative" for="color-red">
-                  <span class="color-preview rounded-circle position-relative"></span>
-                  <span class="color-name small fw-medium">Rojo</span>
-                  <i class="bi bi-check-circle-fill check-icon position-absolute top-0 end-0 m-2 fs-5"></i>
-                </label>
-              </div>
-
-              <!-- Yellow -->
-              <div class="col-6 col-sm-4 col-md-3">
-                <input type="radio" class="btn-check" name="cardColor" id="color-yellow" value="yellow">
-                <label class="color-option color-yellow d-flex flex-column align-items-center gap-3 p-3 rounded-3 w-100 position-relative" for="color-yellow">
-                  <span class="color-preview rounded-circle position-relative"></span>
-                  <span class="color-name small fw-medium">Amarillo</span>
-                  <i class="bi bi-check-circle-fill check-icon position-absolute top-0 end-0 m-2 fs-5"></i>
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="divider my-5 animate-slide-up" style="animation-delay: 0.6s;"></div>
-
-        <!-- Subida de archivos -->
-        <div class="mb-4 animate-slide-up" style="animation-delay: 0.7s;">
-          <label class="form-label text-white fw-semibold mb-3">
-            <i class="bi bi-cloud-arrow-up-fill me-2 text-primary fs-5"></i>
-            Archivos
-          </label>
-          
-          <div class="upload-area rounded-4 position-relative overflow-hidden">
-            <label class="d-flex align-items-center justify-content-center w-100 h-100 cursor-pointer">
-              <div class="text-center p-4">
-                <div class="upload-icon mb-3">
-                  <i class="bi bi-cloud-arrow-up" style="font-size: 4rem;"></i>
+              <div class="row g-3">
+                <div class="col-6 col-sm-4 col-md-3">
+                  <input type="radio" class="btn-check" name="cardColor" id="color-azul" value="primary">
+                  <label class="btn btn-outline-primary w-100 rounded-3 py-3 fw-semibold text-light" for="color-azul">Azul</label>
                 </div>
-                <h5 class="fw-semibold mb-2 text-white">
-                  Arrastra archivos aquí
-                </h5>
-                <p class="text-secondary mb-3">
-                  o haz clic para seleccionar
-                </p>
-                <div class="d-flex flex-column gap-2 align-items-center">
-                  <div class="d-flex align-items-center gap-2 text-secondary small">
-                    <i class="bi bi-file-earmark-check"></i>
-                    <span>PNG, JPG, PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX</span>
-                  </div>
-                  <div class="d-flex align-items-center gap-2 text-secondary small">
-                    <i class="bi bi-hdd"></i>
-                    <span>Máximo 100 MB por archivo</span>
-                  </div>
+                <div class="col-6 col-sm-4 col-md-3">
+                  <input type="radio" class="btn-check" name="cardColor" id="color-rojo" value="danger">
+                  <label class="btn btn-outline-danger w-100 rounded-3 py-3 fw-semibold text-light" for="color-rojo">Rojo</label>
                 </div>
-                <input
-                  type="file"
-                  #fileUpload
-                  class="d-none"
-                  multiple
-                  accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
-                />
+                <div class="col-6 col-sm-4 col-md-3">
+                  <input type="radio" class="btn-check" name="cardColor" id="color-verde" value="success">
+                  <label class="btn btn-outline-success w-100 rounded-3 py-3 fw-semibold text-light" for="color-verde">Verde</label>
+                </div>
+                <div class="col-6 col-sm-4 col-md-3">
+                  <input type="radio" class="btn-check" name="cardColor" id="color-amarillo" value="warning">
+                  <label class="btn btn-outline-warning w-100 rounded-3 py-3 fw-semibold text-light" for="color-amarillo">Amarillo</label>
+                </div>
+                <div class="col-6 col-sm-4 col-md-3">
+                  <input type="radio" class="btn-check" name="cardColor" id="color-cyan" value="info">
+                  <label class="btn btn-outline-info w-100 rounded-3 py-3 fw-semibold text-light" for="color-cyan">Cyan</label>
+                </div>
+                <div class="col-6 col-sm-4 col-md-3">
+                  <input type="radio" class="btn-check" name="cardColor" id="color-gris" value="secondary">
+                  <label class="btn btn-outline-secondary w-100 rounded-3 py-3 fw-semibold text-light" for="color-gris">Gris</label>
+                </div>
               </div>
-            </label>
-          </div>
+            </div>
 
-          <div class="mt-3 text-center">
-            <button
-              type="button"
-              class="btn btn-outline-primary btn-lg rounded-pill px-4"
-              (click)="fileUpload.click()"
-            >
-              <i class="bi bi-folder2-open me-2"></i>Explorar archivos
-            </button>
-          </div>
-        </div>
+            <!-- Subida -->
+            <div class="mb-5">
+              <label class="form-label fw-semibold text-light mb-3">
+                <i class="bi bi-cloud-arrow-up-fill text-primary me-2"></i>
+                Archivos
+              </label>
+              <div class="border border-secondary rounded-4 p-4 p-md-5 text-center bg-black">
+                <i class="bi bi-cloud-arrow-up text-secondary mb-3 d-block" style="font-size: 3rem;"></i>
+                <h5 class="fw-semibold text-light">Arrastra archivos aquí</h5>
+                <p class="text-secondary">o haz clic para seleccionar</p>
+                <input type="file" class="form-control bg-dark text-light border-secondary mt-3" multiple>
+              </div>
+            </div>
 
-        <!-- Archivos subidos (ejemplo comentado) -->
-        <!--
-        <div class="mb-4 animate-slide-up" style="animation-delay: 0.8s;">
-          <label class="form-label text-white fw-semibold mb-3">
-            <i class="bi bi-files me-2 text-primary fs-5"></i>
-            Archivos subidos (3)
-          </label>
-          
-          <div class="d-flex flex-column gap-3">
-            <div class="uploaded-file-card d-flex align-items-center gap-3 rounded-3 p-3">
-              <div class="file-icon file-pdf rounded-2 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; min-width: 50px; font-size: 1.75rem;">
-                <i class="bi bi-file-earmark-pdf-fill"></i>
+            <!-- Estado vacío -->
+            <div class="mb-5">
+              <label class="form-label fw-semibold text-light mb-3">
+                <i class="bi bi-files text-primary me-2"></i>
+                Archivos subidos (0)
+              </label>
+              <div class="border border-secondary rounded-3 p-4 text-center bg-black text-secondary">
+                <i class="bi bi-inbox mb-3 d-block" style="font-size: 2.5rem;"></i>
+                No has subido ningún archivo aún
               </div>
-              <div class="flex-grow-1 min-w-0">
-                <h6 class="file-name fw-medium text-white mb-1 small">Documento_Teoria.pdf</h6>
-                <p class="file-size text-secondary small mb-0">2.4 MB</p>
-              </div>
-              <button class="btn btn-delete rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; min-width: 36px;" title="Eliminar">
-                <i class="bi bi-x-lg"></i>
+            </div>
+
+            <!-- Botones -->
+            <div class="d-flex flex-column flex-sm-row justify-content-end gap-3">
+              <button type="reset" class="btn btn-outline-light btn-lg rounded-pill px-4" [disabled]="cargando">
+                <i class="bi bi-arrow-counterclockwise me-2"></i>Limpiar
+              </button>
+              <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4" [disabled]="cargando">
+                <span *ngIf="!cargando">
+                  <i class="bi bi-check-circle-fill me-2"></i>Crear apuntes
+                </span>
+                <span *ngIf="cargando">
+                  <span class="spinner-border spinner-border-sm me-2"></span>Creando...
+                </span>
               </button>
             </div>
 
-            <div class="uploaded-file-card d-flex align-items-center gap-3 rounded-3 p-3">
-              <div class="file-icon file-image rounded-2 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; min-width: 50px; font-size: 1.75rem;">
-                <i class="bi bi-file-earmark-image-fill"></i>
-              </div>
-              <div class="flex-grow-1 min-w-0">
-                <h6 class="file-name fw-medium text-white mb-1 small">Esquema_Mental.png</h6>
-                <p class="file-size text-secondary small mb-0">1.2 MB</p>
-              </div>
-              <button class="btn btn-delete rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; min-width: 36px;" title="Eliminar">
-                <i class="bi bi-x-lg"></i>
-              </button>
-            </div>
-
-            <div class="uploaded-file-card d-flex align-items-center gap-3 rounded-3 p-3">
-              <div class="file-icon file-word rounded-2 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; min-width: 50px; font-size: 1.75rem;">
-                <i class="bi bi-file-earmark-word-fill"></i>
-              </div>
-              <div class="flex-grow-1 min-w-0">
-                <h6 class="file-name fw-medium text-white mb-1 small">Ejercicios_Practicos.docx</h6>
-                <p class="file-size text-secondary small mb-0">856 KB</p>
-              </div>
-              <button class="btn btn-delete rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; min-width: 36px;" title="Eliminar">
-                <i class="bi bi-x-lg"></i>
-              </button>
-            </div>
-          </div>
+          </form>
         </div>
-        -->
+      </div>
 
-        <!-- Empty state -->
-        <div class="mb-4 animate-slide-up" style="animation-delay: 0.8s;">
-          <label class="form-label text-white fw-semibold mb-3">
-            <i class="bi bi-files me-2 text-primary fs-5"></i>
-            Archivos subidos (0)
-          </label>
-          <div class="empty-state rounded-3 p-4 text-center">
-            <i class="bi bi-inbox d-block mb-3" style="font-size: 3rem;"></i>
-            <p class="mb-0 small">No has subido ningún archivo aún</p>
-          </div>
-        </div>
-
-        <div class="divider my-5 animate-slide-up" style="animation-delay: 0.9s;"></div>
-
-        <!-- Botones de acción -->
-        <div class="d-flex justify-content-end gap-3 mt-4 animate-slide-up" style="animation-delay: 1s;">
-          <button
-            type="reset"
-            class="btn btn-outline-secondary btn-lg rounded-pill px-4"
-            [disabled]="cargando"
-          >
-            <i class="bi bi-arrow-counterclockwise me-2"></i>Limpiar
-          </button>
-          <button
-            type="submit"
-            class="btn btn-primary btn-lg rounded-pill px-4 btn-submit position-relative overflow-hidden"
-            [disabled]="cargando"
-          >
-            <span *ngIf="!cargando">
-              <i class="bi bi-check-circle-fill me-2"></i>Crear apuntes
-            </span>
-            <span *ngIf="cargando">
-              <span class="spinner-border spinner-border-sm me-2"></span>
-              Creando...
-            </span>
-          </button>
-        </div>
-      </form>
     </div>
   </div>
 </div>
