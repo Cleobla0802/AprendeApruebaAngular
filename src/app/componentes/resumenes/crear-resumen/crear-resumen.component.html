@@ -1,178 +1,151 @@
-<div class="container py-5">
+<div class="mb-5">
+  <label class="form-label fw-semibold text-light mb-3">
+    <i class="bi bi-journals text-primary me-2"></i>
+    Selecciona los apuntes
+  </label>
 
-  <div class="d-flex flex-column flex-lg-row gap-3 mb-4">
-    <div class="input-group input-group-lg flex-fill shadow-sm rounded-4 overflow-hidden">
-      <span class="input-group-text bg-dark border-0 text-secondary">
+  <div class="d-flex gap-2 mb-3">
+    <div class="input-group flex-grow-1">
+      <span class="input-group-text bg-black border-secondary text-secondary">
         <i class="bi bi-search"></i>
       </span>
-      <input type="text" class="form-control bg-dark text-white border-0" placeholder="Buscar apuntes">
+      <input type="text" class="form-control bg-black text-light border-secondary" placeholder="Buscar apuntes...">
     </div>
+    <span class="badge bg-primary bg-opacity-25 text-primary border border-primary border-opacity-25 rounded-3 px-3 d-flex align-items-center gap-1 fs-6">
+      <i class="bi bi-check2-square"></i> 0 / 3
+    </span>
   </div>
 
-  <div class="d-flex flex-wrap gap-2 mb-4">
-    <input type="checkbox" class="btn-check" id="f-matematicas">
-    <label class="btn btn-outline-light btn-sm rounded-pill px-3" for="f-matematicas">
-      <i class="bi bi-calculator me-1"></i> Matemáticas
-    </label>
-
-    <input type="checkbox" class="btn-check" id="f-ciencias">
-    <label class="btn btn-outline-light btn-sm rounded-pill px-3" for="f-ciencias">
-      <i class="bi bi-flask me-1"></i> Ciencias
-    </label>
-
-    <input type="checkbox" class="btn-check" id="f-ingles">
-    <label class="btn btn-outline-light btn-sm rounded-pill px-3" for="f-ingles">
-      <i class="bi bi-translate me-1"></i> Inglés
-    </label>
-
-    <input type="checkbox" class="btn-check" id="f-historia">
-    <label class="btn btn-outline-light btn-sm rounded-pill px-3" for="f-historia">
-      <i class="bi bi-hourglass-split me-1"></i> Historia
-    </label>
-
-    <input type="checkbox" class="btn-check" id="f-tecnologia">
-    <label class="btn btn-outline-light btn-sm rounded-pill px-3" for="f-tecnologia">
-      <i class="bi bi-cpu me-1"></i> Tecnología
-    </label>
-  </div>
-
-  <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+  <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
 
     <div class="col">
-      <a routerLink="/componentes/apuntes/visualizar-apuntes" class="card h-100 bg-dark border-primary border-opacity-25 text-decoration-none text-reset shadow" role="link" aria-label="Ver apuntes">
+      <input type="checkbox" class="btn-check" id="apunte-1">
+      <label for="apunte-1" class="card h-100 bg-dark border-primary border-opacity-25 text-decoration-none text-reset shadow w-100">
         <div class="card-body d-flex flex-column">
           <div class="ratio ratio-16x9 rounded-3 overflow-hidden mb-3 bg-black bg-opacity-50">
             <div class="d-flex align-items-center justify-content-center">
               <i class="bi bi-calculator-fill display-4 text-primary opacity-50"></i>
             </div>
           </div>
-
           <div class="d-flex gap-2 mb-3">
             <span class="badge text-bg-primary bg-opacity-25 rounded-pill px-3">Matemáticas</span>
             <span class="badge bg-dark text-secondary border border-secondary rounded-pill px-3">Intermedio</span>
+            <span class="ms-auto badge bg-dark border border-secondary text-secondary rounded-pill px-3">
+              <i class="bi bi-square me-1"></i>Seleccionar
+            </span>
           </div>
-
           <h5 class="text-white fw-bold mb-2">Álgebra básica</h5>
           <p class="text-secondary small mb-3 flex-grow-1">
             Fórmulas, ejemplos resueltos y notas rápidas para repasar.
           </p>
-
           <div class="d-flex flex-wrap gap-3 small text-secondary mb-3">
             <span><i class="bi bi-journal-bookmark me-1"></i>24 páginas</span>
             <span><i class="bi bi-clock me-1"></i>12h estudio</span>
           </div>
-
           <div class="mb-3">
             <div class="d-flex justify-content-between align-items-center mb-2">
               <span class="small text-secondary">Progreso</span>
               <span class="small text-primary fw-semibold">45%</span>
             </div>
-            <div class="progress bg-dark-subtle rounded-pill" style="height: 6px;">
-              <div class="progress-bar rounded-pill" role="progressbar" style="width: 45%"></div>
+            <div class="progress bg-dark-subtle rounded-pill">
+              <div class="progress-bar rounded-pill w-50" role="progressbar"></div>
             </div>
           </div>
-
           <div class="d-flex justify-content-between align-items-center small text-muted border-top border-secondary pt-3">
             <span><i class="bi bi-person-fill me-1"></i>Creado por mí</span>
             <span><i class="bi bi-clock-history me-1"></i>Hace 3 días</span>
           </div>
         </div>
-      </a>
+      </label>
     </div>
 
     <div class="col">
-      <a routerLink="/componentes/apuntes/visualizar-apuntes" class="card h-100 bg-dark border-success border-opacity-25 text-decoration-none text-reset shadow" role="link" aria-label="Ver apuntes">
+      <input type="checkbox" class="btn-check" id="apunte-2">
+      <label for="apunte-2" class="card h-100 bg-dark border-success border-opacity-25 text-decoration-none text-reset shadow w-100">
         <div class="card-body d-flex flex-column">
           <div class="ratio ratio-16x9 rounded-3 overflow-hidden mb-3 bg-black bg-opacity-50">
             <div class="d-flex align-items-center justify-content-center">
               <i class="bi bi-flask-fill display-4 text-success opacity-50"></i>
             </div>
           </div>
-
           <div class="d-flex gap-2 mb-3">
             <span class="badge text-bg-success bg-opacity-25 rounded-pill px-3">Ciencias</span>
             <span class="badge bg-dark text-secondary border border-secondary rounded-pill px-3">Básico</span>
+            <span class="ms-auto badge bg-dark border border-secondary text-secondary rounded-pill px-3">
+              <i class="bi bi-square me-1"></i>Seleccionar
+            </span>
           </div>
-
           <h5 class="text-white fw-bold mb-2">Física básica</h5>
           <p class="text-secondary small mb-3 flex-grow-1">
             Esquemas, fórmulas esenciales y ejercicios resueltos.
           </p>
-
           <div class="d-flex flex-wrap gap-3 small text-secondary mb-3">
             <span><i class="bi bi-journal-bookmark me-1"></i>18 páginas</span>
             <span><i class="bi bi-clock me-1"></i>9h estudio</span>
           </div>
-
           <div class="mb-3">
             <div class="d-flex justify-content-between align-items-center mb-2">
               <span class="small text-secondary">Progreso</span>
               <span class="small text-success fw-semibold">30%</span>
             </div>
-            <div class="progress bg-dark-subtle rounded-pill" style="height: 6px;">
-              <div class="progress-bar bg-success rounded-pill" role="progressbar" style="width: 30%"></div>
+            <div class="progress bg-dark-subtle rounded-pill">
+              <div class="progress-bar bg-success rounded-pill w-25" role="progressbar"></div>
             </div>
           </div>
-
           <div class="d-flex justify-content-between align-items-center small text-muted border-top border-secondary pt-3">
             <span><i class="bi bi-arrow-repeat me-1"></i>Actualizado</span>
             <span><i class="bi bi-clock-history me-1"></i>Hace 1 semana</span>
           </div>
         </div>
-      </a>
+      </label>
     </div>
 
     <div class="col">
-      <a routerLink="/componentes/apuntes/visualizar-apuntes" class="card h-100 bg-dark border-info border-opacity-25 text-decoration-none text-reset shadow" role="link" aria-label="Ver apuntes">
+      <input type="checkbox" class="btn-check" id="apunte-3">
+      <label for="apunte-3" class="card h-100 bg-dark border-info border-opacity-25 text-decoration-none text-reset shadow w-100">
         <div class="card-body d-flex flex-column">
           <div class="ratio ratio-16x9 rounded-3 overflow-hidden mb-3 bg-black bg-opacity-50">
             <div class="d-flex align-items-center justify-content-center">
               <i class="bi bi-translate display-4 text-info opacity-50"></i>
             </div>
           </div>
-
           <div class="d-flex gap-2 mb-3">
             <span class="badge text-bg-info bg-opacity-25 rounded-pill px-3">Inglés</span>
             <span class="badge bg-dark text-secondary border border-secondary rounded-pill px-3">Avanzado</span>
+            <span class="ms-auto badge bg-dark border border-secondary text-secondary rounded-pill px-3">
+              <i class="bi bi-square me-1"></i>Seleccionar
+            </span>
           </div>
-
           <h5 class="text-white fw-bold mb-2">Inglés conversacional</h5>
           <p class="text-secondary small mb-3 flex-grow-1">
             Vocabulario, frases útiles y práctica de fluidez.
           </p>
-
           <div class="d-flex flex-wrap gap-3 small text-secondary mb-3">
             <span><i class="bi bi-journal-bookmark me-1"></i>32 páginas</span>
             <span><i class="bi bi-clock me-1"></i>15h estudio</span>
           </div>
-
           <div class="mb-3">
             <div class="d-flex justify-content-between align-items-center mb-2">
               <span class="small text-secondary">Progreso</span>
               <span class="small text-info fw-semibold">70%</span>
             </div>
-            <div class="progress bg-dark-subtle rounded-pill" style="height: 6px;">
-              <div class="progress-bar bg-info rounded-pill" role="progressbar" style="width: 70%"></div>
+            <div class="progress bg-dark-subtle rounded-pill">
+              <div class="progress-bar bg-info rounded-pill w-75" role="progressbar"></div>
             </div>
           </div>
-
           <div class="d-flex justify-content-between align-items-center small text-muted border-top border-secondary pt-3">
             <span><i class="bi bi-person-fill me-1"></i>Creado por mí</span>
             <span><i class="bi bi-clock-history me-1"></i>Hace 1 mes</span>
           </div>
         </div>
-      </a>
+      </label>
     </div>
 
   </div>
 
-  <div class="d-flex justify-content-center gap-3 mt-5">
-    <button class="btn btn-outline-danger btn-lg rounded-pill px-4">
-      <i class="bi bi-trash me-2"></i>Eliminar apuntes
-    </button>
-    <a routerLink="/componentes/apuntes/crear-apuntes" class="btn btn-primary btn-lg rounded-pill px-4">
-      <i class="bi bi-plus-lg me-2"></i>Crear apuntes
-    </a>
+  <div class="border border-secondary rounded-3 p-4 text-center bg-black text-secondary mt-3 d-none">
+    <i class="bi bi-inbox mb-3 d-block fs-1"></i>
+    No tienes apuntes disponibles aún
   </div>
 
 </div>

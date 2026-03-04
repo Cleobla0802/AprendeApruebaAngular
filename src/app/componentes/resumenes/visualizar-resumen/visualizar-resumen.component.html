@@ -1,0 +1,155 @@
+<div class="container-fluid min-vh-100 py-5">
+
+  <!-- Header -->
+  <div class="mb-5 d-flex flex-wrap align-items-center justify-content-between gap-3">
+    <div>
+      <h1 class="display-5 fw-bold text-white mb-2">Editor de Resumen</h1>
+      <p class="text-secondary mb-0">
+        <i class="bi bi-pencil-square me-2"></i>
+        Crea y edita tu resumen con nuestro editor avanzado
+      </p>
+    </div>
+    <div class="d-flex gap-2 flex-wrap">
+      <button class="btn btn-outline-secondary rounded-pill px-4 shadow-sm">
+        <i class="bi bi-eye me-2"></i>Vista previa
+      </button>
+      <button class="btn btn-primary rounded-pill px-4 shadow-sm">
+        <i class="bi bi-save me-2"></i>Guardar cambios
+      </button>
+    </div>
+  </div>
+
+  <div class="row g-4">
+
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+      <div class="card bg-secondary bg-opacity-10 text-white rounded-4 shadow-lg overflow-hidden">
+
+        <div class="card-header bg-secondary bg-opacity-25 d-flex align-items-center p-4">
+          <i class="bi bi-info-circle-fill me-2 fs-5"></i>
+          <h5 class="mb-0 fw-semibold">Información del resumen</h5>
+        </div>
+
+        <div class="card-body p-4">
+
+          <div class="mb-4">
+            <label class="form-label small fw-semibold text-secondary mb-2">
+              <i class="bi bi-card-heading me-2"></i>Título
+            </label>
+            <p class="text-white fw-semibold mb-0">Álgebra y Física básica</p>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label small fw-semibold text-secondary mb-2">
+              <i class="bi bi-folder-fill me-2"></i>Categoría
+            </label>
+            <p class="mb-0">
+              <span class="badge text-bg-primary bg-opacity-25 rounded-pill px-3">Matemáticas</span>
+            </p>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label small fw-semibold text-secondary mb-2">
+              <i class="bi bi-speedometer2 me-2"></i>Nivel de dificultad
+            </label>
+            <p class="mb-0">
+              <span class="badge bg-dark text-secondary border border-secondary rounded-pill px-3">🟡 Intermedio</span>
+            </p>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label small fw-semibold text-secondary mb-2">
+              <i class="bi bi-palette-fill me-2"></i>Color de acento
+            </label>
+            <p class="mb-0">
+              <span class="badge border border-primary text-primary bg-primary bg-opacity-10 rounded-pill px-3">Azul</span>
+            </p>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label small fw-semibold text-secondary mb-2">
+              <i class="bi bi-tags-fill me-2"></i>Etiquetas
+            </label>
+            <div class="d-flex flex-wrap gap-2">
+              <span class="badge bg-primary rounded-pill px-3 py-2">Ecuaciones</span>
+              <span class="badge bg-success rounded-pill px-3 py-2">Álgebra</span>
+              <span class="badge bg-warning text-dark rounded-pill px-3 py-2">Matemáticas</span>
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label small fw-semibold text-secondary mb-2">
+              <i class="bi bi-journals me-2"></i>Apuntes relacionados
+            </label>
+            <div class="d-flex flex-column gap-2">
+              <a routerLink="/componentes/apuntes/visualizar-apuntes" class="d-flex align-items-center gap-2 text-decoration-none text-secondary">
+                <i class="bi bi-calculator-fill text-primary"></i>
+                <span class="small">Álgebra básica</span>
+                <i class="bi bi-arrow-right ms-auto"></i>
+              </a>
+              <a routerLink="/componentes/apuntes/visualizar-apuntes" class="d-flex align-items-center gap-2 text-decoration-none text-secondary">
+                <i class="bi bi-flask-fill text-success"></i>
+                <span class="small">Física básica</span>
+                <i class="bi bi-arrow-right ms-auto"></i>
+              </a>
+              <a routerLink="/componentes/apuntes/visualizar-apuntes" class="d-flex align-items-center gap-2 text-decoration-none text-secondary">
+                <i class="bi bi-translate text-info"></i>
+                <span class="small">Inglés conversacional</span>
+                <i class="bi bi-arrow-right ms-auto"></i>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Editor -->
+    <div class="col-lg-8">
+      <div class="card bg-dark text-white rounded-4 shadow-lg overflow-hidden">
+
+        <!-- Toolbar -->
+        <div class="d-flex flex-wrap gap-3 p-4 border-bottom border-secondary border-opacity-25">
+          <div class="d-flex gap-1 flex-wrap">
+            <button class="btn btn-outline-light rounded-2 shadow-sm" title="Negrita"><i class="bi bi-type-bold"></i></button>
+            <button class="btn btn-outline-light rounded-2 shadow-sm" title="Cursiva"><i class="bi bi-type-italic"></i></button>
+            <button class="btn btn-outline-light rounded-2 shadow-sm" title="Subrayado"><i class="bi bi-type-underline"></i></button>
+            <button class="btn btn-outline-light rounded-2 shadow-sm" title="Tachado"><i class="bi bi-type-strikethrough"></i></button>
+          </div>
+        </div>
+
+        <!-- Editor Area -->
+        <div class="p-4" contenteditable="true" style="min-height:500px; max-height:600px; overflow-y:auto; font-size:0.95rem; line-height:1.7;">
+          <h2 class="fw-semibold mb-3">Introducción al Álgebra y Física Básica</h2>
+          <p class="text-secondary mb-4">
+            El álgebra es una rama fundamental de las matemáticas que utiliza símbolos y letras para representar valores y fórmulas. Sus conceptos clave incluyen variables, expresiones algebraicas, ecuaciones y funciones.
+          </p>
+          <h5 class="fw-semibold text-white mb-3">Puntos clave de Álgebra</h5>
+          <p class="text-secondary mb-4">
+            Las ecuaciones lineales permiten encontrar valores desconocidos mediante operaciones básicas. Las funciones cuadráticas describen parábolas y tienen aplicaciones en física y geometría.
+          </p>
+          <h5 class="fw-semibold text-white mb-3">Puntos clave de Física</h5>
+          <p class="text-secondary mb-4">
+            Las leyes de Newton describen el movimiento de los cuerpos. La primera ley establece que un objeto en reposo permanece en reposo salvo que actúe una fuerza externa sobre él.
+          </p>
+          <h5 class="fw-semibold text-white mb-3">Conclusión</h5>
+          <p class="text-secondary mb-0">
+            Ambas disciplinas están estrechamente relacionadas: la física usa el álgebra para expresar sus leyes, y el álgebra encuentra en la física su aplicación más directa.
+          </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="d-flex justify-content-between align-items-center p-3 text-secondary border-top border-secondary border-opacity-25">
+          <span><i class="bi bi-file-text me-1"></i>245 palabras</span>
+          <div class="d-flex gap-2">
+            <button class="btn btn-sm btn-outline-light rounded-pill shadow-sm"><i class="bi bi-arrow-counterclockwise me-1"></i>Deshacer</button>
+            <button class="btn btn-sm btn-outline-light rounded-pill shadow-sm"><i class="bi bi-arrow-clockwise me-1"></i>Rehacer</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>
