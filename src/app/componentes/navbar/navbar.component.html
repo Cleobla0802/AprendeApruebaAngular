@@ -13,7 +13,7 @@
           <a routerLink="/componentes/apuntes" class="nav-link text-white">Apuntes</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="#">Resumen</a>
+          <a routerLink="/componentes/resumenes" class="nav-link text-white">Resumen</a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-white" href="#">Pruebas</a>
@@ -22,7 +22,7 @@
       <div class="d-flex gap-2">
         <a routerLink="/componentes/autenticacion/login" class="btn btn-primary rounded-pill px-4">Login</a>
         <a routerLink="/componentes/autenticacion/sigin" class="btn btn-primary rounded-pill px-4">Sign In</a>
-        <button class="btn btn-danger rounded-pill px-4">Logout</button>
+        <button (click)="logout()" class="btn btn-danger rounded-pill px-4">Logout</button>
       </div>
     </div>
   </div>

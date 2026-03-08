@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Auth, authState, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut, User, UserCredential } from '@angular/fire/auth';
+import { Auth, authState, createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut, User, UserCredential } from '@angular/fire/auth';
 import { Database, ref, set } from '@angular/fire/database';
+import { Router } from '@angular/router';
+import { sendPasswordResetEmail } from 'firebase/auth';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -9,7 +11,7 @@ import { Observable } from 'rxjs';
 export class AuthService {
 
 
-  constructor(private db: Database, private auth: Auth) { }
+  constructor(private db: Database, private auth: Auth, private router:Router) { }
 
 
   register(email: string, password: string) {
@@ -21,8 +23,15 @@ export class AuthService {
   }
 
   logout() {
-    signOut(this.auth);
-  }
+  const auth = getAuth();
+  signOut(auth)
+    .then(() => {
+      this.router.navigate(['/login']);
+    })
+    .catch((error) => {
+      console.error('Error al cerrar sesión:', error);
+    });
+}
 
   loginWithGoogle(): Promise<UserCredential> {
     const provider = new GoogleAuthProvider();
@@ -38,6 +47,10 @@ export class AuthService {
   saveUsername(uid: string, username: string) {
     const userRef = ref(this.db, `usuarios/${uid}`);
     return set(userRef, { username });
+  }
+
+  resetPassword(email: string): Promise<void>{
+    return sendPasswordResetEmail(this.auth, email)
   }
 
 }

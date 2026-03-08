@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-recuperar-password',
@@ -9,24 +11,29 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './recuperar-password.component.scss'
 })
 export class RecuperarPasswordComponent {
+
   email: string = '';
   cargando: boolean = false;
-  mensaje: string = '';
   mostrarAlert: boolean = false;
+  mensaje: string = '';
+
+  constructor(private authService: AuthService) {}
 
   enviarEmail() {
-    if (!this.email.trim()) return;
-
+    if (!this.email) return;
     this.cargando = true;
-    this.mensaje = '';
-    this.mostrarAlert = false;
-
-    setTimeout(() => {
-      this.cargando = false;
-      this.mensaje = `Se ha enviado un enlace de recuperación a ${this.email}`;
-      this.mostrarAlert = true;
-      this.email = '';
-    }, 2000);
+    this.authService.resetPassword(this.email)
+      .then(() => {
+        this.mensaje = 'Se ha enviado un correo para restablecer tu contraseña.';
+        this.mostrarAlert = true;
+      })
+      .catch((error) => {
+        this.mensaje = `Error: ${error.message}`;
+        this.mostrarAlert = true;
+      })
+      .finally(() => {
+        this.cargando = false;
+      });
   }
-
+  
 }

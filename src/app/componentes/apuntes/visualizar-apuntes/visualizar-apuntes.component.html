@@ -1,58 +1,51 @@
-<div class="container py-5">
-  
-  <!-- Header Section -->
-  <div class="mb-5">
-    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-      <div>
-        <h1 class="display-5 fw-bold text-white mb-2">Editor de Apuntes</h1>
-        <p class="text-secondary mb-0">
-          <i class="bi bi-pencil-square me-2"></i>
-          Crea y edita tus apuntes con nuestro editor avanzado
-        </p>
-      </div>
-      <div class="d-flex gap-2">
-        <button class="btn btn-outline-secondary rounded-pill px-4">
-          <i class="bi bi-eye me-2"></i>Vista previa
-        </button>
-        <button class="btn btn-primary rounded-pill px-4">
-          <i class="bi bi-save me-2"></i>Guardar cambios
-        </button>
-      </div>
+<div class="container-fluid min-vh-100 py-5">
+
+  <!-- Header -->
+  <div class="mb-5 d-flex flex-wrap align-items-center justify-content-between gap-3">
+    <div>
+      <h1 class="display-5 fw-bold text-white mb-2">Editor de Apuntes</h1>
+      <p class="text-secondary mb-0">
+        <i class="bi bi-pencil-square me-2"></i>
+        Crea y edita tus apuntes con nuestro editor avanzado
+      </p>
+    </div>
+    <div class="d-flex gap-2 flex-wrap">
+      <button class="btn btn-outline-secondary rounded-pill px-4 shadow-sm">
+        <i class="bi bi-eye me-2"></i>Vista previa
+      </button>
+      <button class="btn btn-primary rounded-pill px-4 shadow-sm">
+        <i class="bi bi-save me-2"></i>Guardar cambios
+      </button>
     </div>
   </div>
 
   <div class="row g-4">
-    
-    <!-- Sidebar - Información del apunte -->
+
+    <!-- Sidebar -->
     <div class="col-lg-4">
-      <div class="sidebar-card rounded-4 overflow-hidden">
-        <div class="sidebar-header p-4 d-flex align-items-center">
+      <div class="card bg-secondary bg-opacity-10 text-white rounded-4 shadow-lg overflow-hidden">
+
+        <div class="card-header bg-secondary bg-opacity-25 d-flex align-items-center p-4">
           <i class="bi bi-info-circle-fill me-2 fs-5"></i>
-          <h5 class="mb-0 fw-semibold text-white">Información del apunte</h5>
+          <h5 class="mb-0 fw-semibold">Información del apunte</h5>
         </div>
 
-        <div class="p-4">
+        <div class="card-body p-4">
+
           <!-- Título -->
           <div class="mb-4">
-            <label class="form-label d-flex align-items-center small fw-medium text-secondary mb-2">
-              <i class="bi bi-card-heading me-2"></i>
-              Título
+            <label class="form-label small fw-semibold text-secondary mb-2">
+              <i class="bi bi-card-heading me-2"></i>Título
             </label>
-            <input
-              type="text"
-              class="form-control form-control-dark rounded-3"
-              placeholder="Ej: Álgebra lineal, Física cuántica..."
-              value="Álgebra básica"
-            />
+            <input type="text" class="form-control form-control-dark rounded-3 shadow-sm" placeholder="Ej: Álgebra lineal" value="Álgebra básica">
           </div>
 
           <!-- Categoría -->
           <div class="mb-4">
-            <label class="form-label d-flex align-items-center small fw-medium text-secondary mb-2">
-              <i class="bi bi-folder-fill me-2"></i>
-              Categoría
+            <label class="form-label small fw-semibold text-secondary mb-2">
+              <i class="bi bi-folder-fill me-2"></i>Categoría
             </label>
-            <select class="form-select form-control-dark rounded-3">
+            <select class="form-select form-control-dark rounded-3 shadow-sm">
               <option selected>Matemáticas</option>
               <option>Ciencias</option>
               <option>Inglés</option>
@@ -62,13 +55,12 @@
             </select>
           </div>
 
-          <!-- Nivel de dificultad -->
+          <!-- Nivel -->
           <div class="mb-4">
-            <label class="form-label d-flex align-items-center small fw-medium text-secondary mb-2">
-              <i class="bi bi-speedometer2 me-2"></i>
-              Nivel de dificultad
+            <label class="form-label small fw-semibold text-secondary mb-2">
+              <i class="bi bi-speedometer2 me-2"></i>Nivel de dificultad
             </label>
-            <select class="form-select form-control-dark rounded-3">
+            <select class="form-select form-control-dark rounded-3 shadow-sm">
               <option>🟢 Básico</option>
               <option selected>🟡 Intermedio</option>
               <option>🔴 Avanzado</option>
@@ -77,318 +69,107 @@
 
           <!-- Color de acento -->
           <div class="mb-4">
-            <label class="form-label d-flex align-items-center small fw-medium text-secondary mb-2">
-              <i class="bi bi-palette-fill me-2"></i>
-              Color de acento
+            <label class="form-label small fw-semibold text-secondary mb-2">
+              <i class="bi bi-palette-fill me-2"></i>Color de acento
             </label>
-            <div class="d-flex gap-2 flex-wrap">
-              <input type="radio" class="btn-check" name="accentColor" id="accent-purple" checked>
-              <label class="color-dot purple rounded-circle position-relative d-flex align-items-center justify-content-center" for="accent-purple"></label>
+            <div class="d-flex flex-wrap gap-2">
+              <input type="radio" class="btn-check" name="accentColor" id="accent-blue" checked>
+              <label class="btn btn-outline-primary shadow-sm rounded-3 py-2 text-white w-100" for="accent-blue">Azul</label>
 
-              <input type="radio" class="btn-check" name="accentColor" id="accent-blue">
-              <label class="color-dot blue rounded-circle position-relative d-flex align-items-center justify-content-center" for="accent-blue"></label>
+              <input type="radio" class="btn-check" name="accentColor" id="accent-red">
+              <label class="btn btn-outline-danger shadow-sm rounded-3 py-2 text-white w-100" for="accent-red">Rojo</label>
 
               <input type="radio" class="btn-check" name="accentColor" id="accent-green">
-              <label class="color-dot green rounded-circle position-relative d-flex align-items-center justify-content-center" for="accent-green"></label>
+              <label class="btn btn-outline-success shadow-sm rounded-3 py-2 text-white w-100" for="accent-green">Verde</label>
 
-              <input type="radio" class="btn-check" name="accentColor" id="accent-orange">
-              <label class="color-dot orange rounded-circle position-relative d-flex align-items-center justify-content-center" for="accent-orange"></label>
-
-              <input type="radio" class="btn-check" name="accentColor" id="accent-pink">
-              <label class="color-dot pink rounded-circle position-relative d-flex align-items-center justify-content-center" for="accent-pink"></label>
+              <input type="radio" class="btn-check" name="accentColor" id="accent-yellow">
+              <label class="btn btn-outline-warning shadow-sm rounded-3 py-2 text-dark w-100" for="accent-yellow">Amarillo</label>
 
               <input type="radio" class="btn-check" name="accentColor" id="accent-cyan">
-              <label class="color-dot cyan rounded-circle position-relative d-flex align-items-center justify-content-center" for="accent-cyan"></label>
+              <label class="btn btn-outline-info shadow-sm rounded-3 py-2 text-white w-100" for="accent-cyan">Cyan</label>
+
+              <input type="radio" class="btn-check" name="accentColor" id="accent-gray">
+              <label class="btn btn-outline-secondary shadow-sm rounded-3 py-2 text-white w-100" for="accent-gray">Gris</label>
             </div>
           </div>
 
           <!-- Etiquetas -->
           <div class="mb-4">
-            <label class="form-label d-flex align-items-center small fw-medium text-secondary mb-2">
-              <i class="bi bi-tags-fill me-2"></i>
-              Etiquetas
+            <label class="form-label small fw-semibold text-secondary mb-2">
+              <i class="bi bi-tags-fill me-2"></i>Etiquetas
             </label>
             <div class="d-flex flex-wrap gap-2 mb-2">
-              <span class="tag-pill d-inline-flex align-items-center gap-2 rounded-pill px-3 py-2 small fw-medium text-secondary">
-                Ecuaciones
-                <button class="tag-remove btn btn-link p-0 d-flex align-items-center justify-content-center rounded-circle">
-                  <i class="bi bi-x"></i>
-                </button>
-              </span>
-              <span class="tag-pill d-inline-flex align-items-center gap-2 rounded-pill px-3 py-2 small fw-medium text-secondary">
-                Álgebra
-                <button class="tag-remove btn btn-link p-0 d-flex align-items-center justify-content-center rounded-circle">
-                  <i class="bi bi-x"></i>
-                </button>
-              </span>
-              <span class="tag-pill d-inline-flex align-items-center gap-2 rounded-pill px-3 py-2 small fw-medium text-secondary">
-                Matemáticas
-                <button class="tag-remove btn btn-link p-0 d-flex align-items-center justify-content-center rounded-circle">
-                  <i class="bi bi-x"></i>
-                </button>
-              </span>
+              <span class="badge bg-primary rounded-pill px-3 py-2">Ecuaciones</span>
+              <span class="badge bg-success rounded-pill px-3 py-2">Álgebra</span>
+              <span class="badge bg-warning text-dark rounded-pill px-3 py-2">Matemáticas</span>
             </div>
-            <button class="btn btn-sm btn-outline-primary rounded-pill w-100">
+            <button class="btn btn-sm btn-outline-light rounded-pill w-100 shadow-sm">
               <i class="bi bi-plus-lg me-1"></i>Añadir etiqueta
             </button>
           </div>
 
-          <!-- Divider -->
-          <div class="divider-sidebar my-4"></div>
-
-        </div>
-      </div>
-
-      <!-- Stats Card -->
-      <div class="stats-card rounded-4 p-4 mt-4">
-        <h6 class="d-flex align-items-center small fw-semibold text-secondary mb-3">
-          <i class="bi bi-bar-chart-fill me-2"></i>
-          Estadísticas
-        </h6>
-        <div class="row g-3">
-          <div class="col-6">
-            <div class="stat-item d-flex align-items-center gap-3 rounded-3 p-3">
-              <div class="stat-icon rounded-2 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; min-width: 36px;">
-                <i class="bi bi-file-text fs-5"></i>
-              </div>
-              <div>
-                <div class="fw-bold text-white mb-1">245</div>
-                <div class="small text-secondary text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.05em;">Palabras</div>
-              </div>
-            </div>
-          </div>
-          <div class="col-6">
-            <div class="stat-item d-flex align-items-center gap-3 rounded-3 p-3">
-              <div class="stat-icon rounded-2 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; min-width: 36px;">
-                <i class="bi bi-clock-history fs-5"></i>
-              </div>
-              <div>
-                <div class="fw-bold text-white mb-1">~2 min</div>
-                <div class="small text-secondary text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.05em;">Lectura</div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
 
-    <!-- Editor principal -->
+    <!-- Editor -->
     <div class="col-lg-8">
-      <div class="editor-container rounded-4 overflow-hidden">
-        
+      <div class="card bg-dark text-white rounded-4 shadow-lg overflow-hidden">
+
         <!-- Toolbar -->
-        <div class="editor-toolbar p-4 d-flex flex-wrap gap-4 align-items-center">
-          <!-- Formato -->
-          <div class="d-flex flex-column gap-2">
-            <div class="text-uppercase small text-secondary fw-semibold" style="font-size: 0.7rem; letter-spacing: 0.05em;">Formato</div>
-            <div class="d-flex gap-1">
-              <button class="toolbar-btn btn d-flex align-items-center justify-content-center rounded-2" style="width: 36px; height: 36px;" title="Negrita (Ctrl+B)">
-                <i class="bi bi-type-bold fs-5"></i>
-              </button>
-              <button class="toolbar-btn btn d-flex align-items-center justify-content-center rounded-2" style="width: 36px; height: 36px;" title="Cursiva (Ctrl+I)">
-                <i class="bi bi-type-italic fs-5"></i>
-              </button>
-              <button class="toolbar-btn btn d-flex align-items-center justify-content-center rounded-2" style="width: 36px; height: 36px;" title="Subrayado (Ctrl+U)">
-                <i class="bi bi-type-underline fs-5"></i>
-              </button>
-              <button class="toolbar-btn btn d-flex align-items-center justify-content-center rounded-2" style="width: 36px; height: 36px;" title="Tachado">
-                <i class="bi bi-type-strikethrough fs-5"></i>
-              </button>
-            </div>
-          </div>
-
-          <div class="toolbar-divider"></div>
-
-          <!-- Títulos -->
-          <div class="d-flex flex-column gap-2">
-            <div class="text-uppercase small text-secondary fw-semibold" style="font-size: 0.7rem; letter-spacing: 0.05em;">Títulos</div>
-            <div class="d-flex gap-1">
-              <button class="toolbar-btn btn d-flex align-items-center justify-content-center rounded-2" style="width: 36px; height: 36px;" title="Título 1">
-                <i class="bi bi-type-h1 fs-5"></i>
-              </button>
-              <button class="toolbar-btn btn d-flex align-items-center justify-content-center rounded-2" style="width: 36px; height: 36px;" title="Título 2">
-                <i class="bi bi-type-h2 fs-5"></i>
-              </button>
-              <button class="toolbar-btn btn d-flex align-items-center justify-content-center rounded-2" style="width: 36px; height: 36px;" title="Título 3">
-                <i class="bi bi-type-h3 fs-5"></i>
-              </button>
-            </div>
-          </div>
-
-          <div class="toolbar-divider"></div>
-
-          <!-- Listas -->
-          <div class="d-flex flex-column gap-2">
-            <div class="text-uppercase small text-secondary fw-semibold" style="font-size: 0.7rem; letter-spacing: 0.05em;">Listas</div>
-            <div class="d-flex gap-1">
-              <button class="toolbar-btn btn d-flex align-items-center justify-content-center rounded-2" style="width: 36px; height: 36px;" title="Lista con viñetas">
-                <i class="bi bi-list-ul fs-5"></i>
-              </button>
-              <button class="toolbar-btn btn d-flex align-items-center justify-content-center rounded-2" style="width: 36px; height: 36px;" title="Lista numerada">
-                <i class="bi bi-list-ol fs-5"></i>
-              </button>
-              <button class="toolbar-btn btn d-flex align-items-center justify-content-center rounded-2" style="width: 36px; height: 36px;" title="Lista de tareas">
-                <i class="bi bi-list-check fs-5"></i>
-              </button>
-            </div>
-          </div>
-
-          <div class="toolbar-divider"></div>
-
-          <!-- Insertar -->
-          <div class="d-flex flex-column gap-2">
-            <div class="text-uppercase small text-secondary fw-semibold" style="font-size: 0.7rem; letter-spacing: 0.05em;">Insertar</div>
-            <div class="d-flex gap-1">
-              <button class="toolbar-btn btn d-flex align-items-center justify-content-center rounded-2" style="width: 36px; height: 36px;" title="Enlace">
-                <i class="bi bi-link-45deg fs-5"></i>
-              </button>
-              <button class="toolbar-btn btn d-flex align-items-center justify-content-center rounded-2" style="width: 36px; height: 36px;" title="Imagen">
-                <i class="bi bi-image fs-5"></i>
-              </button>
-              <button class="toolbar-btn btn d-flex align-items-center justify-content-center rounded-2" style="width: 36px; height: 36px;" title="Código">
-                <i class="bi bi-code-slash fs-5"></i>
-              </button>
-              <button class="toolbar-btn btn d-flex align-items-center justify-content-center rounded-2" style="width: 36px; height: 36px;" title="Tabla">
-                <i class="bi bi-table fs-5"></i>
-              </button>
-            </div>
-          </div>
-
-          <div class="toolbar-divider"></div>
-
-          <!-- Más -->
-          <div class="d-flex flex-column gap-2">
-            <div class="text-uppercase small text-secondary fw-semibold" style="font-size: 0.7rem; letter-spacing: 0.05em;">Más</div>
-            <div class="d-flex gap-1">
-              <button class="toolbar-btn btn d-flex align-items-center justify-content-center rounded-2" style="width: 36px; height: 36px;" title="Cita">
-                <i class="bi bi-quote fs-5"></i>
-              </button>
-              <button class="toolbar-btn btn d-flex align-items-center justify-content-center rounded-2" style="width: 36px; height: 36px;" title="Línea horizontal">
-                <i class="bi bi-hr fs-5"></i>
-              </button>
-            </div>
+        <div class="d-flex flex-wrap gap-3 p-4 border-bottom border-secondary border-opacity-25">
+          <div class="d-flex gap-1 flex-wrap">
+            <button class="btn btn-outline-light rounded-2 shadow-sm" title="Negrita"><i class="bi bi-type-bold"></i></button>
+            <button class="btn btn-outline-light rounded-2 shadow-sm" title="Cursiva"><i class="bi bi-type-italic"></i></button>
+            <button class="btn btn-outline-light rounded-2 shadow-sm" title="Subrayado"><i class="bi bi-type-underline"></i></button>
+            <button class="btn btn-outline-light rounded-2 shadow-sm" title="Tachado"><i class="bi bi-type-strikethrough"></i></button>
           </div>
         </div>
 
         <!-- Editor Area -->
-        <div class="editor-area p-4 overflow-y-auto" contenteditable="true" style="min-height: 500px; max-height: 600px; font-size: 0.95rem; line-height: 1.7;">
-          <h2 class="fw-semibold text-white mb-3 pb-2" style="font-size: 1.75rem;">Introducción al Álgebra Básica</h2>
-          <p class="mb-3">
-            El álgebra es una rama fundamental de las matemáticas que utiliza símbolos y letras para representar números y cantidades en fórmulas y ecuaciones.
+        <div class="p-4" contenteditable="true" style="min-height:500px; max-height:600px; overflow-y:auto; font-size:0.95rem; line-height:1.7;">
+          <h2 class="fw-semibold mb-3">Introducción al Álgebra Básica</h2>
+          <p class="text-secondary mb-3">
+            El álgebra es una rama fundamental de las matemáticas que utiliza símbolos y letras para representar valores y fórmulas.
           </p>
-
-          <h3 class="fw-semibold mb-3" style="font-size: 1.35rem;">Conceptos Fundamentales</h3>
-          <ul class="mb-3 ps-4">
-            <li class="mb-2"><strong class="text-white fw-semibold">Variables:</strong> Símbolos que representan valores desconocidos (x, y, z)</li>
-            <li class="mb-2"><strong class="text-white fw-semibold">Constantes:</strong> Valores fijos que no cambian</li>
-            <li class="mb-2"><strong class="text-white fw-semibold">Expresiones algebraicas:</strong> Combinación de variables y constantes</li>
-          </ul>
-
-          <h3 class="fw-semibold mb-3" style="font-size: 1.35rem;">Operaciones Básicas</h3>
-          <p class="mb-3">
-            Las operaciones fundamentales en álgebra incluyen suma, resta, multiplicación y división de expresiones algebraicas.
-          </p>
-
-          <h4 class="fw-semibold mb-3" style="font-size: 1.1rem;">Ejemplo práctico:</h4>
-          <p class="mb-2">
-            Si <code class="rounded px-2 py-1" style="font-family: 'Courier New', monospace; font-size: 0.875em;">x = 5</code> y <code class="rounded px-2 py-1" style="font-family: 'Courier New', monospace; font-size: 0.875em;">y = 3</code>, entonces:
-          </p>
-          <ul class="mb-3 ps-4">
-            <li class="mb-2">x + y = 8</li>
-            <li class="mb-2">x - y = 2</li>
-            <li class="mb-2">x × y = 15</li>
-            <li class="mb-2">x ÷ y = 1.67</li>
-          </ul>
-
-          <blockquote class="border-start rounded p-3 my-4 border-4">
-            <strong class="d-block mb-1">Nota importante:</strong> El orden de las operaciones (PEMDAS) es crucial al resolver ecuaciones algebraicas.
-          </blockquote>
         </div>
 
-        <!-- Editor Footer -->
-        <div class="editor-footer p-3 d-flex justify-content-between align-items-center flex-wrap gap-3">
-          <div class="d-flex align-items-center gap-2 small text-secondary">
-            <span><i class="bi bi-file-text me-1"></i>245 palabras</span>
-            <span class="mx-2">•</span>
-            <span><i class="bi bi-clock me-1"></i>Guardado hace 2 min</span>
-          </div>
+        <!-- Footer -->
+        <div class="d-flex justify-content-between align-items-center p-3 text-secondary border-top border-secondary border-opacity-25">
+          <span><i class="bi bi-file-text me-1"></i>245 palabras</span>
           <div class="d-flex gap-2">
-            <button class="btn btn-sm btn-outline-secondary rounded-pill">
-              <i class="bi bi-arrow-counterclockwise me-1"></i>Deshacer
-            </button>
-            <button class="btn btn-sm btn-outline-secondary rounded-pill">
-              <i class="bi bi-arrow-clockwise me-1"></i>Rehacer
-            </button>
+            <button class="btn btn-sm btn-outline-light rounded-pill shadow-sm"><i class="bi bi-arrow-counterclockwise me-1"></i>Deshacer</button>
+            <button class="btn btn-sm btn-outline-light rounded-pill shadow-sm"><i class="bi bi-arrow-clockwise me-1"></i>Rehacer</button>
           </div>
         </div>
       </div>
     </div>
+
   </div>
 
-  <!-- Vista previa de la tarjeta -->
+  <!-- Vista previa -->
   <div class="mt-5">
-    <div class="mb-4">
-      <h5 class="text-white fw-semibold mb-1">
-        <i class="bi bi-eye-fill me-2"></i>
-        Vista previa de la tarjeta
-      </h5>
-      <p class="text-secondary small mb-0">
-        Así se verá tu apunte en la galería principal
-      </p>
-    </div>
-
+    <h5 class="text-white mb-2"><i class="bi bi-eye-fill me-2"></i>Vista previa de la tarjeta</h5>
+    <p class="text-secondary small mb-3">Así se verá tu apunte en la galería</p>
     <div class="row justify-content-center">
       <div class="col-lg-6 col-xl-5">
-        <div class="preview-card rounded-4 p-4 position-relative">
-          <div class="preview-card-glow"></div>
-          
-          <div class="position-relative" style="z-index: 1;">
-            <!-- Thumbnail -->
-            <div class="preview-thumbnail rounded-3 overflow-hidden mb-4" style="aspect-ratio: 16 / 9;">
-              <label class="upload-thumbnail-label w-100 h-100 d-flex align-items-center justify-content-center cursor-pointer">
-                <div class="text-center text-secondary">
-                  <i class="bi bi-cloud-arrow-up d-block mb-3" style="font-size: 3rem;"></i>
-                  <span class="d-block fw-semibold mb-1">Subir miniatura</span>
-                  <small>PNG, JPG o WEBP</small>
-                </div>
-                <input type="file" class="d-none" accept="image/*" />
-              </label>
-            </div>
-
-            <!-- Badges -->
-            <div class="d-flex gap-2 mb-3">
-              <span class="badge-category rounded-pill px-3 py-2 small fw-semibold">Matemáticas</span>
-              <span class="badge-level rounded-pill px-3 py-2 small fw-medium text-secondary">Intermedio</span>
-            </div>
-
-            <!-- Content -->
-            <div>
-              <h5 class="text-white fw-bold mb-3">Álgebra básica</h5>
-              <p class="text-secondary small mb-3" style="line-height: 1.6;">
-                Introducción al álgebra, conceptos fundamentales y operaciones básicas con ejemplos prácticos.
-              </p>
-
-              <div class="preview-meta d-flex gap-4 small text-secondary mb-4 pb-4">
-                <span class="d-flex align-items-center gap-1">
-                  <i class="bi bi-journal-bookmark"></i>24 páginas
-                </span>
-                <span class="d-flex align-items-center gap-1">
-                  <i class="bi bi-clock"></i>12h estudio
-                </span>
-              </div>
-
-              <div class="d-flex justify-content-between align-items-center small text-secondary">
-                <span class="d-flex align-items-center gap-1">
-                  <i class="bi bi-person-fill"></i>Creado por mí
-                </span>
-                <span class="d-flex align-items-center gap-1">
-                  <i class="bi bi-clock-history"></i>Hace 3 días
-                </span>
-              </div>
-            </div>
+        <div class="card bg-dark text-white rounded-4 shadow-lg p-4 position-relative">
+          <div class="overflow-hidden rounded-3 mb-4" style="aspect-ratio:16/9; background:#111; display:flex; align-items:center; justify-content:center;">
+            <i class="bi bi-cloud-arrow-up text-secondary fs-1"></i>
+          </div>
+          <div class="d-flex gap-2 mb-3 flex-wrap">
+            <span class="badge bg-primary rounded-pill px-3 py-2">Matemáticas</span>
+            <span class="badge bg-warning text-dark rounded-pill px-3 py-2">Intermedio</span>
+          </div>
+          <h5 class="fw-bold mb-2">Álgebra básica</h5>
+          <p class="text-secondary small mb-3">Introducción al álgebra, conceptos fundamentales y operaciones básicas con ejemplos prácticos.</p>
+          <div class="d-flex justify-content-between small text-secondary">
+            <span><i class="bi bi-person-fill"></i>Creado por mí</span>
+            <span><i class="bi bi-clock-history"></i>Hace 3 días</span>
           </div>
         </div>
       </div>
     </div>
   </div>
+
 </div>
