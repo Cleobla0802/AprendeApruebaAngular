@@ -37,7 +37,8 @@
             <label class="form-label small fw-semibold text-secondary mb-2">
               <i class="bi bi-card-heading me-2"></i>Título
             </label>
-            <input type="text" class="form-control form-control-dark rounded-3 shadow-sm" placeholder="Ej: Álgebra lineal" value="Álgebra básica">
+            <input type="text" class="form-control form-control-dark rounded-3 shadow-sm"
+              placeholder="Ej: Álgebra lineal" value="Álgebra básica">
           </div>
 
           <!-- Categoría -->
@@ -67,29 +68,35 @@
             </select>
           </div>
 
-          <!-- Color de acento -->
+          <!-- Color de tarjeta -->
           <div class="mb-4">
             <label class="form-label small fw-semibold text-secondary mb-2">
-              <i class="bi bi-palette-fill me-2"></i>Color de acento
+              <i class="bi bi-palette-fill me-2"></i>Color de tarjeta
             </label>
             <div class="d-flex flex-wrap gap-2">
               <input type="radio" class="btn-check" name="accentColor" id="accent-blue" checked>
-              <label class="btn btn-outline-primary shadow-sm rounded-3 py-2 text-white w-100" for="accent-blue">Azul</label>
+              <label class="btn btn-outline-primary shadow-sm rounded-3 py-2 text-white w-100"
+                for="accent-blue">Azul</label>
 
               <input type="radio" class="btn-check" name="accentColor" id="accent-red">
-              <label class="btn btn-outline-danger shadow-sm rounded-3 py-2 text-white w-100" for="accent-red">Rojo</label>
+              <label class="btn btn-outline-danger shadow-sm rounded-3 py-2 text-white w-100"
+                for="accent-red">Rojo</label>
 
               <input type="radio" class="btn-check" name="accentColor" id="accent-green">
-              <label class="btn btn-outline-success shadow-sm rounded-3 py-2 text-white w-100" for="accent-green">Verde</label>
+              <label class="btn btn-outline-success shadow-sm rounded-3 py-2 text-white w-100"
+                for="accent-green">Verde</label>
 
               <input type="radio" class="btn-check" name="accentColor" id="accent-yellow">
-              <label class="btn btn-outline-warning shadow-sm rounded-3 py-2 text-dark w-100" for="accent-yellow">Amarillo</label>
+              <label class="btn btn-outline-warning shadow-sm rounded-3 py-2 text-dark w-100"
+                for="accent-yellow">Amarillo</label>
 
               <input type="radio" class="btn-check" name="accentColor" id="accent-cyan">
-              <label class="btn btn-outline-info shadow-sm rounded-3 py-2 text-white w-100" for="accent-cyan">Cyan</label>
+              <label class="btn btn-outline-info shadow-sm rounded-3 py-2 text-white w-100"
+                for="accent-cyan">Cyan</label>
 
               <input type="radio" class="btn-check" name="accentColor" id="accent-gray">
-              <label class="btn btn-outline-secondary shadow-sm rounded-3 py-2 text-white w-100" for="accent-gray">Gris</label>
+              <label class="btn btn-outline-secondary shadow-sm rounded-3 py-2 text-white w-100"
+                for="accent-gray">Gris</label>
             </div>
           </div>
 
@@ -119,27 +126,36 @@
         <!-- Toolbar -->
         <div class="d-flex flex-wrap gap-3 p-4 border-bottom border-secondary border-opacity-25">
           <div class="d-flex gap-1 flex-wrap">
-            <button class="btn btn-outline-light rounded-2 shadow-sm" title="Negrita"><i class="bi bi-type-bold"></i></button>
-            <button class="btn btn-outline-light rounded-2 shadow-sm" title="Cursiva"><i class="bi bi-type-italic"></i></button>
-            <button class="btn btn-outline-light rounded-2 shadow-sm" title="Subrayado"><i class="bi bi-type-underline"></i></button>
-            <button class="btn btn-outline-light rounded-2 shadow-sm" title="Tachado"><i class="bi bi-type-strikethrough"></i></button>
+            <button class="btn btn-outline-light rounded-2 shadow-sm" title="Negrita"><i
+                class="bi bi-type-bold"></i></button>
+            <button class="btn btn-outline-light rounded-2 shadow-sm" title="Cursiva"><i
+                class="bi bi-type-italic"></i></button>
+            <button class="btn btn-outline-light rounded-2 shadow-sm" title="Subrayado"><i
+                class="bi bi-type-underline"></i></button>
+            <button class="btn btn-outline-light rounded-2 shadow-sm" title="Tachado"><i
+                class="bi bi-type-strikethrough"></i></button>
           </div>
         </div>
 
         <!-- Editor Area -->
-        <div class="p-4" contenteditable="true" style="min-height:500px; max-height:600px; overflow-y:auto; font-size:0.95rem; line-height:1.7;">
+        <div class="p-4" contenteditable="true"
+          style="min-height:500px; max-height:600px; overflow-y:auto; font-size:0.95rem; line-height:1.7;">
           <h2 class="fw-semibold mb-3">Introducción al Álgebra Básica</h2>
           <p class="text-secondary mb-3">
-            El álgebra es una rama fundamental de las matemáticas que utiliza símbolos y letras para representar valores y fórmulas.
+            El álgebra es una rama fundamental de las matemáticas que utiliza símbolos y letras para representar valores
+            y fórmulas.
           </p>
         </div>
 
         <!-- Footer -->
-        <div class="d-flex justify-content-between align-items-center p-3 text-secondary border-top border-secondary border-opacity-25">
+        <div
+          class="d-flex justify-content-between align-items-center p-3 text-secondary border-top border-secondary border-opacity-25">
           <span><i class="bi bi-file-text me-1"></i>245 palabras</span>
           <div class="d-flex gap-2">
-            <button class="btn btn-sm btn-outline-light rounded-pill shadow-sm"><i class="bi bi-arrow-counterclockwise me-1"></i>Deshacer</button>
-            <button class="btn btn-sm btn-outline-light rounded-pill shadow-sm"><i class="bi bi-arrow-clockwise me-1"></i>Rehacer</button>
+            <button class="btn btn-sm btn-outline-light rounded-pill shadow-sm"><i
+                class="bi bi-arrow-counterclockwise me-1"></i>Deshacer</button>
+            <button class="btn btn-sm btn-outline-light rounded-pill shadow-sm"><i
+                class="bi bi-arrow-clockwise me-1"></i>Rehacer</button>
           </div>
         </div>
       </div>
@@ -147,29 +163,45 @@
 
   </div>
 
-  <!-- Vista previa -->
+  <!-- Vista previa de la tarjeta -->
   <div class="mt-5">
-    <h5 class="text-white mb-2"><i class="bi bi-eye-fill me-2"></i>Vista previa de la tarjeta</h5>
+    <h5 class="text-white mb-2">
+      <i class="bi bi-eye-fill me-2"></i>Vista previa de la tarjeta
+    </h5>
     <p class="text-secondary small mb-3">Así se verá tu apunte en la galería</p>
+
     <div class="row justify-content-center">
-      <div class="col-lg-6 col-xl-5">
-        <div class="card bg-dark text-white rounded-4 shadow-lg p-4 position-relative">
-          <div class="overflow-hidden rounded-3 mb-4" style="aspect-ratio:16/9; background:#111; display:flex; align-items:center; justify-content:center;">
-            <i class="bi bi-cloud-arrow-up text-secondary fs-1"></i>
-          </div>
-          <div class="d-flex gap-2 mb-3 flex-wrap">
-            <span class="badge bg-primary rounded-pill px-3 py-2">Matemáticas</span>
-            <span class="badge bg-warning text-dark rounded-pill px-3 py-2">Intermedio</span>
-          </div>
-          <h5 class="fw-bold mb-2">Álgebra básica</h5>
-          <p class="text-secondary small mb-3">Introducción al álgebra, conceptos fundamentales y operaciones básicas con ejemplos prácticos.</p>
-          <div class="d-flex justify-content-between small text-secondary">
-            <span><i class="bi bi-person-fill"></i>Creado por mí</span>
-            <span><i class="bi bi-clock-history"></i>Hace 3 días</span>
+      <div class="col-md-5 col-lg-4 col-xl-3">
+
+        <div class="card bg-dark border-primary border-opacity-25 text-white rounded-4 shadow-lg">
+          <div class="card-body p-4">
+
+            <div class="d-flex justify-content-between align-items-start mb-4">
+              <span class="badge text-bg-primary bg-opacity-25 rounded-pill px-3 py-2">Matemáticas</span>
+              <span
+                class="badge bg-dark text-secondary border border-secondary rounded-pill px-3 py-2">Intermedio</span>
+            </div>
+
+            <h4 class="fw-bold mb-2">Álgebra básica</h4>
+            <p class="text-secondary small mb-0">
+              Introducción al álgebra, conceptos fundamentales y operaciones básicas con ejemplos prácticos.
+            </p>
+
+            <div
+              class="border-top border-secondary border-opacity-25 mt-4 pt-3 d-flex justify-content-between align-items-center">
+              <span
+                class="badge bg-primary bg-opacity-10 border border-primary border-opacity-25 text-primary rounded-pill px-3 py-2">
+                <i class="bi bi-journal-bookmark me-1"></i>24 páginas
+              </span>
+              <span class="small text-secondary">
+                <i class="bi bi-clock-history me-1"></i>Hace 3 días
+              </span>
+            </div>
+
           </div>
         </div>
+
       </div>
     </div>
   </div>
-
 </div>
