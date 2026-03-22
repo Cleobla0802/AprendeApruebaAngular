@@ -2,51 +2,46 @@
   <div class="row justify-content-center">
     <div class="col-12 col-md-10 col-lg-8 col-xl-7">
 
-      <!-- Header -->
       <div class="text-center mb-5">
         <i class="bi bi-journal-plus text-primary mb-3 d-block" style="font-size: 3rem;"></i>
         <h1 class="fw-bold text-light">Crear Apuntes</h1>
-        <p class="text-secondary mb-0">Completa el formulario para crear tus nuevos apuntes</p>
+        <p class="text-secondary mb-0">Completa el formulario para digitalizar tus apuntes con IA</p>
       </div>
 
-      <!-- Card principal -->
       <div class="card bg-dark border border-secondary shadow-lg rounded-4">
         <div class="card-body p-4 p-md-5">
 
           <form (ngSubmit)="crearApuntes()" #formulario="ngForm">
 
-            <!-- Nombre -->
+            <div *ngIf="mensajeFeedback" 
+                 class="alert alert-{{tipoFeedback}} border-0 bg-opacity-10 text-{{tipoFeedback}} mb-4 rounded-3 d-flex align-items-center" 
+                 role="alert">
+              <i class="bi" [ngClass]="{'bi-check-circle-fill': tipoFeedback === 'success', 'bi-exclamation-triangle-fill': tipoFeedback === 'danger', 'bi-info-circle-fill': tipoFeedback === 'info'}"></i>
+              <div class="ms-3">
+                {{ mensajeFeedback }}
+              </div>
+            </div>
+
             <div class="mb-4">
               <label class="form-label fw-semibold text-light">
                 <i class="bi bi-pencil-fill text-primary me-2"></i>
                 Nombre del apunte
               </label>
               <input type="text"
+                     name="titulo"
+                     [(ngModel)]="datosApunte.titulo"
                      class="form-control form-control-lg bg-black text-light border-secondary rounded-3"
                      placeholder="Ej: Álgebra básica..."
                      required />
             </div>
 
-            <!-- Descripción -->
-            <div class="mb-4">
-              <label class="form-label fw-semibold text-light">
-                <i class="bi bi-card-text text-primary me-2"></i>
-                Descripción
-              </label>
-              <textarea class="form-control bg-black text-light border-secondary rounded-3"
-                        rows="4"
-                        placeholder="Describe el contenido..."
-                        required></textarea>
-            </div>
-
-            <!-- Categoría y dificultad -->
             <div class="row">
               <div class="col-12 col-md-6 mb-4">
                 <label class="form-label fw-semibold text-light">
                   <i class="bi bi-folder-fill text-primary me-2"></i>
                   Categoría
                 </label>
-                <select class="form-select form-select-lg bg-black text-light border-secondary rounded-3" required>
+                <select class="form-select form-select-lg bg-black text-light border-secondary rounded-3">
                   <option value="">Selecciona una categoría</option>
                   <option *ngFor="let cat of categorias" [value]="cat.valor">{{ cat.nombre }}</option>
                 </select>
@@ -56,7 +51,7 @@
                   <i class="bi bi-speedometer2 text-primary me-2"></i>
                   Nivel de dificultad
                 </label>
-                <select class="form-select form-select-lg bg-black text-light border-secondary rounded-3" required>
+                <select class="form-select form-select-lg bg-black text-light border-secondary rounded-3">
                   <option value="">Selecciona el nivel</option>
                   <option value="basico">🟢 Básico</option>
                   <option value="intermedio">🟡 Intermedio</option>
@@ -65,77 +60,43 @@
               </div>
             </div>
 
-            <!-- Colores -->
-            <div class="mb-5">
-              <label class="form-label fw-semibold text-light mb-3">
-                <i class="bi bi-palette-fill text-primary me-2"></i>
-                Color de la tarjeta
-              </label>
-              <div class="row g-3">
-                <div class="col-6 col-sm-4 col-md-3">
-                  <input type="radio" class="btn-check" name="cardColor" id="color-azul" value="primary">
-                  <label class="btn btn-outline-primary w-100 rounded-3 py-3 fw-semibold text-light" for="color-azul">Azul</label>
-                </div>
-                <div class="col-6 col-sm-4 col-md-3">
-                  <input type="radio" class="btn-check" name="cardColor" id="color-rojo" value="danger">
-                  <label class="btn btn-outline-danger w-100 rounded-3 py-3 fw-semibold text-light" for="color-rojo">Rojo</label>
-                </div>
-                <div class="col-6 col-sm-4 col-md-3">
-                  <input type="radio" class="btn-check" name="cardColor" id="color-verde" value="success">
-                  <label class="btn btn-outline-success w-100 rounded-3 py-3 fw-semibold text-light" for="color-verde">Verde</label>
-                </div>
-                <div class="col-6 col-sm-4 col-md-3">
-                  <input type="radio" class="btn-check" name="cardColor" id="color-amarillo" value="warning">
-                  <label class="btn btn-outline-warning w-100 rounded-3 py-3 fw-semibold text-light" for="color-amarillo">Amarillo</label>
-                </div>
-                <div class="col-6 col-sm-4 col-md-3">
-                  <input type="radio" class="btn-check" name="cardColor" id="color-cyan" value="info">
-                  <label class="btn btn-outline-info w-100 rounded-3 py-3 fw-semibold text-light" for="color-cyan">Cyan</label>
-                </div>
-                <div class="col-6 col-sm-4 col-md-3">
-                  <input type="radio" class="btn-check" name="cardColor" id="color-gris" value="secondary">
-                  <label class="btn btn-outline-secondary w-100 rounded-3 py-3 fw-semibold text-light" for="color-gris">Gris</label>
-                </div>
-              </div>
-            </div>
-
-            <!-- Subida -->
             <div class="mb-5">
               <label class="form-label fw-semibold text-light mb-3">
                 <i class="bi bi-cloud-arrow-up-fill text-primary me-2"></i>
-                Archivos
+                Imagen de tus apuntes
               </label>
-              <div class="border border-secondary rounded-4 p-4 p-md-5 text-center bg-black">
-                <i class="bi bi-cloud-arrow-up text-secondary mb-3 d-block" style="font-size: 3rem;"></i>
-                <h5 class="fw-semibold text-light">Arrastra archivos aquí</h5>
-                <p class="text-secondary">o haz clic para seleccionar</p>
-                <input type="file" class="form-control bg-dark text-light border-secondary mt-3" multiple>
+              <div class="border border-secondary rounded-4 p-4 p-md-5 text-center bg-black position-relative" 
+                   style="border-style: dashed !important;">
+                
+                <i class="bi bi-image text-secondary mb-3 d-block" style="font-size: 3rem;"></i>
+                <h5 class="fw-semibold text-light">Selecciona la foto</h5>
+                <p class="text-secondary small">Formatos aceptados: JPG, PNG, BMP</p>
+                
+                <input type="file" 
+                       (change)="onFileSelected($event)"
+                       accept="image/*"
+                       class="form-control bg-dark text-light border-secondary mt-3 shadow-none">
+                
+                <div *ngIf="archivoSeleccionado" class="mt-3 text-primary fw-bold animate__animated animate__fadeIn">
+                  <i class="bi bi-file-earmark-check me-1"></i> {{ archivoSeleccionado.name }}
+                </div>
               </div>
             </div>
 
-            <!-- Estado vacío -->
-            <div class="mb-5">
-              <label class="form-label fw-semibold text-light mb-3">
-                <i class="bi bi-files text-primary me-2"></i>
-                Archivos subidos (0)
-              </label>
-              <div class="border border-secondary rounded-3 p-4 text-center bg-black text-secondary">
-                <i class="bi bi-inbox mb-3 d-block" style="font-size: 2.5rem;"></i>
-                No has subido ningún archivo aún
-              </div>
-            </div>
-
-            <!-- Botones -->
             <div class="d-flex flex-column flex-sm-row justify-content-end gap-3">
-              <button type="reset" class="btn btn-outline-light btn-lg rounded-pill px-4" [disabled]="cargando">
+              <button type="reset" class="btn btn-outline-light btn-lg rounded-pill px-4" 
+                      [disabled]="cargando" 
+                      (click)="limpiarFormulario()">
                 <i class="bi bi-arrow-counterclockwise me-2"></i>Limpiar
               </button>
-              <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4" [disabled]="cargando">
+              
+              <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4" 
+                      [disabled]="cargando || !formulario.form.valid || !archivoSeleccionado">
                 <span *ngIf="!cargando">
-                  <i class="bi bi-check-circle-fill me-2"></i>Crear apuntes
+                  <i class="bi bi-magic me-2"></i>Digitalizar con IA
                 </span>
                 <span *ngIf="cargando">
-                  <span class="spinner-border spinner-border-sm me-2"></span>Creando...
+                  <span class="spinner-border spinner-border-sm me-2"></span>Procesando...
                 </span>
               </button>
             </div>

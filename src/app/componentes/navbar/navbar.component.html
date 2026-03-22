@@ -20,9 +20,13 @@
         </li>
       </ul>
       <div class="d-flex gap-2">
-        <a routerLink="/componentes/autenticacion/login" class="btn btn-primary rounded-pill px-4">Login</a>
-        <a routerLink="/componentes/autenticacion/sigin" class="btn btn-primary rounded-pill px-4">Sign In</a>
-        <button (click)="logout()" class="btn btn-danger rounded-pill px-4">Logout</button>
+        <ng-container *ngIf="!usuarioActual">
+          <a routerLink="/componentes/autenticacion/login" class="btn btn-primary rounded-pill px-4">Login</a>
+          <a routerLink="/componentes/autenticacion/sigin" class="btn btn-primary rounded-pill px-4">Sign In</a>
+        </ng-container>
+        <ng-container *ngIf="usuarioActual">
+          <button (click)="logout()" class="btn btn-danger rounded-pill px-4">Logout</button>
+        </ng-container>
       </div>
     </div>
   </div>
