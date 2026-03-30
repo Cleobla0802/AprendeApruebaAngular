@@ -1,7 +1,9 @@
 export interface Apunte {
-    id: number;
+    id?: string;
     titulo: string;
     descripcion: string;
     contenido: string;
     categoria: string;
+    creadoEn?: string;
+    userId: string;
   }
