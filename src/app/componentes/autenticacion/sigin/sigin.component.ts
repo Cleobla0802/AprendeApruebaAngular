@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { Auth, UserCredential } from '@angular/fire/auth';
-import { Database, push, ref } from '@angular/fire/database';
+import { UserCredential } from '@angular/fire/auth';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -14,8 +13,10 @@ import { CommonModule } from '@angular/common';
 })
 export class SiginComponent {
 
-  registerForm: FormGroup;
+registerForm: FormGroup;
   errores = false;
+  loading = false; 
+  mensajeError = ''; 
 
   constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     this.registerForm = this.fb.group({
@@ -26,35 +27,49 @@ export class SiginComponent {
   }
 
   register() {
-    if (this.registerForm.valid) {
+    if (this.registerForm.valid && !this.loading) {
+      this.loading = true;
+      this.errores = false;
+      this.mensajeError = ''; // Limpiamos errores previos
+      
       const { username, email, password } = this.registerForm.value;
 
       this.authService.register(email, password)
         .then((userCredential: UserCredential) => {
-          const uid = userCredential.user.uid;
-
-          return this.authService.saveUsername(uid, username);
+          return this.authService.saveUsername(userCredential.user.uid, username);
         })
         .then(() => {
-          this.errores = false;
           this.router.navigate(['/componentes/apuntes']);
         })
         .catch(error => {
-          console.error(error);
           this.errores = true;
-        });
+          this.loading = false;
 
-    } else {
-      this.errores = true;
+          // CONTROL DE CORREO DUPLICADO
+          if (error.code === 'auth/email-already-in-use') {
+            this.mensajeError = 'Este correo electrónico ya está en uso por otra cuenta.';
+          } else if (error.code === 'auth/invalid-email') {
+            this.mensajeError = 'El formato del correo no es válido.';
+          } else if (error.code === 'auth/weak-password') {
+            this.mensajeError = 'La contraseña es muy débil.';
+          } else {
+            this.mensajeError = 'Ocurrió un error al intentar registrarte.';
+          }
+          
+          console.error('Error de Firebase:', error.code);
+        });
     }
   }
 
   loginWithGoogle() {
+    if (this.loading) return;
+    this.loading = true;
     this.authService.loginWithGoogle()
-      .then(() => this.router.navigate(['/apuntes']))
+      .then(() => this.router.navigate(['/componentes/apuntes']))
       .catch(err => {
-        console.error(err);
         this.errores = true;
+        this.mensajeError = 'Error al conectar con Google.';
+        this.loading = false;
       });
   }
 }
