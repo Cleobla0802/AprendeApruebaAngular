@@ -15,7 +15,6 @@ export class CrearApuntesComponent {
   cargando = false;
   archivoSeleccionado: File | null = null;
   
-  // Feedback para el usuario (reemplaza a los alert)
   mensajeFeedback: string | null = null;
   tipoFeedback: 'success' | 'danger' | 'info' = 'info';
 
