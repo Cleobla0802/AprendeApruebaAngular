@@ -2,27 +2,51 @@ import { Component } from '@angular/core';
 import { RouterLink, RouterModule } from '@angular/router';
 import { ApunteService } from '../../services/apuntes.service';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-apuntes',
-  imports: [RouterLink, RouterModule, CommonModule],
+  imports: [RouterLink, RouterModule, CommonModule, FormsModule],
   templateUrl: './apuntes.component.html',
   styleUrl: './apuntes.component.scss'
 })
 export class ApuntesComponent {
-  listaApuntes: any[] = [];
+  listaApuntes: any[] = []; 
+  listaApuntesOriginal: any[] = []; 
   cargando = true;
+  buscarApunte: string = '';
 
-  constructor(private apunteService: ApunteService) {}
+  // Estado de los botones de categorías
+  filtrosCategorias: any = {
+    matematicas: false,
+    ciencias: false,
+    ingles: false,
+    historia: false,
+    tecnologia: false
+  };
+
+  constructor(
+    private apunteService: ApunteService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
-    this.obtenerApuntes();
+    this.authService.getUserAuthenticated().subscribe(user => {
+      if (user) {
+        this.obtenerApuntes(user.uid);
+      } else {
+        this.cargando = false;
+        console.warn("No hay usuario autenticado");
+      }
+    });
   }
 
-  obtenerApuntes() {
+  obtenerApuntes(uid: string) {
     this.cargando = true;
-    this.apunteService.listarApuntes().subscribe({
+    this.apunteService.listarApuntesPorUsuario(uid).subscribe({
       next: (data) => {
+        this.listaApuntesOriginal = data;
         this.listaApuntes = data;
         this.cargando = false;
       },
@@ -33,7 +57,42 @@ export class ApuntesComponent {
     });
   }
 
+  // Se activa al escribir en el buscador o pulsar un checkbox
+  filtrarApuntes() {
+    const texto = this.buscarApunte.toLowerCase().trim();
+    
+    // Verificamos si hay algún filtro de categoría activo
+    const categoriasActivas = Object.keys(this.filtrosCategorias).filter(cat => this.filtrosCategorias[cat]);
+
+    this.listaApuntes = this.listaApuntesOriginal.filter(apunte => {
+      // 1. Filtro por texto
+      const coincideTexto = apunte.titulo.toLowerCase().includes(texto);
+      
+      // 2. Filtro por categoría (si no hay ninguna marcada, pasan todas)
+      const categoriaApunte = apunte.categoria ? apunte.categoria.toLowerCase() : '';
+      const coincideCategoria = categoriasActivas.length === 0 || categoriasActivas.includes(categoriaApunte);
+
+      return coincideTexto && coincideCategoria;
+    });
+  }
+
+  // Método para los checkboxes
+  toggleCategoria(cat: string) {
+    this.filtrosCategorias[cat] = !this.filtrosCategorias[cat];
+    this.filtrarApuntes();
+  }
+
+  eliminar(id: any) {
+    if (confirm('¿Estás seguro de que quieres borrar este apunte?')) {
+      this.apunteService.eliminarApunte(id).subscribe(() => {
+        this.listaApuntesOriginal = this.listaApuntesOriginal.filter(a => a.id !== id);
+        this.filtrarApuntes();
+      });
+    }
+  }
+
   getBgColor(categoria: string): string {
+    if (!categoria) return 'secondary';
     const colores: any = {
       'matematicas': 'primary',
       'ciencias': 'success',
@@ -41,6 +100,6 @@ export class ApuntesComponent {
       'historia': 'warning',
       'tecnologia': 'danger'
     };
-    return colores[categoria?.toLowerCase()] || 'secondary';
+    return colores[categoria.toLowerCase()] || 'secondary';
   }
 }

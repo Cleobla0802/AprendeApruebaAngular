@@ -12,24 +12,44 @@ export class ApunteService {
   private apiBackend = 'http://localhost:8080/api/apuntes'; // Proyecto backend parte de apuntes
   private apiKeyImgBB = 'c7a45042cb4b545d896d5c8730252add'; // Api key de el servicio de hosting para sacar una URL de el archivo proporcionado por el usuario
 
-  constructor(private http: HttpClient) { }
+constructor(private http: HttpClient) { }
 
-  // Subir la foto a ImgBB
+  /**
+   * 1. Subir la imagen a ImgBB
+   */
   subirAImgBB(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('image', file);
-    // Enviamos a la API de ImgBB
     return this.http.post(`${this.apiImgBB}?key=${this.apiKeyImgBB}`, formData);
   }
 
-  // Enviar la URL al Backend de Java
-  digitalizarEnBackend(titulo: string, urlImagen: string): Observable<string> {
-    const body = { titulo, url: urlImagen };
-    return this.http.post(this.apiBackend + '/digitalizar', body, { responseType: 'text' });
+  /**
+   * 2. Enviar datos al Backend para que la IA digitalice y guarde
+   */
+  digitalizarEnBackend(titulo: string, url: string, userId: string, categoria: string): Observable<any> {
+  const body = { titulo, url, userId, categoria };
+  return this.http.post(`${this.apiBackend}/digitalizar`, body, { responseType: 'text' as 'json' }); 
+  // Ese 'responseType' hará que Angular acepte el texto sin intentar parsearlo a JSON
+}
+
+  /**
+   * 3. Listar apuntes filtrados por usuario (Privacidad)
+   */
+  listarApuntesPorUsuario(uid: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiBackend}/usuario/${uid}`);
   }
 
+  /**
+   * 4. Eliminar un apunte
+   */
+  eliminarApunte(id: any): Observable<any> {
+    return this.http.delete(`${this.apiBackend}/${id}`);
+  }
 
-  listarApuntes(): Observable<Apunte[]> {
-    return this.http.get<Apunte[]>(this.apiBackend + '/listar');
+  /**
+   * 5. Listado general (si aún lo usas)
+   */
+  listarApuntes(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiBackend);
   }
 }
