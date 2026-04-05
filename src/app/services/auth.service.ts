@@ -4,15 +4,14 @@ import { Database, ref, set } from '@angular/fire/database';
 import { Router } from '@angular/router';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { Observable } from 'rxjs';
+import { ApunteService } from './apuntes.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-
-  constructor(private db: Database, private auth: Auth, private router:Router) { }
-
+  constructor(private db: Database, private auth: Auth, private router: Router) { }
 
   register(email: string, password: string) {
     return createUserWithEmailAndPassword(this.auth, email, password);
@@ -23,15 +22,10 @@ export class AuthService {
   }
 
   logout() {
-  const auth = getAuth();
-  signOut(auth)
-    .then(() => {
+    return signOut(this.auth).then(() => {
       this.router.navigate(['/login']);
-    })
-    .catch((error) => {
-      console.error('Error al cerrar sesión:', error);
     });
-}
+  }
 
   loginWithGoogle(): Promise<UserCredential> {
     const provider = new GoogleAuthProvider();
@@ -39,9 +33,7 @@ export class AuthService {
   }
 
   getUserAuthenticated(): Observable<User | null> {
-    {
-      return authState(this.auth);
-    }
+    return authState(this.auth);
   }
 
   saveUsername(uid: string, username: string) {
@@ -49,8 +41,8 @@ export class AuthService {
     return set(userRef, { username });
   }
 
-  resetPassword(email: string): Promise<void>{
-    return sendPasswordResetEmail(this.auth, email)
+  resetPassword(email: string): Promise<void> {
+    return sendPasswordResetEmail(this.auth, email);
   }
 
 }

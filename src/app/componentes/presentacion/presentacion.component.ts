@@ -7,7 +7,7 @@ import { ApuntesComponent } from '../apuntes/apuntes.component';
 
 @Component({
   selector: 'app-presentacion',
-  imports: [FooterComponent, ApuntesComponent, LoginComponent, CommonModule, RouterLink],
+  imports: [FooterComponent, LoginComponent, CommonModule, RouterLink],
   templateUrl: './presentacion.component.html',
   styleUrl: './presentacion.component.scss'
 })
