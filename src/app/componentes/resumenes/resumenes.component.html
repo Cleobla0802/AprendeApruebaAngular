@@ -5,32 +5,33 @@
       <span class="input-group-text bg-dark border-0 text-secondary">
         <i class="bi bi-search"></i>
       </span>
-      <input type="text" class="form-control bg-dark text-white border-0" placeholder="Buscar resúmenes">
+      <input type="text" class="form-control bg-dark text-white border-0" 
+             placeholder="Buscar resúmenes" [(ngModel)]="buscarResumen" (input)="filtrarResumenes()">
     </div>
   </div>
 
   <div class="d-flex flex-wrap gap-2 mb-4">
-    <input type="checkbox" class="btn-check" id="f-matematicas">
+    <input type="checkbox" class="btn-check" id="f-matematicas" (change)="toggleCategoria('matematicas')">
     <label class="btn btn-outline-light btn-sm rounded-pill px-3" for="f-matematicas">
       <i class="bi bi-calculator me-1"></i> Matemáticas
     </label>
 
-    <input type="checkbox" class="btn-check" id="f-ciencias">
+    <input type="checkbox" class="btn-check" id="f-ciencias" (change)="toggleCategoria('ciencias')">
     <label class="btn btn-outline-light btn-sm rounded-pill px-3" for="f-ciencias">
       <i class="bi bi-flask me-1"></i> Ciencias
     </label>
 
-    <input type="checkbox" class="btn-check" id="f-ingles">
+    <input type="checkbox" class="btn-check" id="f-ingles" (change)="toggleCategoria('ingles')">
     <label class="btn btn-outline-light btn-sm rounded-pill px-3" for="f-ingles">
       <i class="bi bi-translate me-1"></i> Inglés
     </label>
 
-    <input type="checkbox" class="btn-check" id="f-historia">
+    <input type="checkbox" class="btn-check" id="f-historia" (change)="toggleCategoria('historia')">
     <label class="btn btn-outline-light btn-sm rounded-pill px-3" for="f-historia">
       <i class="bi bi-hourglass-split me-1"></i> Historia
     </label>
 
-    <input type="checkbox" class="btn-check" id="f-tecnologia">
+    <input type="checkbox" class="btn-check" id="f-tecnologia" (change)="toggleCategoria('tecnologia')">
     <label class="btn btn-outline-light btn-sm rounded-pill px-3" for="f-tecnologia">
       <i class="bi bi-cpu me-1"></i> Tecnología
     </label>
@@ -38,143 +39,59 @@
 
   <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
 
-    <div class="col">
-      <a routerLink="/componentes/resumenes/visualizar-resumen" class="card h-100 bg-dark border-primary border-opacity-25 text-decoration-none text-reset shadow" role="link" aria-label="Ver resumen">
-        <div class="card-body d-flex flex-column">
-          <div class="ratio ratio-16x9 rounded-3 overflow-hidden mb-3 bg-black bg-opacity-50">
-            <div class="d-flex align-items-center justify-content-center">
-              <i class="bi bi-calculator-fill display-4 text-primary opacity-50"></i>
-            </div>
-          </div>
-
-          <div class="d-flex gap-2 mb-3">
-            <span class="badge text-bg-primary bg-opacity-25 rounded-pill px-3">Matemáticas</span>
-            <span class="badge bg-dark text-secondary border border-secondary rounded-pill px-3">Intermedio</span>
-          </div>
-
-          <h5 class="text-white fw-bold mb-2">Álgebra básica</h5>
-          <p class="text-secondary small mb-3 flex-grow-1">
-            Síntesis de fórmulas, propiedades esenciales y ejemplos resueltos.
-          </p>
-
-          <div class="d-flex flex-wrap gap-3 small text-secondary mb-3">
-            <span><i class="bi bi-file-earmark-text me-1"></i>8 páginas</span>
-            <span><i class="bi bi-clock me-1"></i>~12 min lectura</span>
-            <span><i class="bi bi-list-check me-1"></i>5 puntos clave</span>
-          </div>
-
-          <div class="mb-3">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-              <span class="small text-secondary">Completitud</span>
-              <span class="small text-primary fw-semibold">45%</span>
-            </div>
-            <div class="progress bg-dark-subtle rounded-pill" style="height: 6px;">
-              <div class="progress-bar rounded-pill" role="progressbar" style="width: 45%"></div>
-            </div>
-          </div>
-
-          <div class="d-flex justify-content-between align-items-center small text-muted border-top border-secondary pt-3">
-            <span><i class="bi bi-person-fill me-1"></i>Creado por mí</span>
-            <span><i class="bi bi-clock-history me-1"></i>Hace 3 días</span>
-          </div>
-        </div>
-      </a>
+    <div class="col-12 text-center py-5" *ngIf="cargando">
+      <div class="spinner-border text-primary mb-3" role="status"></div>
+      <p class="text-secondary fw-light">Consultando resúmenes en Firebase...</p>
     </div>
 
-    <div class="col">
-      <a routerLink="/componentes/resumenes/visualizar-resumen" class="card h-100 bg-dark border-success border-opacity-25 text-decoration-none text-reset shadow" role="link" aria-label="Ver resumen">
-        <div class="card-body d-flex flex-column">
-          <div class="ratio ratio-16x9 rounded-3 overflow-hidden mb-3 bg-black bg-opacity-50">
-            <div class="d-flex align-items-center justify-content-center">
-              <i class="bi bi-flask-fill display-4 text-success opacity-50"></i>
-            </div>
-          </div>
-
-          <div class="d-flex gap-2 mb-3">
-            <span class="badge text-bg-success bg-opacity-25 rounded-pill px-3">Ciencias</span>
-            <span class="badge bg-dark text-secondary border border-secondary rounded-pill px-3">Básico</span>
-          </div>
-
-          <h5 class="text-white fw-bold mb-2">Física básica</h5>
-          <p class="text-secondary small mb-3 flex-grow-1">
-            Leyes fundamentales, unidades y ejercicios tipo examen condensados.
-          </p>
-
-          <div class="d-flex flex-wrap gap-3 small text-secondary mb-3">
-            <span><i class="bi bi-file-earmark-text me-1"></i>6 páginas</span>
-            <span><i class="bi bi-clock me-1"></i>~9 min lectura</span>
-            <span><i class="bi bi-list-check me-1"></i>4 puntos clave</span>
-          </div>
-
-          <div class="mb-3">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-              <span class="small text-secondary">Completitud</span>
-              <span class="small text-success fw-semibold">30%</span>
-            </div>
-            <div class="progress bg-dark-subtle rounded-pill" style="height: 6px;">
-              <div class="progress-bar bg-success rounded-pill" role="progressbar" style="width: 30%"></div>
-            </div>
-          </div>
-
-          <div class="d-flex justify-content-between align-items-center small text-muted border-top border-secondary pt-3">
-            <span><i class="bi bi-arrow-repeat me-1"></i>Actualizado</span>
-            <span><i class="bi bi-clock-history me-1"></i>Hace 1 semana</span>
-          </div>
-        </div>
-      </a>
+    <div class="col-12 text-center py-5" *ngIf="!cargando && listaResumenes.length === 0">
+      <div class="display-1 text-secondary opacity-25 mb-3">
+        <i class="bi bi-journal-x"></i>
+      </div>
+      <h4 class="text-secondary fw-light">No se han encontrado resúmenes registrados</h4>
     </div>
 
-    <div class="col">
-      <a routerLink="/componentes/resumenes/visualizar-resumen" class="card h-100 bg-dark border-info border-opacity-25 text-decoration-none text-reset shadow" role="link" aria-label="Ver resumen">
-        <div class="card-body d-flex flex-column">
-          <div class="ratio ratio-16x9 rounded-3 overflow-hidden mb-3 bg-black bg-opacity-50">
-            <div class="d-flex align-items-center justify-content-center">
-              <i class="bi bi-translate display-4 text-info opacity-50"></i>
-            </div>
+    <div class="col" *ngFor="let resumen of listaResumenes">
+      <div class="card h-100 bg-dark border-secondary shadow rounded-4 overflow-hidden">
+        <div class="card-body p-4 d-flex flex-column">
+          
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <span [class]="'badge rounded-pill px-3 py-2 bg-' + getBgColor(resumen.categoria) + ' bg-opacity-10 text-' + getBgColor(resumen.categoria)">
+              {{ (resumen.categoria || 'Sin categoría') | titlecase }}
+            </span>
+            <small class="text-secondary opacity-75">
+              <i class="bi bi-calendar3 me-1"></i>{{ resumen.fecha | date:'dd/MM/yy' }}
+            </small>
           </div>
 
-          <div class="d-flex gap-2 mb-3">
-            <span class="badge text-bg-info bg-opacity-25 rounded-pill px-3">Inglés</span>
-            <span class="badge bg-dark text-secondary border border-secondary rounded-pill px-3">Avanzado</span>
-          </div>
-
-          <h5 class="text-white fw-bold mb-2">Inglés conversacional</h5>
-          <p class="text-secondary small mb-3 flex-grow-1">
-            Vocabulario, expresiones idiomáticas y frases de uso frecuente.
+          <h5 class="card-title text-white fw-bold mb-2">{{ resumen.titulo }}</h5>
+          
+          <p class="card-text text-secondary small flex-grow-1 overflow-hidden" 
+             style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; min-height: 4.5em;">
+            {{ resumen.contenido || 'Sin descripción disponible...' }}
           </p>
 
-          <div class="d-flex flex-wrap gap-3 small text-secondary mb-3">
-            <span><i class="bi bi-file-earmark-text me-1"></i>10 páginas</span>
-            <span><i class="bi bi-clock me-1"></i>~15 min lectura</span>
-            <span><i class="bi bi-list-check me-1"></i>7 puntos clave</span>
+          <div class="d-flex gap-3 mb-3 mt-2 small text-secondary">
+             <span><i class="bi bi-list-check me-1"></i>IA Generado</span>
           </div>
 
-          <div class="mb-3">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-              <span class="small text-secondary">Completitud</span>
-              <span class="small text-info fw-semibold">70%</span>
-            </div>
-            <div class="progress bg-dark-subtle rounded-pill" style="height: 6px;">
-              <div class="progress-bar bg-info rounded-pill" role="progressbar" style="width: 70%"></div>
-            </div>
-          </div>
-
-          <div class="d-flex justify-content-between align-items-center small text-muted border-top border-secondary pt-3">
-            <span><i class="bi bi-person-fill me-1"></i>Creado por mí</span>
-            <span><i class="bi bi-clock-history me-1"></i>Hace 1 mes</span>
+          <div class="mt-auto pt-3 border-top border-secondary border-opacity-25 d-flex gap-2">
+            <a [routerLink]="['/componentes/resumenes/visualizar-resumen', resumen.id]" 
+               class="btn btn-sm btn-outline-light rounded-pill flex-grow-1">
+              Ver resumen
+            </a>
+            <button class="btn btn-sm btn-outline-danger rounded-circle" (click)="eliminar(resumen.id)">
+              <i class="bi bi-trash"></i>
+            </button>
           </div>
         </div>
-      </a>
+      </div>
     </div>
-
   </div>
 
-  <div class="d-flex justify-content-center gap-3 mt-5">
-    <button class="btn btn-outline-danger btn-lg rounded-pill px-4">
-      <i class="bi bi-trash me-2"></i>Eliminar resumen
-    </button>
-    <a routerLink="/componentes/resumenes/crear-resumen" class="btn btn-primary btn-lg rounded-pill px-4">
-      <i class="bi bi-plus-lg me-2"></i>Crear resumen
+  <div class="d-flex justify-content-center mt-5">
+    <a routerLink="/componentes/resumenes/crear-resumen" class="btn btn-primary btn-lg rounded-pill px-5 shadow">
+      <i class="bi bi-magic me-2"></i>Generar nuevo resumen
     </a>
   </div>
 
