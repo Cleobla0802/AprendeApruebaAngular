@@ -35,6 +35,7 @@ listaResumenes: any[] = [];
   ngOnInit(): void {
     this.authService.getUserAuthenticated().subscribe(user => {
       if (user) {
+        this.usuarioActual = user;
         this.obtenerResumenes(user.uid);
       } else {
         this.cargando = false;

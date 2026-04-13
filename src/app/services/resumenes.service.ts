@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Database, listVal, ref, remove } from '@angular/fire/database';
-import { from, Observable } from 'rxjs';
+import { from, map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -16,9 +16,14 @@ export class ResumenesService {
   /**
    * Obtiene los resúmenes directamente de Firebase (Lectura rápida)
    */
-  getResumenesByUser(userId: string): Observable<any[]> {
-    const resumenesRef = ref(this.db, `resumenes/${userId}`);
-    return listVal(resumenesRef, { keyField: 'id' });
+  getResumenesByUser(uid: string): Observable<any[]> {
+    const resumenesRef = ref(this.db, 'resumenes');
+    return listVal(resumenesRef, { keyField: 'id' }).pipe(
+      map((resumenes: any[]) => 
+        // Filtramos para que el usuario solo vea los suyos
+        resumenes.filter(r => r.userId === uid)
+      )
+    );
   }
 
   /**
