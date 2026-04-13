@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { from, Observable } from 'rxjs';
+import { Database, objectVal, ref, set } from '@angular/fire/database';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class ApunteService {
   // Ejemplo: 'https://mi-backend-production.up.railway.app/api/apuntes'
   private apiBackend = 'https://api-aprende-aprueba-production.up.railway.app/api/apuntes';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private db:Database) { }
 
   subirAImgBB(file: File): Observable<any> {
     const formData = new FormData();
@@ -38,5 +39,16 @@ export class ApunteService {
 
   listarApuntes(): Observable<any[]> {
     return this.http.get<any[]>(this.apiBackend);
+  }
+
+  getApunteById(apunteId: string): Observable<any> {
+    // Apuntamos a la ruta plana en Firebase
+    const apunteRef = ref(this.db, `apuntes/${apunteId}`);
+    return objectVal(apunteRef, { keyField: 'id' });
+  }
+
+  actualizarApunteFirebase(apunteId: string, datos: any): Observable<void> {
+    const apunteRef = ref(this.db, `apuntes/${apunteId}`);
+    return from(set(apunteRef, datos));
   }
 }

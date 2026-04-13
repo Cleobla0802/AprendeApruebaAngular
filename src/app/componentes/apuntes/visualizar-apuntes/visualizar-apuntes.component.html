@@ -1,6 +1,5 @@
-<div class="container-fluid min-vh-100 py-5">
+<div class="container-fluid min-vh-100 py-5" *ngIf="!cargando && apunte">
 
-  <!-- Header -->
   <div class="mb-5 d-flex flex-wrap align-items-center justify-content-between gap-3">
     <div>
       <h1 class="display-5 fw-bold text-white mb-2">Editor de Apuntes</h1>
@@ -10,197 +9,89 @@
       </p>
     </div>
     <div class="d-flex gap-2 flex-wrap">
-      <button class="btn btn-outline-secondary rounded-pill px-4 shadow-sm">
-        <i class="bi bi-eye me-2"></i>Vista previa
+      <button class="btn btn-outline-secondary rounded-pill px-4 shadow-sm" (click)="router.navigate(['/componentes/apuntes'])">
+        <i class="bi bi-arrow-left me-2"></i>Volver
       </button>
-      <button class="btn btn-primary rounded-pill px-4 shadow-sm">
-        <i class="bi bi-save me-2"></i>Guardar cambios
+      <button class="btn btn-primary rounded-pill px-4 shadow-sm" (click)="guardarCambios()" [disabled]="guardando">
+        <span *ngIf="guardando" class="spinner-border spinner-border-sm me-2"></span>
+        <i *ngIf="!guardando" class="bi bi-save me-2"></i>Guardar cambios
       </button>
     </div>
   </div>
 
   <div class="row g-4">
 
-    <!-- Sidebar -->
     <div class="col-lg-4">
-      <div class="card bg-secondary bg-opacity-10 text-white rounded-4 shadow-lg overflow-hidden">
-
+      <div class="card bg-secondary bg-opacity-10 text-white rounded-4 shadow-lg overflow-hidden border-0">
         <div class="card-header bg-secondary bg-opacity-25 d-flex align-items-center p-4">
           <i class="bi bi-info-circle-fill me-2 fs-5"></i>
           <h5 class="mb-0 fw-semibold">Información del apunte</h5>
         </div>
 
         <div class="card-body p-4">
-
-          <!-- Título -->
           <div class="mb-4">
-            <label class="form-label small fw-semibold text-secondary mb-2">
-              <i class="bi bi-card-heading me-2"></i>Título
-            </label>
-            <input type="text" class="form-control form-control-dark rounded-3 shadow-sm"
-              placeholder="Ej: Álgebra lineal" value="Álgebra básica">
+            <label class="form-label small fw-semibold text-secondary mb-2">Título</label>
+            <input type="text" class="form-control bg-dark text-white border-secondary shadow-none" 
+                   [(ngModel)]="apunte.titulo">
           </div>
 
-          <!-- Categoría -->
           <div class="mb-4">
-            <label class="form-label small fw-semibold text-secondary mb-2">
-              <i class="bi bi-folder-fill me-2"></i>Categoría
-            </label>
-            <select class="form-select form-control-dark rounded-3 shadow-sm">
-              <option selected>Matemáticas</option>
-              <option>Ciencias</option>
-              <option>Inglés</option>
-              <option>Tecnología</option>
-              <option>Historia</option>
-              <option>Geografía</option>
+            <label class="form-label small fw-semibold text-secondary mb-2">Categoría</label>
+            <select class="form-select bg-dark text-white border-secondary shadow-none" [(ngModel)]="apunte.categoria">
+              <option value="matematicas">Matemáticas</option>
+              <option value="ciencias">Ciencias</option>
+              <option value="ingles">Inglés</option>
+              <option value="tecnologia">Tecnología</option>
+              <option value="historia">Historia</option>
             </select>
           </div>
 
-          <!-- Nivel -->
           <div class="mb-4">
-            <label class="form-label small fw-semibold text-secondary mb-2">
-              <i class="bi bi-speedometer2 me-2"></i>Nivel de dificultad
-            </label>
-            <select class="form-select form-control-dark rounded-3 shadow-sm">
-              <option>🟢 Básico</option>
-              <option selected>🟡 Intermedio</option>
-              <option>🔴 Avanzado</option>
-            </select>
+            <label class="form-label small fw-semibold text-secondary mb-2">Fecha de registro</label>
+            <p class="text-white small">{{ apunte.fecha | date:'medium' }}</p>
           </div>
-
-          <!-- Color de tarjeta -->
-          <div class="mb-4">
-            <label class="form-label small fw-semibold text-secondary mb-2">
-              <i class="bi bi-palette-fill me-2"></i>Color de tarjeta
-            </label>
-            <div class="d-flex flex-wrap gap-2">
-              <input type="radio" class="btn-check" name="accentColor" id="accent-blue" checked>
-              <label class="btn btn-outline-primary shadow-sm rounded-3 py-2 text-white w-100"
-                for="accent-blue">Azul</label>
-
-              <input type="radio" class="btn-check" name="accentColor" id="accent-red">
-              <label class="btn btn-outline-danger shadow-sm rounded-3 py-2 text-white w-100"
-                for="accent-red">Rojo</label>
-
-              <input type="radio" class="btn-check" name="accentColor" id="accent-green">
-              <label class="btn btn-outline-success shadow-sm rounded-3 py-2 text-white w-100"
-                for="accent-green">Verde</label>
-
-              <input type="radio" class="btn-check" name="accentColor" id="accent-yellow">
-              <label class="btn btn-outline-warning shadow-sm rounded-3 py-2 text-dark w-100"
-                for="accent-yellow">Amarillo</label>
-
-              <input type="radio" class="btn-check" name="accentColor" id="accent-cyan">
-              <label class="btn btn-outline-info shadow-sm rounded-3 py-2 text-white w-100"
-                for="accent-cyan">Cyan</label>
-
-              <input type="radio" class="btn-check" name="accentColor" id="accent-gray">
-              <label class="btn btn-outline-secondary shadow-sm rounded-3 py-2 text-white w-100"
-                for="accent-gray">Gris</label>
-            </div>
-          </div>
-
-          <!-- Etiquetas -->
-          <div class="mb-4">
-            <label class="form-label small fw-semibold text-secondary mb-2">
-              <i class="bi bi-tags-fill me-2"></i>Etiquetas
-            </label>
-            <div class="d-flex flex-wrap gap-2 mb-2">
-              <span class="badge bg-primary rounded-pill px-3 py-2">Ecuaciones</span>
-              <span class="badge bg-success rounded-pill px-3 py-2">Álgebra</span>
-              <span class="badge bg-warning text-dark rounded-pill px-3 py-2">Matemáticas</span>
-            </div>
-            <button class="btn btn-sm btn-outline-light rounded-pill w-100 shadow-sm">
-              <i class="bi bi-plus-lg me-1"></i>Añadir etiqueta
-            </button>
-          </div>
-
         </div>
       </div>
     </div>
 
-    <!-- Editor -->
     <div class="col-lg-8">
-      <div class="card bg-dark text-white rounded-4 shadow-lg overflow-hidden">
-
-        <!-- Toolbar -->
+      <div class="card bg-dark text-white rounded-4 shadow-lg overflow-hidden border-secondary">
         <div class="d-flex flex-wrap gap-3 p-4 border-bottom border-secondary border-opacity-25">
-          <div class="d-flex gap-1 flex-wrap">
-            <button class="btn btn-outline-light rounded-2 shadow-sm" title="Negrita"><i
-                class="bi bi-type-bold"></i></button>
-            <button class="btn btn-outline-light rounded-2 shadow-sm" title="Cursiva"><i
-                class="bi bi-type-italic"></i></button>
-            <button class="btn btn-outline-light rounded-2 shadow-sm" title="Subrayado"><i
-                class="bi bi-type-underline"></i></button>
-            <button class="btn btn-outline-light rounded-2 shadow-sm" title="Tachado"><i
-                class="bi bi-type-strikethrough"></i></button>
-          </div>
+          <span class="text-secondary small">Editor de texto</span>
         </div>
 
-        <!-- Editor Area -->
-        <div class="p-4" contenteditable="true"
-          style="min-height:500px; max-height:600px; overflow-y:auto; font-size:0.95rem; line-height:1.7;">
-          <h2 class="fw-semibold mb-3">Introducción al Álgebra Básica</h2>
-          <p class="text-secondary mb-3">
-            El álgebra es una rama fundamental de las matemáticas que utiliza símbolos y letras para representar valores
-            y fórmulas.
-          </p>
-        </div>
-
-        <!-- Footer -->
-        <div
-          class="d-flex justify-content-between align-items-center p-3 text-secondary border-top border-secondary border-opacity-25">
-          <span><i class="bi bi-file-text me-1"></i>245 palabras</span>
-          <div class="d-flex gap-2">
-            <button class="btn btn-sm btn-outline-light rounded-pill shadow-sm"><i
-                class="bi bi-arrow-counterclockwise me-1"></i>Deshacer</button>
-            <button class="btn btn-sm btn-outline-light rounded-pill shadow-sm"><i
-                class="bi bi-arrow-clockwise me-1"></i>Rehacer</button>
-          </div>
-        </div>
+        <textarea 
+          [(ngModel)]="apunte.contenido"
+          class="form-control bg-transparent text-white border-0 p-4" 
+          style="min-height:500px; font-size:1rem; line-height:1.7; outline: none; box-shadow: none; resize: none;"
+          placeholder="Escribe el contenido de tu apunte...">
+        </textarea>
       </div>
     </div>
-
   </div>
 
-  <!-- Vista previa de la tarjeta -->
   <div class="mt-5">
-    <h5 class="text-white mb-2">
-      <i class="bi bi-eye-fill me-2"></i>Vista previa de la tarjeta
-    </h5>
-    <p class="text-secondary small mb-3">Así se verá tu apunte en la galería</p>
-
+    <h5 class="text-white mb-2"><i class="bi bi-eye-fill me-2"></i>Vista previa de la tarjeta</h5>
     <div class="row justify-content-center">
       <div class="col-md-5 col-lg-4 col-xl-3">
-
         <div class="card bg-dark border-primary border-opacity-25 text-white rounded-4 shadow-lg">
           <div class="card-body p-4">
-
             <div class="d-flex justify-content-between align-items-start mb-4">
-              <span class="badge text-bg-primary bg-opacity-25 rounded-pill px-3 py-2">Matemáticas</span>
-              <span
-                class="badge bg-dark text-secondary border border-secondary rounded-pill px-3 py-2">Intermedio</span>
+              <span class="badge text-bg-primary bg-opacity-25 rounded-pill px-3 py-2">
+                {{ apunte.categoria | titlecase }}
+              </span>
             </div>
-
-            <h4 class="fw-bold mb-2">Álgebra básica</h4>
-            <p class="text-secondary small mb-0">
-              Introducción al álgebra, conceptos fundamentales y operaciones básicas con ejemplos prácticos.
+            <h4 class="fw-bold mb-2">{{ apunte.titulo || 'Sin título' }}</h4>
+            <p class="text-secondary small mb-0 text-truncate">
+              {{ apunte.contenido }}
             </p>
-
-            <div
-              class="border-top border-secondary border-opacity-25 mt-4 pt-3 d-flex justify-content-between align-items-center">
-              <span
-                class="badge bg-primary bg-opacity-10 border border-primary border-opacity-25 text-primary rounded-pill px-3 py-2">
-                <i class="bi bi-journal-bookmark me-1"></i>24 páginas
-              </span>
+            <div class="border-top border-secondary border-opacity-25 mt-4 pt-3 text-end">
               <span class="small text-secondary">
-                <i class="bi bi-clock-history me-1"></i>Hace 3 días
+                <i class="bi bi-calendar-event me-1"></i>{{ apunte.fecha | date:'dd/MM/yy' }}
               </span>
             </div>
-
           </div>
         </div>
-
       </div>
     </div>
   </div>

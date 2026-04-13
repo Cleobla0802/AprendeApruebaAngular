@@ -18,12 +18,15 @@ export const routes: Routes = [
     {path: 'componentes/autenticacion/sigin' ,component:SiginComponent},
     {path: 'componentes/autenticacion/recuperar-password' ,component:RecuperarPasswordComponent},
     {path: 'componentes/autenticacion/recuperar-password/crear-nueva-password' ,component:CrearNuevaPasswordComponent},
-    {path: 'componentes/resumenes' ,component:ResumenesComponent},
+    
+    {path: 'componentes/resumenes' ,component:ResumenesComponent, ...canActivate(()=>redirectUnauthorizedTo('/componentes/autenticacion/login'))},
     {path: 'componentes/resumenes/crear-resumen' ,component:CrearResumenComponent},
-    {path: 'componentes/resumenes/visualizar-resumen' ,component:VisualizarResumenComponent},
-    {path: 'componentes/apuntes' ,component:ApuntesComponent, ...canActivate(()=>redirectUnauthorizedTo('/login'))},
-    {path: 'componentes/apuntes/visualizar-apuntes', component: VisualizarApuntesComponent},
+    {path: 'componentes/resumenes/visualizar-resumen/:id' ,component:VisualizarResumenComponent},
+
+    {path: 'componentes/apuntes' ,component:ApuntesComponent, ...canActivate(()=>redirectUnauthorizedTo('/componentes/autenticacion/login'))},
+    {path: 'componentes/apuntes/visualizar-apuntes/:id', component: VisualizarApuntesComponent},
     {path: 'componentes/apuntes/crear-apuntes', component: CrearApuntesComponent },
-    {path: '',redirectTo:'componentes/presentacion',pathMatch:'full'},
-    {path: '**',redirectTo:'componentes/presentacion',pathMatch:'full'}
+    
+    {path: '', redirectTo:'componentes/presentacion', pathMatch:'full'},
+    {path: '**', redirectTo:'componentes/presentacion', pathMatch:'full'}
 ];

@@ -1,151 +1,100 @@
-<div class="mb-5">
-  <label class="form-label fw-semibold text-light mb-3">
-    <i class="bi bi-journals text-primary me-2"></i>
-    Selecciona los apuntes
-  </label>
+<div class="container-fluid py-4">
+  
+  <div class="mb-5">
+    <label class="form-label fw-semibold text-light mb-3">
+      <i class="bi bi-journals text-primary me-2"></i>
+      Selecciona los apuntes
+    </label>
 
-  <div class="d-flex gap-2 mb-3">
-    <div class="input-group flex-grow-1">
-      <span class="input-group-text bg-black border-secondary text-secondary">
-        <i class="bi bi-search"></i>
+    <div class="d-flex gap-2 mb-4">
+      <div class="input-group flex-grow-1">
+        <span class="input-group-text bg-black border-secondary text-secondary">
+          <i class="bi bi-search"></i>
+        </span>
+        <input type="text" class="form-control bg-black text-light border-secondary" placeholder="Buscar apuntes...">
+      </div>
+      <span class="badge bg-primary bg-opacity-25 text-primary border border-primary border-opacity-25 rounded-3 px-3 d-flex align-items-center gap-1 fs-6">
+        <i class="bi bi-check2-square"></i> {{ seleccionados.length }} seleccionados
       </span>
-      <input type="text" class="form-control bg-black text-light border-secondary" placeholder="Buscar apuntes...">
     </div>
-    <span class="badge bg-primary bg-opacity-25 text-primary border border-primary border-opacity-25 rounded-3 px-3 d-flex align-items-center gap-1 fs-6">
-      <i class="bi bi-check2-square"></i> 0 / 3
-    </span>
+
+    <div *ngIf="cargando" class="text-center my-5">
+      <div class="spinner-border text-primary" role="status"></div>
+      <p class="text-secondary mt-2">Cargando tus apuntes...</p>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3" *ngIf="!cargando && listaApuntes.length > 0">
+      <div class="col" *ngFor="let apunte of listaApuntes">
+        <input type="checkbox" class="btn-check" [id]="'apunte-' + apunte.id" (change)="toggleSeleccion(apunte)">
+        <label [for]="'apunte-' + apunte.id" class="card h-100 bg-dark border-primary border-opacity-25 text-decoration-none text-reset shadow w-100 cursor-pointer">
+          <div class="card-body">
+             <div class="d-flex justify-content-between mb-2">
+                <span class="badge text-bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">{{apunte.categoria}}</span>
+                <i class="bi" [ngClass]="seleccionados.includes(apunte) ? 'bi-check-circle-fill text-primary' : 'bi-circle text-secondary'"></i>
+             </div>
+             <h5 class="text-white fw-bold">{{ apunte.titulo }}</h5>
+             <p class="text-secondary small">{{ apunte.contenido | slice:0:80 }}...</p>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <div *ngIf="!cargando && listaApuntes.length === 0" class="alert alert-dark border-secondary text-center py-5">
+      <i class="bi bi-inbox fs-1 d-block mb-3 opacity-50"></i>
+      No tienes apuntes disponibles para resumir.
+    </div>
   </div>
 
-  <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
-
-    <div class="col">
-      <input type="checkbox" class="btn-check" id="apunte-1">
-      <label for="apunte-1" class="card h-100 bg-dark border-primary border-opacity-25 text-decoration-none text-reset shadow w-100">
-        <div class="card-body d-flex flex-column">
-          <div class="ratio ratio-16x9 rounded-3 overflow-hidden mb-3 bg-black bg-opacity-50">
-            <div class="d-flex align-items-center justify-content-center">
-              <i class="bi bi-calculator-fill display-4 text-primary opacity-50"></i>
-            </div>
-          </div>
-          <div class="d-flex gap-2 mb-3">
-            <span class="badge text-bg-primary bg-opacity-25 rounded-pill px-3">Matemáticas</span>
-            <span class="badge bg-dark text-secondary border border-secondary rounded-pill px-3">Intermedio</span>
-            <span class="ms-auto badge bg-dark border border-secondary text-secondary rounded-pill px-3">
-              <i class="bi bi-square me-1"></i>Seleccionar
-            </span>
-          </div>
-          <h5 class="text-white fw-bold mb-2">Álgebra básica</h5>
-          <p class="text-secondary small mb-3 flex-grow-1">
-            Fórmulas, ejemplos resueltos y notas rápidas para repasar.
-          </p>
-          <div class="d-flex flex-wrap gap-3 small text-secondary mb-3">
-            <span><i class="bi bi-journal-bookmark me-1"></i>24 páginas</span>
-            <span><i class="bi bi-clock me-1"></i>12h estudio</span>
-          </div>
-          <div class="mb-3">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-              <span class="small text-secondary">Progreso</span>
-              <span class="small text-primary fw-semibold">45%</span>
-            </div>
-            <div class="progress bg-dark-subtle rounded-pill">
-              <div class="progress-bar rounded-pill w-50" role="progressbar"></div>
-            </div>
-          </div>
-          <div class="d-flex justify-content-between align-items-center small text-muted border-top border-secondary pt-3">
-            <span><i class="bi bi-person-fill me-1"></i>Creado por mí</span>
-            <span><i class="bi bi-clock-history me-1"></i>Hace 3 días</span>
+  <div class="row pt-4 border-top border-secondary border-opacity-25">
+    
+    <div class="col-lg-4">
+      <h5 class="text-white mb-3">Configuración del Resumen</h5>
+      <div class="card bg-dark border-secondary p-4">
+        <div class="mb-4">
+          <label class="form-label text-secondary small fw-bold">Categoría del Resumen</label>
+          <div class="d-flex gap-2">
+            <select class="form-select bg-black text-light border-secondary" [(ngModel)]="nuevaCategoria">
+              <option value="" disabled selected>Selecciona una categoría</option>
+              <option *ngFor="let cat of categorias" [value]="cat.valor">{{ cat.nombre }}</option>
+            </select>
+            <button class="btn btn-outline-primary" (click)="toggleCrearCategoria()">
+              <i class="bi bi-plus-lg"></i>
+            </button>
           </div>
         </div>
-      </label>
+
+        <button class="btn btn-primary w-100 py-3 d-flex align-items-center justify-content-center gap-2"
+                [disabled]="seleccionados.length === 0 || generandoIA"
+                (click)="crearResumen()">
+          <span *ngIf="generandoIA" class="spinner-border spinner-border-sm"></span>
+          <i *ngIf="!generandoIA" class="bi bi-stars"></i>
+          {{ generandoIA ? 'Generando...' : 'Generar Resumen' }}
+        </button>
+      </div>
     </div>
 
-    <div class="col">
-      <input type="checkbox" class="btn-check" id="apunte-2">
-      <label for="apunte-2" class="card h-100 bg-dark border-success border-opacity-25 text-decoration-none text-reset shadow w-100">
-        <div class="card-body d-flex flex-column">
-          <div class="ratio ratio-16x9 rounded-3 overflow-hidden mb-3 bg-black bg-opacity-50">
-            <div class="d-flex align-items-center justify-content-center">
-              <i class="bi bi-flask-fill display-4 text-success opacity-50"></i>
-            </div>
+    <div class="col-lg-8">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="text-white m-0">Resultado del Resumen</h5>
+        <button *ngIf="resumenResultado" class="btn btn-sm btn-success" (click)="guardarResumenFinal()">
+          <i class="bi bi-save me-1"></i> Guardar en Biblioteca
+        </button>
+      </div>
+      
+      <div class="card bg-black border-secondary" style="min-height: 300px;">
+        <div class="card-body p-0 d-flex flex-column">
+          <div *ngIf="!resumenResultado && !generandoIA" class="m-auto text-center text-secondary opacity-50 p-5">
+            <i class="bi bi-robot display-4 mb-3"></i>
+            <p>Selecciona tus apuntes arriba y pulsa "Generar"</p>
           </div>
-          <div class="d-flex gap-2 mb-3">
-            <span class="badge text-bg-success bg-opacity-25 rounded-pill px-3">Ciencias</span>
-            <span class="badge bg-dark text-secondary border border-secondary rounded-pill px-3">Básico</span>
-            <span class="ms-auto badge bg-dark border border-secondary text-secondary rounded-pill px-3">
-              <i class="bi bi-square me-1"></i>Seleccionar
-            </span>
-          </div>
-          <h5 class="text-white fw-bold mb-2">Física básica</h5>
-          <p class="text-secondary small mb-3 flex-grow-1">
-            Esquemas, fórmulas esenciales y ejercicios resueltos.
-          </p>
-          <div class="d-flex flex-wrap gap-3 small text-secondary mb-3">
-            <span><i class="bi bi-journal-bookmark me-1"></i>18 páginas</span>
-            <span><i class="bi bi-clock me-1"></i>9h estudio</span>
-          </div>
-          <div class="mb-3">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-              <span class="small text-secondary">Progreso</span>
-              <span class="small text-success fw-semibold">30%</span>
-            </div>
-            <div class="progress bg-dark-subtle rounded-pill">
-              <div class="progress-bar bg-success rounded-pill w-25" role="progressbar"></div>
-            </div>
-          </div>
-          <div class="d-flex justify-content-between align-items-center small text-muted border-top border-secondary pt-3">
-            <span><i class="bi bi-arrow-repeat me-1"></i>Actualizado</span>
-            <span><i class="bi bi-clock-history me-1"></i>Hace 1 semana</span>
-          </div>
-        </div>
-      </label>
-    </div>
 
-    <div class="col">
-      <input type="checkbox" class="btn-check" id="apunte-3">
-      <label for="apunte-3" class="card h-100 bg-dark border-info border-opacity-25 text-decoration-none text-reset shadow w-100">
-        <div class="card-body d-flex flex-column">
-          <div class="ratio ratio-16x9 rounded-3 overflow-hidden mb-3 bg-black bg-opacity-50">
-            <div class="d-flex align-items-center justify-content-center">
-              <i class="bi bi-translate display-4 text-info opacity-50"></i>
-            </div>
-          </div>
-          <div class="d-flex gap-2 mb-3">
-            <span class="badge text-bg-info bg-opacity-25 rounded-pill px-3">Inglés</span>
-            <span class="badge bg-dark text-secondary border border-secondary rounded-pill px-3">Avanzado</span>
-            <span class="ms-auto badge bg-dark border border-secondary text-secondary rounded-pill px-3">
-              <i class="bi bi-square me-1"></i>Seleccionar
-            </span>
-          </div>
-          <h5 class="text-white fw-bold mb-2">Inglés conversacional</h5>
-          <p class="text-secondary small mb-3 flex-grow-1">
-            Vocabulario, frases útiles y práctica de fluidez.
-          </p>
-          <div class="d-flex flex-wrap gap-3 small text-secondary mb-3">
-            <span><i class="bi bi-journal-bookmark me-1"></i>32 páginas</span>
-            <span><i class="bi bi-clock me-1"></i>15h estudio</span>
-          </div>
-          <div class="mb-3">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-              <span class="small text-secondary">Progreso</span>
-              <span class="small text-info fw-semibold">70%</span>
-            </div>
-            <div class="progress bg-dark-subtle rounded-pill">
-              <div class="progress-bar bg-info rounded-pill w-75" role="progressbar"></div>
-            </div>
-          </div>
-          <div class="d-flex justify-content-between align-items-center small text-muted border-top border-secondary pt-3">
-            <span><i class="bi bi-person-fill me-1"></i>Creado por mí</span>
-            <span><i class="bi bi-clock-history me-1"></i>Hace 1 mes</span>
-          </div>
+          <textarea *ngIf="resumenResultado" 
+                    class="form-control bg-transparent text-light border-0 p-4 flex-grow-1"
+                    [(ngModel)]="resumenResultado"
+                    style="min-height: 300px; resize: none;"></textarea>
         </div>
-      </label>
+      </div>
     </div>
 
   </div>
-
-  <div class="border border-secondary rounded-3 p-4 text-center bg-black text-secondary mt-3 d-none">
-    <i class="bi bi-inbox mb-3 d-block fs-1"></i>
-    No tienes apuntes disponibles aún
-  </div>
-
 </div>
