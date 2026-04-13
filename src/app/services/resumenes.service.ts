@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Database, listVal, ref, remove } from '@angular/fire/database';
+import { Database, listVal, objectVal, ref, remove, set } from '@angular/fire/database';
 import { from, map, Observable } from 'rxjs';
 
 @Injectable({
@@ -24,6 +24,20 @@ export class ResumenesService {
         resumenes.filter(r => r.userId === uid)
       )
     );
+  }
+
+  getResumenById(userId: string, resumenId: string): Observable<any> {
+    // Cambiamos la ruta: de `resumenes/${userId}/${resumenId}` 
+    // a simplemente `resumenes/${resumenId}`
+    const resumenRef = ref(this.db, `resumenes/${resumenId}`); 
+    
+    return objectVal(resumenRef, { keyField: 'id' });
+  }
+
+  actualizarResumen(userId: string, resumenId: string, datos: any): Observable<void> {
+    // Lo mismo para actualizar: la ruta debe ser la misma donde están los datos
+    const resumenRef = ref(this.db, `resumenes/${resumenId}`);
+    return from(set(resumenRef, datos));
   }
 
   /**

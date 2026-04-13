@@ -1,47 +1,53 @@
 <div class="container py-5">
+  <h1 class="text-center text-white mb-5 display-4 fw-bold">
+    ¡AQUÍ TIENE SUS RESÚMENES GUARDADOS!
+  </h1>
 
-  <div class="d-flex flex-column flex-lg-row gap-3 mb-4">
-    <div class="input-group input-group-lg flex-fill shadow-sm rounded-4 overflow-hidden">
-      <span class="input-group-text bg-dark border-0 text-secondary">
-        <i class="bi bi-search"></i>
-      </span>
-      <input type="text" class="form-control bg-dark text-white border-0" 
-             placeholder="Buscar resúmenes" [(ngModel)]="buscarResumen" (input)="filtrarResumenes()">
+  <div class="row mb-4">
+    <div class="col-12 col-lg-8 mx-auto">
+      
+      <label for="buscadorResumenes" class="form-label text-secondary mb-2 ms-1">
+        <i class="bi bi-info-circle me-1"></i> 
+        BUSCA TUS RESÚMENES GENERADOS
+      </label>
+
+      <div class="input-group input-group-lg shadow-sm">
+        <span class="input-group-text bg-dark border-secondary text-secondary">
+          <i class="bi bi-search"></i>
+        </span>
+        <input 
+          id="buscadorResumenes"
+          type="text" 
+          class="form-control bg-dark text-white border-secondary shadow-none" 
+          placeholder="Ej: Resumen de la Guerra Civil..."
+          [(ngModel)]="buscarResumen"
+          (input)="filtrarResumenes()">
+      </div>
     </div>
   </div>
 
-  <div class="d-flex flex-wrap gap-2 mb-4">
-    <input type="checkbox" class="btn-check" id="f-matematicas" (change)="toggleCategoria('matematicas')">
-    <label class="btn btn-outline-light btn-sm rounded-pill px-3" for="f-matematicas">
-      <i class="bi bi-calculator me-1"></i> Matemáticas
-    </label>
+  <div class="d-flex flex-wrap gap-2 mb-5 justify-content-center">
+    <input type="checkbox" class="btn-check" id="r-matematicas" (change)="toggleCategoria('matematicas')">
+    <label class="btn btn-outline-primary btn-sm rounded-pill px-3" for="r-matematicas">Matemáticas</label>
 
-    <input type="checkbox" class="btn-check" id="f-ciencias" (change)="toggleCategoria('ciencias')">
-    <label class="btn btn-outline-light btn-sm rounded-pill px-3" for="f-ciencias">
-      <i class="bi bi-flask me-1"></i> Ciencias
-    </label>
+    <input type="checkbox" class="btn-check" id="r-ciencias" (change)="toggleCategoria('ciencias')">
+    <label class="btn btn-outline-success btn-sm rounded-pill px-3" for="r-ciencias">Ciencias</label>
 
-    <input type="checkbox" class="btn-check" id="f-ingles" (change)="toggleCategoria('ingles')">
-    <label class="btn btn-outline-light btn-sm rounded-pill px-3" for="f-ingles">
-      <i class="bi bi-translate me-1"></i> Inglés
-    </label>
+    <input type="checkbox" class="btn-check" id="r-ingles" (change)="toggleCategoria('ingles')">
+    <label class="btn btn-outline-info btn-sm rounded-pill px-3" for="r-ingles">Inglés</label>
 
-    <input type="checkbox" class="btn-check" id="f-historia" (change)="toggleCategoria('historia')">
-    <label class="btn btn-outline-light btn-sm rounded-pill px-3" for="f-historia">
-      <i class="bi bi-hourglass-split me-1"></i> Historia
-    </label>
+    <input type="checkbox" class="btn-check" id="r-historia" (change)="toggleCategoria('historia')">
+    <label class="btn btn-outline-warning btn-sm rounded-pill px-3" for="r-historia">Historia</label>
 
-    <input type="checkbox" class="btn-check" id="f-tecnologia" (change)="toggleCategoria('tecnologia')">
-    <label class="btn btn-outline-light btn-sm rounded-pill px-3" for="f-tecnologia">
-      <i class="bi bi-cpu me-1"></i> Tecnología
-    </label>
+    <input type="checkbox" class="btn-check" id="r-tecnologia" (change)="toggleCategoria('tecnologia')">
+    <label class="btn btn-outline-danger btn-sm rounded-pill px-3" for="r-tecnologia">Tecnología</label>
   </div>
 
   <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
 
     <div class="col-12 text-center py-5" *ngIf="cargando">
       <div class="spinner-border text-primary mb-3" role="status"></div>
-      <p class="text-secondary fw-light">Consultando resúmenes en Firebase...</p>
+      <p class="text-secondary fw-light">Consultando Firebase...</p>
     </div>
 
     <div class="col-12 text-center py-5" *ngIf="!cargando && listaResumenes.length === 0">
@@ -53,8 +59,8 @@
 
     <div class="col" *ngFor="let resumen of listaResumenes">
       <div class="card h-100 bg-dark border-secondary shadow rounded-4 overflow-hidden">
+
         <div class="card-body p-4 d-flex flex-column">
-          
           <div class="d-flex justify-content-between align-items-center mb-3">
             <span [class]="'badge rounded-pill px-3 py-2 bg-' + getBgColor(resumen.categoria) + ' bg-opacity-10 text-' + getBgColor(resumen.categoria)">
               {{ (resumen.categoria || 'Sin categoría') | titlecase }}
@@ -68,11 +74,11 @@
           
           <p class="card-text text-secondary small flex-grow-1 overflow-hidden" 
              style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; min-height: 4.5em;">
-            {{ resumen.contenido || 'Sin descripción disponible...' }}
+            {{ resumen.contenido || 'Contenido del resumen...' }}
           </p>
 
           <div class="d-flex gap-3 mb-3 mt-2 small text-secondary">
-             <span><i class="bi bi-list-check me-1"></i>IA Generado</span>
+             <span><i class="bi bi-magic me-1"></i>IA Generado</span>
           </div>
 
           <div class="mt-auto pt-3 border-top border-secondary border-opacity-25 d-flex gap-2">
@@ -89,10 +95,9 @@
     </div>
   </div>
 
-  <div class="d-flex justify-content-center mt-5">
+  <div class="text-center mt-5">
     <a routerLink="/componentes/resumenes/crear-resumen" class="btn btn-primary btn-lg rounded-pill px-5 shadow">
-      <i class="bi bi-magic me-2"></i>Generar nuevo resumen
+      <i class="bi bi-plus-lg me-2"></i>Nuevo resumen
     </a>
   </div>
-
 </div>
