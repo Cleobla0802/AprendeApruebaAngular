@@ -78,12 +78,11 @@ listaApuntes: any[] = [];
         next: (testGenerado) => {
           this.generando = false;
           // Navegamos al componente de realizar el test pasando el ID
-          this.router.navigate(['/componentes/tests/realizar-test', testGenerado.id]);
+          this.router.navigate(['componentes/pruebas-test/realizar-test', testGenerado.id]);
         },
         error: (err) => {
           console.error("Error al generar test", err);
           this.generando = false;
-          alert("Hubo un error con la IA al generar el test.");
         }
       });
   }

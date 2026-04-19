@@ -38,7 +38,11 @@ ngOnInit() {
 }
 
   get preguntaActual() {
-    return this.test?.preguntas[this.preguntaActualIndex];
+    // Si test o preguntas no existen, devolvemos null en lugar de romper la app
+    if (!this.test || !this.test.preguntas) {
+      return null;
+    }
+    return this.test.preguntas[this.preguntaActualIndex];
   }
 
   seleccionarOpcion(index: number) {
