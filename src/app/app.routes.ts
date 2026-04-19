@@ -14,6 +14,7 @@ import { VisualizarResumenComponent } from './componentes/resumenes/visualizar-r
 import { PruebasTestComponent } from './componentes/pruebas-test/pruebas-test.component';
 import { CrearTipoTestComponent } from './componentes/pruebas-test/crear-tipo-test/crear-tipo-test.component';
 import { VisualizarTipoTestComponent } from './componentes/pruebas-test/visualizar-tipo-test/visualizar-tipo-test.component';
+import { RealizarTipoTestComponent } from './componentes/pruebas-test/realizar-tipo-test/realizar-tipo-test.component';
 
 export const routes: Routes = [
     {path: 'componentes/presentacion' ,component:PresentacionComponent},
@@ -33,6 +34,7 @@ export const routes: Routes = [
     {path: 'componentes/pruebas-test', component: PruebasTestComponent },
     {path: 'componentes/pruebas-test/crear-tipo-test', component: CrearTipoTestComponent },
     {path: 'componentes/pruebas-test/visualizar-tipo-test/:id', component: VisualizarTipoTestComponent },
+    { path: 'componentes/pruebas-test/realizar-test/:id', component: RealizarTipoTestComponent },
 
     
     {path: '', redirectTo:'componentes/presentacion', pathMatch:'full'},

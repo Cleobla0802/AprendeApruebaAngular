@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PruebasService } from '../../../services/pruebas.service';
 
@@ -9,14 +9,13 @@ import { PruebasService } from '../../../services/pruebas.service';
   templateUrl: './realizar-tipo-test.component.html',
   styleUrl: './realizar-tipo-test.component.scss'
 })
-export class RealizarTipoTestComponent {
+export class RealizarTipoTestComponent implements OnInit {
 
-  test: any = null;
-  preguntaActual: number = 0;
-  respuestasUsuario: number[] = [];
-  mostrarResultado: boolean = false;
-  puntuacion: number = 0;
-  cargando: boolean = true;
+  test: any;
+  preguntaActualIndex: number = 0;
+  respuestasUsuario: number[] = []; // Guardamos el índice de la opción elegida
+  testFinalizado: boolean = false;
+  nota: number = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -24,42 +23,51 @@ export class RealizarTipoTestComponent {
     private router: Router
   ) {}
 
-  ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.testService.obtenerTestPorId(id).subscribe(data => {
-        this.test = data;
-        this.cargando = false;
-      });
+ngOnInit() {
+  const id = this.route.snapshot.paramMap.get('id');
+  console.log("ID recuperado de la URL:", id); // <-- LOG 1
+
+  if (id) {
+    this.testService.obtenerTestPorId(id).subscribe(data => {
+      console.log("Datos recibidos de Firebase:", data); // <-- LOG 2
+      this.test = data;
+    });
+  } else {
+    console.error("No se encontró ID en la ruta");
+  }
+}
+
+  get preguntaActual() {
+    return this.test?.preguntas[this.preguntaActualIndex];
+  }
+
+  seleccionarOpcion(index: number) {
+    this.respuestasUsuario[this.preguntaActualIndex] = index;
+    
+    // Avanzar automáticamente o esperar a que el usuario de a "Siguiente"
+    if (this.preguntaActualIndex < this.test.preguntas.length - 1) {
+      setTimeout(() => this.preguntaActualIndex++, 300);
+    } else {
+      this.calcularResultado();
     }
   }
 
-  seleccionarRespuesta(indiceOpcion: number) {
-    this.respuestasUsuario[this.preguntaActual] = indiceOpcion;
-    
-    // Pequeño retardo para pasar a la siguiente pregunta automáticamente
-    setTimeout(() => {
-      if (this.preguntaActual < this.test.preguntas.length - 1) {
-        this.preguntaActual++;
-      } else {
-        this.finalizarTest();
-      }
-    }, 300);
-  }
-
-  finalizarTest() {
+  calcularResultado() {
     let aciertos = 0;
-    this.test.preguntas.forEach((pregunta: any, index: number) => {
-      if (this.respuestasUsuario[index] === pregunta.respuestaCorrecta) {
+    this.test.preguntas.forEach((p: any, i: number) => {
+      if (this.respuestasUsuario[i] === p.respuestaCorrecta) {
         aciertos++;
       }
     });
-    this.puntuacion = (aciertos / this.test.preguntas.length) * 10;
-    this.mostrarResultado = true;
+    this.nota = (aciertos / this.test.preguntas.length) * 10;
+    this.testService.guardarNota(this.test.id, this.nota).subscribe(() => {
+      console.log("Nota guardada con éxito");
+    });
+    this.testFinalizado = true;
   }
 
-  irAtras() {
-    this.router.navigate(['/componentes/tests']);
+  finalizar() {
+    this.router.navigate(['componentes/pruebas-test']);
   }
 
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Database, equalTo, onValue, orderByChild, query, ref, remove } from '@angular/fire/database';
-import { Observable } from 'rxjs';
+import { child, Database, equalTo, get, onValue, orderByChild, query, ref, remove, update } from '@angular/fire/database';
+import { from, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -34,12 +34,22 @@ constructor(private db: Database) {}
   }
 
   obtenerTestPorId(id: string): Observable<any> {
-  const testRef = ref(this.db, `tests/${id}`);
-  return new Observable(observer => {
-    onValue(testRef, (snapshot) => {
-      observer.next(snapshot.val());
-    });
-  });
-}
+    const dbRef = ref(this.db);
+    // 'from' convierte la promesa de Firebase en un Observable
+    return from(get(child(dbRef, `tests/${id}`)).then(snapshot => {
+      if (snapshot.exists()) {
+        return snapshot.val();
+      } else {
+        console.error("No existe el test con ese ID en la DB");
+        return null;
+      }
+    }));
+  }
+
+  guardarNota(id: string, nota: number) {
+    const testRef = ref(this.db, `tests/${id}`);
+    // Usamos update para no borrar el resto de datos del test
+    return from(update(testRef, { calificacion: nota.toFixed(1) }));
+  }
 
 }
