@@ -13,7 +13,7 @@ export class ApunteService {
 
   // URL de tu Backend en Railway (Asegúrate de que termine en /api/apuntes)
   // Ejemplo: 'https://mi-backend-production.up.railway.app/api/apuntes'
-  private apiBackend = 'https://api-aprende-aprueba-production.up.railway.app/api/apuntes';
+  private apiBackend = 'https://api-aprende-aprueba-1.onrender.com/api/apuntes';
 
   constructor(private http: HttpClient, private db:Database) { }
 

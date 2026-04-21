@@ -9,7 +9,7 @@ import { from, map, Observable } from 'rxjs';
 export class ResumenesService {
 
   // Añadimos el protocolo https:// y la ruta base de tu controlador de Java
-  private apiUrl = 'https://api-aprende-aprueba-production.up.railway.app/api/resumenes';
+  private apiUrl = 'https://api-aprende-aprueba-1.onrender.com/api/resumenes';
 
   constructor(private db: Database, private http: HttpClient) {}
 
