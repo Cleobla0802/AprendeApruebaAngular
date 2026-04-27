@@ -26,6 +26,12 @@ export class ApuntesComponent {
     tecnologia: false
   };
 
+  notif = { 
+  show: false, 
+  msg: '', 
+  type: 'success' as 'success' | 'danger' | 'warning' | 'info' 
+  };
+
   constructor(
     private apunteService: ApunteService,
     private authService: AuthService
@@ -83,12 +89,32 @@ export class ApuntesComponent {
   }
 
   eliminar(id: any) {
-    if (confirm('¿Estás seguro de que quieres borrar este apunte?')) {
-      this.apunteService.eliminarApunte(id).subscribe(() => {
+    // Llamamos al servicio para eliminar
+    this.apunteService.eliminarApunte(id).subscribe({
+      next: () => {
+        // 1. Filtramos la lista local para que el elemento desaparezca al instante
         this.listaApuntesOriginal = this.listaApuntesOriginal.filter(a => a.id !== id);
         this.filtrarApuntes();
-      });
-    }
+
+        // 2. Mostramos la notificación verde de éxito
+        this.notif = { 
+          show: true, 
+          msg: '¡Borrado con éxito!', 
+          type: 'success' 
+        };
+
+        // 3. La ocultamos automáticamente tras 2.5 segundos
+        setTimeout(() => this.notif.show = false, 2500);
+      },
+      error: () => {
+        // Si algo falla (ej. sin internet), avisamos en rojo
+        this.notif = { 
+          show: true, 
+          msg: 'Error: No se pudo eliminar el elemento.', 
+          type: 'danger' 
+        };
+      }
+    });
   }
 
   getBgColor(categoria: string): string {

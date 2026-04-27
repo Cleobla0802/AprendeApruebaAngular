@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { child, Database, equalTo, get, onValue, orderByChild, query, ref, remove, update } from '@angular/fire/database';
+import { child, Database, equalTo, get, listVal, objectVal, onValue, orderByChild, push, query, ref, remove, set, update } from '@angular/fire/database';
 import { from, Observable } from 'rxjs';
 
 @Injectable({
@@ -10,17 +10,14 @@ export class PruebasService {
 constructor(private db: Database) {}
 
   listarTestsPorUsuario(uid: string): Observable<any[]> {
-    return new Observable(observer => {
-      const testsRef = ref(this.db, 'tests');
-      // Filtramos por userId dentro de la carpeta 'tests'
-      const testsQuery = query(testsRef, orderByChild('userId'), equalTo(uid));
-      
-      onValue(testsQuery, (snapshot) => {
-        const data = snapshot.val();
-        const tests = data ? Object.keys(data).map(key => ({ id: key, ...data[key] })) : [];
-        observer.next(tests);
-      });
-    });
+    const testsRef = ref(this.db, 'tests');
+    const testsQuery = query(testsRef, orderByChild('userId'), equalTo(uid));
+    return listVal(testsQuery, { keyField: 'id' });
+  }
+
+  obtenerTestPorId(id: string): Observable<any> {
+    const testRef = ref(this.db, `tests/${id}`);
+    return objectVal(testRef, { keyField: 'id' });
   }
 
   eliminarTest(id: string): Observable<void> {
@@ -33,23 +30,19 @@ constructor(private db: Database) {}
     });
   }
 
-  obtenerTestPorId(id: string): Observable<any> {
-    const dbRef = ref(this.db);
-    // 'from' convierte la promesa de Firebase en un Observable
-    return from(get(child(dbRef, `tests/${id}`)).then(snapshot => {
-      if (snapshot.exists()) {
-        return snapshot.val();
-      } else {
-        console.error("No existe el test con ese ID en la DB");
-        return null;
-      }
-    }));
-  }
-
   guardarNota(id: string, nota: number) {
     const testRef = ref(this.db, `tests/${id}`);
-    // Usamos update para no borrar el resto de datos del test
     return from(update(testRef, { calificacion: nota.toFixed(1) }));
+  }
+
+  crearTest(test: any): Observable<any> {
+    const testsRef = ref(this.db, 'tests');
+    const nuevoTestRef = push(testsRef);
+    const id = nuevoTestRef.key;
+
+    return from(set(nuevoTestRef, test).then(() => {
+      return { ...test, id: id };
+    }));
   }
 
 }

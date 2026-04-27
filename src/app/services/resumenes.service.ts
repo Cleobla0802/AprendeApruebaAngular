@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Database, listVal, objectVal, ref, remove, set } from '@angular/fire/database';
+import { Database, equalTo, listVal, objectVal, orderByChild, push, query, ref, remove, set, update } from '@angular/fire/database';
 import { from, map, Observable } from 'rxjs';
 
 @Injectable({
@@ -14,52 +14,61 @@ export class ResumenesService {
   constructor(private db: Database, private http: HttpClient) {}
 
   /**
-   * Obtiene los resúmenes directamente de Firebase (Lectura rápida)
+   * FIREBASE: Lista resúmenes filtrados por UID
    */
-  getResumenesByUser(uid: string): Observable<any[]> {
-    const resumenesRef = ref(this.db, 'resumenes');
-    return listVal(resumenesRef, { keyField: 'id' }).pipe(
-      map((resumenes: any[]) => 
-        // Filtramos para que el usuario solo vea los suyos
-        resumenes.filter(r => r.userId === uid)
-      )
-    );
+  listarResumenesPorUsuario(uid: string): Observable<any[]> {
+    const dbRef = ref(this.db, 'resumenes');
+    const queryRef = query(dbRef, orderByChild('userId'), equalTo(uid));
+    return listVal(queryRef, { keyField: 'id' });
   }
 
-  getResumenById(userId: string, resumenId: string): Observable<any> {
-    // Cambiamos la ruta: de `resumenes/${userId}/${resumenId}` 
-    // a simplemente `resumenes/${resumenId}`
+  /**
+   * FIREBASE: Eliminar resumen
+   * Corregido: Ahora acepta el UID como primer argumento para que no te dé error el componente,
+   * aunque para borrar en una estructura plana solo necesitemos el ID.
+   */
+  eliminarResumen(uid: string, id: string): Observable<void> {
+    const dbRef = ref(this.db, `resumenes/${id}`);
+    return from(remove(dbRef));
+  }
+
+  guardarResumen(resumen: any): Observable<any> {
+  const resumenesRef = ref(this.db, 'resumenes');
+  // push(ref, data) crea un nuevo nodo con un ID único automático
+  return from(push(resumenesRef, resumen));
+  }
+
+  /**
+   * FIREBASE: Obtener un resumen por su ID
+   */
+  getResumenById(resumenId: string): Observable<any> {
     const resumenRef = ref(this.db, `resumenes/${resumenId}`); 
-    
     return objectVal(resumenRef, { keyField: 'id' });
   }
 
-  actualizarResumen(userId: string, resumenId: string, datos: any): Observable<void> {
-    // Lo mismo para actualizar: la ruta debe ser la misma donde están los datos
-    const resumenRef = ref(this.db, `resumenes/${resumenId}`);
-    return from(set(resumenRef, datos));
-  }
-
   /**
-   * Elimina un resumen directamente de Firebase
+   * FIREBASE: Actualizar resumen
    */
-  eliminarResumen(userId: string, resumenId: string): Observable<void> {
-    const resumenRef = ref(this.db, `resumenes/${userId}/${resumenId}`);
-    return from(remove(resumenRef));
+  actualizarResumen(resumenId: string, datos: any): Observable<void> {
+    const resumenRef = ref(this.db, `resumenes/${resumenId}`);
+    // Usamos update en lugar de set para no borrar campos accidentamente
+    return from(update(resumenRef, datos));
   }
 
   /**
-   * 1. Habla con tu Backend en Railway para que Nemotron procese el texto
+   * FIREBASE: Guardar directamente desde Angular (Sin pasar por el Backend)
+   * Como quieres hacerlo todo en Angular, este método guarda el objeto en Firebase.
+   */
+  guardarResumenEnFirebase(resumen: any): Observable<any> {
+    const resumenesRef = ref(this.db, 'resumenes');
+    // push genera un ID automático en Firebase
+    return from(push(resumenesRef, resumen));
+  }
+
+  /**
+   * IA: Habla con tu Backend en Render para procesar el texto
    */
   generarConIA(contenido: string): Observable<{ resumen: string }> {
-    // Enviamos el objeto con la clave "contenido" tal cual lo espera tu controlador en Java
     return this.http.post<{ resumen: string }>(`${this.apiUrl}/generar`, { contenido });
-  }
-
-  /**
-   * 2. Envía el objeto Resumen completo a tu Backend para que Java lo guarde en Firebase
-   */
-  guardarResumen(resumen: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/guardar`, resumen);
   }
 }

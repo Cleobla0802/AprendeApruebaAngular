@@ -1,4 +1,15 @@
-<div class="container-fluid min-vh-100 py-5" *ngIf="!cargando && apunte">
+<div *ngIf="notif.show" 
+     class="alert alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow-lg alert-{{notif.type}}" 
+     style="z-index: 1080;"
+     role="alert">
+  <div class="d-flex align-items-center gap-2">
+    <i class="bi" [ngClass]="notif.type === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'"></i>
+    <span>{{ notif.msg }}</span>
+    <button type="button" class="btn-close" (click)="notif.show = false"></button>
+  </div>
+</div>
+
+<div class="container-fluid py-5" *ngIf="!cargando && apunte; else cargandoTemplate">
 
   <div class="mb-5 d-flex flex-wrap align-items-center justify-content-between gap-3">
     <div>
@@ -20,9 +31,8 @@
   </div>
 
   <div class="row g-4">
-
     <div class="col-lg-4">
-      <div class="card bg-secondary bg-opacity-10 text-white rounded-4 shadow-lg overflow-hidden border-0">
+      <div class="card bg-secondary bg-opacity-10 text-white rounded-4 shadow-lg border-0">
         <div class="card-header bg-secondary bg-opacity-25 d-flex align-items-center p-4">
           <i class="bi bi-info-circle-fill me-2 fs-5"></i>
           <h5 class="mb-0 fw-semibold">Información del apunte</h5>
@@ -46,53 +56,32 @@
             </select>
           </div>
 
-          <div class="mb-4">
+          <div class="mb-1">
             <label class="form-label small fw-semibold text-secondary mb-2">Fecha de registro</label>
-            <p class="text-white small">{{ apunte.fecha | date:'medium' }}</p>
+            <p class="text-white small m-0">{{ apunte.fecha | date:'medium' }}</p>
           </div>
         </div>
       </div>
     </div>
 
     <div class="col-lg-8">
-      <div class="card bg-dark text-white rounded-4 shadow-lg overflow-hidden border-secondary">
-        <div class="d-flex flex-wrap gap-3 p-4 border-bottom border-secondary border-opacity-25">
-          <span class="text-secondary small">Editor de texto</span>
-        </div>
+      <div class="card bg-dark text-white rounded-4 shadow-lg border-secondary">
+        <div class="p-4 border-bottom border-secondary border-opacity-25"></div>
 
         <textarea 
           [(ngModel)]="apunte.contenido"
-          class="form-control bg-transparent text-white border-0 p-4" 
-          style="min-height:500px; font-size:1rem; line-height:1.7; outline: none; box-shadow: none; resize: none;"
+          class="form-control bg-transparent text-white border-0 p-4 shadow-none" 
+          rows="18"
           placeholder="Escribe el contenido de tu apunte...">
         </textarea>
       </div>
     </div>
   </div>
-
-  <div class="mt-5">
-    <h5 class="text-white mb-2"><i class="bi bi-eye-fill me-2"></i>Vista previa de la tarjeta</h5>
-    <div class="row justify-content-center">
-      <div class="col-md-5 col-lg-4 col-xl-3">
-        <div class="card bg-dark border-primary border-opacity-25 text-white rounded-4 shadow-lg">
-          <div class="card-body p-4">
-            <div class="d-flex justify-content-between align-items-start mb-4">
-              <span class="badge text-bg-primary bg-opacity-25 rounded-pill px-3 py-2">
-                {{ apunte.categoria | titlecase }}
-              </span>
-            </div>
-            <h4 class="fw-bold mb-2">{{ apunte.titulo || 'Sin título' }}</h4>
-            <p class="text-secondary small mb-0 text-truncate">
-              {{ apunte.contenido }}
-            </p>
-            <div class="border-top border-secondary border-opacity-25 mt-4 pt-3 text-end">
-              <span class="small text-secondary">
-                <i class="bi bi-calendar-event me-1"></i>{{ apunte.fecha | date:'dd/MM/yy' }}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
+
+<ng-template #cargandoTemplate>
+  <div class="d-flex flex-column align-items-center justify-content-center py-5">
+    <div class="spinner-border text-primary mb-3" role="status"></div>
+    <p class="text-secondary">Cargando apunte...</p>
+  </div>
+</ng-template>

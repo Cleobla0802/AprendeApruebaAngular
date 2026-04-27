@@ -3,9 +3,9 @@
     <div class="col-12 col-md-10 col-lg-8 col-xl-7">
 
       <div class="text-center mb-5">
-        <i class="bi bi-journal-plus text-primary mb-3 d-block" style="font-size: 3rem;"></i>
+        <i class="bi bi-journal-plus text-primary mb-3 d-block display-3"></i>
         <h1 class="fw-bold text-light">Crear Apuntes</h1>
-        <p class="text-secondary mb-0">Completa el formulario para digitalizar tus apuntes con IA en Railway</p>
+        <p class="text-secondary mb-0">Digitaliza tus apuntes con IA</p>
       </div>
 
       <div class="card bg-dark border border-secondary shadow-lg rounded-4">
@@ -14,57 +14,33 @@
           <form (ngSubmit)="crearApuntes()" #formulario="ngForm">
 
             <div *ngIf="mensajeFeedback" 
-                 class="alert alert-{{tipoFeedback}} border-0 bg-opacity-10 text-{{tipoFeedback}} mb-4 rounded-3 d-flex align-items-center animate__animated animate__fadeIn" 
+                 class="alert alert-{{tipoFeedback}} border-0 bg-opacity-10 text-{{tipoFeedback}} mb-4 rounded-3 d-flex align-items-center" 
                  role="alert">
-              <i class="bi" [ngClass]="{
+              <i class="bi me-3" [ngClass]="{
                 'bi-check-circle-fill': tipoFeedback === 'success', 
-                'bi-exclamation-triangle-fill': tipoFeedback === 'danger', 
-                'bi-info-circle-fill': tipoFeedback === 'info'
+                'bi-exclamation-triangle-fill': tipoFeedback === 'danger'
               }"></i>
-              <div class="ms-3">
-                {{ mensajeFeedback }}
-              </div>
+              <div>{{ mensajeFeedback }}</div>
             </div>
 
             <div class="mb-4">
-              <label class="form-label fw-semibold text-light">
-                <i class="bi bi-pencil-fill text-primary me-2"></i>
-                Nombre del apunte
-              </label>
-              <input type="text"
-                     name="titulo"
-                     [(ngModel)]="datosApunte.titulo"
+              <label class="form-label fw-semibold text-light">Nombre del apunte</label>
+              <input type="text" name="titulo" [(ngModel)]="datosApunte.titulo"
                      class="form-control form-control-lg bg-black text-light border-secondary rounded-3 shadow-none"
-                     placeholder="Ej: Álgebra básica..."
-                     required 
-                     #titulo="ngModel"
-                     [class.is-invalid]="titulo.invalid && titulo.touched" />
-              <div class="invalid-feedback">El título es obligatorio.</div>
+                     placeholder="Ej: Historia del Arte..." required>
             </div>
 
-            <div class="row">
-              <div class="col-12 col-md-6 mb-4">
-                <label class="form-label fw-semibold text-light">
-                  <i class="bi bi-folder-fill text-primary me-2"></i>
-                  Categoría
-                </label>
-                <select name="categoria" 
-                        [(ngModel)]="datosApunte.categoria" 
-                        class="form-select form-select-lg bg-black text-light border-secondary rounded-3 shadow-none"
-                        required>
-                  <option value="" disabled>Selecciona una categoría</option>
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold text-light">Categoría</label>
+                <select name="categoria" [(ngModel)]="datosApunte.categoria" 
+                        class="form-select form-select-lg bg-black text-light border-secondary rounded-3 shadow-none">
                   <option *ngFor="let cat of categorias" [value]="cat.valor">{{ cat.nombre }}</option>
                 </select>
               </div>
-
-              <div class="col-12 col-md-6 mb-4">
-                <label class="form-label fw-semibold text-light">
-                  <i class="bi bi-speedometer2 text-primary me-2"></i>
-                  Nivel de dificultad
-                </label>
-                <select name="dificultad"
-                        class="form-select form-select-lg bg-black text-light border-secondary rounded-3 shadow-none">
-                  <option value="" selected>Selecciona el nivel (Opcional)</option>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold text-light">Dificultad (Opcional)</label>
+                <select name="dificultad" class="form-select form-select-lg bg-black text-light border-secondary rounded-3 shadow-none">
                   <option value="basico">🟢 Básico</option>
                   <option value="intermedio">🟡 Intermedio</option>
                   <option value="avanzado">🔴 Avanzado</option>
@@ -73,43 +49,29 @@
             </div>
 
             <div class="mb-5">
-              <label class="form-label fw-semibold text-light mb-3">
-                <i class="bi bi-cloud-arrow-up-fill text-primary me-2"></i>
-                Imagen de tus apuntes
-              </label>
-              <div class="border border-secondary rounded-4 p-4 p-md-5 text-center bg-black position-relative" 
-                   style="border-style: dashed !important;">
-                
-                <i class="bi bi-image text-secondary mb-3 d-block" style="font-size: 3rem;"></i>
-                <h5 class="fw-semibold text-light">Selecciona la foto</h5>
-                <p class="text-secondary small">Formatos aceptados: JPG, PNG, BMP</p>
-                
-                <input type="file" 
-                       id="fileInput"
-                       (change)="onFileSelected($event)"
-                       accept="image/*"
+              <div class="border border-secondary rounded-4 p-5 text-center bg-black" style="border-style: dashed !important;">
+                <i class="bi bi-image text-secondary mb-3 d-block display-4"></i>
+                <h5 class="text-light">Sube la foto de tu apunte</h5>
+                <input type="file" id="fileInput" (change)="onFileSelected($event)" accept="image/*"
                        class="form-control bg-dark text-light border-secondary mt-3 shadow-none">
                 
-                <div *ngIf="archivoSeleccionado" class="mt-3 text-primary fw-bold animate__animated animate__pulse animate__infinite">
+                <div *ngIf="archivoSeleccionado" class="mt-3 text-primary fw-bold">
                   <i class="bi bi-file-earmark-check me-1"></i> {{ archivoSeleccionado.name }}
                 </div>
               </div>
             </div>
 
-            <div class="d-flex flex-column flex-sm-row justify-content-end gap-3">
+            <div class="d-flex justify-content-end gap-3">
               <button type="button" class="btn btn-outline-light btn-lg rounded-pill px-4" 
-                      [disabled]="cargando" 
-                      (click)="limpiarFormulario()">
-                <i class="bi bi-arrow-counterclockwise me-2"></i>Limpiar
+                      [disabled]="cargando" (click)="limpiarFormulario()">
+                Limpiar
               </button>
               
               <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4 shadow" 
                       [disabled]="cargando || formulario.invalid || !archivoSeleccionado">
-                <span *ngIf="!cargando">
-                  <i class="bi bi-magic me-2"></i>Digitalizar con IA
-                </span>
+                <span *ngIf="!cargando">Digitalizar con IA</span>
                 <span *ngIf="cargando">
-                  <span class="spinner-border spinner-border-sm me-2"></span>Procesando...
+                  <span class="spinner-border spinner-border-sm me-2"></span>Digitalizando...
                 </span>
               </button>
             </div>
@@ -117,7 +79,6 @@
           </form>
         </div>
       </div>
-
     </div>
   </div>
 </div>

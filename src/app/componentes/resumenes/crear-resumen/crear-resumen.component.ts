@@ -13,14 +13,12 @@ import { Router } from '@angular/router';
   styleUrl: './crear-resumen.component.scss'
 })
 export class CrearResumenComponent implements OnInit {
-  cargando = false;
-  generandoIA = false;
-  uid: string = '';
-  resumenResultado: string = '';
-  mostrarCrearCategoria = false;
-  nuevaCategoria = '';
-  listaApuntes: any[] = [];
-  seleccionados: any[] = [];
+cargando = false; generandoIA = false; uid = '';
+  resumenResultado = ''; nuevaCategoria = '';
+  nuevoTitulo = ''; // Nueva variable para el título del resumen
+  listaApuntes: any[] = []; seleccionados: any[] = [];
+  
+  notif = { show: false, msg: '', type: 'success' };
 
   categorias = [
     { valor: 'matematicas', nombre: 'Matemáticas' },
@@ -30,116 +28,78 @@ export class CrearResumenComponent implements OnInit {
     { valor: 'tecnologia', nombre: 'Tecnología' }
   ];
 
-  constructor(
-  private apunteService: ApunteService,
-    private authService: AuthService,
-    private resumenesService: ResumenesService,
-    private router: Router
-  ) {}
+  constructor(private apunteS: ApunteService, private resS: ResumenesService, 
+              private auth: AuthService, private router: Router) {}
 
-  ngOnInit(): void {
-    this.authService.getUserAuthenticated().subscribe(user => {
-      if (user) {
-        this.uid = user.uid;
-        this.cargarApuntes();
-      }
+  ngOnInit() {
+    this.auth.getUserAuthenticated().subscribe(u => {
+      if (u) { this.uid = u.uid; this.cargar(); }
     });
   }
 
-  cargarApuntes() {
+  limpiarResultado() {
+    if (this.resumenResultado === '') return;
+    
+    // Simplemente vaciamos las variables
+    this.resumenResultado = '';
+    this.showMsg('Resultado borrado', 'info');
+  }
+
+  cargar() {
     this.cargando = true;
-    this.apunteService.listarApuntesPorUsuario(this.uid).subscribe({
-      next: (apuntes) => {
-        this.listaApuntes = apuntes;
-        this.cargando = false;
-      },
-      error: () => this.cargando = false
+    this.apunteS.listarApuntesPorUsuario(this.uid).subscribe({
+      next: (a) => { this.listaApuntes = a; this.cargando = false; },
+      error: () => this.showMsg('Error al cargar apuntes', 'danger')
     });
   }
 
-  toggleSeleccion(apunte: any) {
-    const index = this.seleccionados.indexOf(apunte);
-    if (index > -1) {
-      this.seleccionados.splice(index, 1);
-    } else {
-      this.seleccionados.push(apunte);
-    }
+  toggle(a: any) {
+    const i = this.seleccionados.indexOf(a);
+    i > -1 ? this.seleccionados.splice(i, 1) : this.seleccionados.push(a);
   }
 
   crearResumen() {
-    // 1. Validaciones previas
-    if (this.seleccionados.length === 0) {
-      alert("Por favor, selecciona al menos un apunte.");
-      return;
-    }
+    if (!this.seleccionados.length) return this.showMsg('Selecciona al menos un apunte', 'warning');
+    
+    this.generandoIA = true;
+    const body = this.seleccionados.map(a => `${a.titulo}: ${a.contenido}`).join('\n');
 
-    // 2. Cambiamos estados visuales
-    this.generandoIA = true; 
-    this.resumenResultado = ''; // Limpiamos resultado anterior
-
-    // 3. Unimos el contenido de todos los apuntes seleccionados
-    const textoUnificado = this.seleccionados
-      .map(a => `TITULO: ${a.titulo}\nCONTENIDO: ${a.contenido}`)
-      .join('\n\n---\n\n');
-
-    console.log("Enviando a la IA...", textoUnificado);
-
-    // 4. Llamada al servicio que conecta con Railway -> OpenRouter
-    this.resumenesService.generarConIA(textoUnificado).subscribe({
-      next: (res) => {
-        this.resumenResultado = res.resumen;
-        this.generandoIA = false;
-        console.log("Resumen generado con éxito");
+    this.resS.generarConIA(body).subscribe({
+      next: (r) => { 
+        this.resumenResultado = r.resumen; 
+        this.generandoIA = false; 
+        this.showMsg('Resumen generado con éxito', 'success');
       },
-      error: (err) => {
-        console.error("Error al generar resumen:", err);
-        alert("Hubo un error al conectar con la IA. Revisa la consola.");
-        this.generandoIA = false;
+      error: () => { 
+        this.showMsg('Error al conectar con la IA', 'danger'); 
+        this.generandoIA = false; 
       }
     });
   }
 
-  toggleCrearCategoria() {
-    this.mostrarCrearCategoria = !this.mostrarCrearCategoria;
-    this.nuevaCategoria = '';
+  guardar() {
+    if (!this.nuevoTitulo.trim()) return this.showMsg('Escribe un título para tu resumen', 'warning');
+    if (!this.resumenResultado) return this.showMsg('No hay contenido para guardar', 'warning');
+
+    const data = {
+      titulo: this.nuevoTitulo,
+      resumenTexto: this.resumenResultado, // Asegúrate que el campo coincida con tu interfaz de Firebase
+      categoria: this.nuevaCategoria || 'general',
+      userId: this.uid,
+      fecha: new Date().getTime()
+    };
+
+    this.resS.guardarResumen(data).subscribe({
+      next: () => {
+        this.showMsg('¡Resumen guardado! Redirigiendo...', 'success');
+        setTimeout(() => this.router.navigate(['/componentes/resumenes']), 1500);
+      },
+      error: () => this.showMsg('Error al guardar en la base de datos', 'danger')
+    });
   }
 
-  agregarCategoria() {
-    const nombre = this.nuevaCategoria.trim();
-    if (!nombre) return;
-
-    const valor = nombre.toLowerCase().replace(/\s+/g, '');
-    const existe = this.categorias.some(c => c.valor === valor);
-
-    if (!existe) {
-      this.categorias.push({ valor, nombre });
-    }
-
-    this.toggleCrearCategoria();
+  showMsg(msg: string, type: string) {
+    this.notif = { show: true, msg, type };
+    setTimeout(() => this.notif.show = false, 2500);
   }
-
-  guardarResumenFinal() {
-  if (!this.resumenResultado || !this.uid) return;
-
-  const resumenParaGuardar = {
-    titulo: `Resumen de ${this.seleccionados.length} apuntes`,
-    contenido: this.resumenResultado,
-    categoria: this.nuevaCategoria || 'general',
-    userId: this.uid,
-    fecha: new Date().toISOString()
-  };
-
-  this.cargando = true;
-  this.resumenesService.guardarResumen(resumenParaGuardar).subscribe({
-    next: () => {
-      alert("¡Resumen guardado correctamente en tu biblioteca!");
-      this.router.navigate(['/resumenes']); // Redirigir a la lista
-    },
-    error: (err) => {
-      console.error("Error al guardar:", err);
-      alert("No se pudo guardar el resumen.");
-      this.cargando = false;
-    }
-  });
-}
 }

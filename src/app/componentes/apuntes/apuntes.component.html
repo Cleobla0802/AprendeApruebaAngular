@@ -3,9 +3,18 @@
     ¡AQUÍ TIENE SUS APUNTES GUARDADOS!
   </h1>
 
+  <div *ngIf="notif.show" 
+       class="alert alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow-lg z-3 alert-{{notif.type}}" 
+       role="alert">
+    <div class="d-flex align-items-center gap-2">
+      <i class="bi" [ngClass]="notif.type === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'"></i>
+      <span>{{ notif.msg }}</span>
+      <button type="button" class="btn-close" (click)="notif.show = false"></button>
+    </div>
+  </div>
+
   <div class="row mb-4">
     <div class="col-12 col-lg-8 mx-auto">
-      
       <label for="buscadorApuntes" class="form-label text-secondary mb-2 ms-1">
         <i class="bi bi-info-circle me-1"></i> 
         BUSCA TUS APUNTES GUARDADOS
@@ -72,8 +81,7 @@
 
           <h5 class="card-title text-white fw-bold mb-2">{{ apunte.titulo }}</h5>
           
-          <p class="card-text text-secondary small flex-grow-1 overflow-hidden" 
-             style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; min-height: 4.5em;">
+          <p class="card-text text-secondary small flex-grow-1 overflow-hidden">
             {{ apunte.contenido || 'Procesando contenido...' }}
           </p>
 

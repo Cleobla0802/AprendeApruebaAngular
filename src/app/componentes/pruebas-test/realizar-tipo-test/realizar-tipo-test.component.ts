@@ -11,11 +11,17 @@ import { PruebasService } from '../../../services/pruebas.service';
 })
 export class RealizarTipoTestComponent implements OnInit {
 
-  test: any;
+ test: any;
   preguntaActualIndex: number = 0;
-  respuestasUsuario: number[] = []; // Guardamos el índice de la opción elegida
+  respuestasUsuario: number[] = [];
   testFinalizado: boolean = false;
   nota: number = 0;
+
+  notif = { 
+    show: false, 
+    msg: '', 
+    type: 'success' as 'success' | 'danger' | 'warning' | 'info' 
+  };
 
   constructor(
     private route: ActivatedRoute,
@@ -23,32 +29,34 @@ export class RealizarTipoTestComponent implements OnInit {
     private router: Router
   ) {}
 
-ngOnInit() {
-  const id = this.route.snapshot.paramMap.get('id');
-  console.log("ID recuperado de la URL:", id); // <-- LOG 1
-
-  if (id) {
-    this.testService.obtenerTestPorId(id).subscribe(data => {
-      console.log("Datos recibidos de Firebase:", data); // <-- LOG 2
-      this.test = data;
-    });
-  } else {
-    console.error("No se encontró ID en la ruta");
+  ngOnInit() {
+    const id = this.route.snapshot.paramMap.get('id');
+    
+    if (id) {
+      this.testService.obtenerTestPorId(id).subscribe({
+        next: (data) => {
+          if (data) {
+            // Unimos el ID de la URL con los datos de Firebase
+            this.test = { id, ...data };
+          } else {
+            this.mostrarNotif('No se encontró el test en la base de datos.', 'warning');
+          }
+        },
+        error: () => this.mostrarNotif('Error al cargar el test.', 'danger')
+      });
+    } else {
+      this.mostrarNotif('ID de test no válido.', 'danger');
+    }
   }
-}
 
   get preguntaActual() {
-    // Si test o preguntas no existen, devolvemos null en lugar de romper la app
-    if (!this.test || !this.test.preguntas) {
-      return null;
-    }
+    if (!this.test || !this.test.preguntas) return null;
     return this.test.preguntas[this.preguntaActualIndex];
   }
 
   seleccionarOpcion(index: number) {
     this.respuestasUsuario[this.preguntaActualIndex] = index;
     
-    // Avanzar automáticamente o esperar a que el usuario de a "Siguiente"
     if (this.preguntaActualIndex < this.test.preguntas.length - 1) {
       setTimeout(() => this.preguntaActualIndex++, 300);
     } else {
@@ -59,19 +67,29 @@ ngOnInit() {
   calcularResultado() {
     let aciertos = 0;
     this.test.preguntas.forEach((p: any, i: number) => {
-      if (this.respuestasUsuario[i] === p.respuestaCorrecta) {
-        aciertos++;
+      if (this.respuestasUsuario[i] === p.respuestaCorrecta) aciertos++;
+    });
+
+    this.nota = (aciertos / this.test.preguntas.length) * 10;
+
+    // Guardamos la nota usando el ID que inyectamos en ngOnInit
+    this.testService.guardarNota(this.test.id, this.nota).subscribe({
+      next: () => {
+        this.testFinalizado = true;
+      },
+      error: () => {
+        this.mostrarNotif('Error al guardar la calificación.', 'warning');
+        this.testFinalizado = true;
       }
     });
-    this.nota = (aciertos / this.test.preguntas.length) * 10;
-    this.testService.guardarNota(this.test.id, this.nota).subscribe(() => {
-      console.log("Nota guardada con éxito");
-    });
-    this.testFinalizado = true;
   }
 
   finalizar() {
-    this.router.navigate(['componentes/pruebas-test']);
+    this.router.navigate(['/componentes/pruebas-test']);
   }
 
+  private mostrarNotif(msg: string, type: 'success' | 'danger' | 'warning' | 'info') {
+    this.notif = { show: true, msg, type };
+    setTimeout(() => this.notif.show = false, 4000);
+  }
 }

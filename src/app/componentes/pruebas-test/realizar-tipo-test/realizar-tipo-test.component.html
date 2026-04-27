@@ -1,3 +1,13 @@
+<div *ngIf="notif.show" 
+     class="alert alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow-lg z-3 alert-{{notif.type}}" 
+     role="alert">
+  <div class="d-flex align-items-center gap-2">
+    <i class="bi" [ngClass]="notif.type === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'"></i>
+    <span>{{ notif.msg }}</span>
+    <button type="button" class="btn-close" (click)="notif.show = false"></button>
+  </div>
+</div>
+
 <div class="container py-5" *ngIf="test; else cargando">
   
   <div class="row justify-content-center mb-4" *ngIf="!testFinalizado">
@@ -76,9 +86,7 @@
 
 <ng-template #cargando>
   <div class="d-flex flex-column align-items-center justify-content-center py-5">
-    <div class="spinner-border text-primary mb-3" role="status">
-      <span class="visually-hidden">Cargando...</span>
-    </div>
+    <div class="spinner-border text-primary mb-3" role="status"></div>
     <p class="text-secondary fw-light fs-5">Sincronizando con Firebase...</p>
   </div>
 </ng-template>

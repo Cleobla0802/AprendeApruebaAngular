@@ -12,63 +12,48 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './visualizar-resumen.component.scss'
 })
 export class VisualizarResumenComponent implements OnInit {
-resumen: any = null;
-  resumenId: string = '';
-  userId: string = '';
+resumenId: string | null = null;
+  resumen: any = null;
   cargando = true;
-  guardando = false;
+  notif = { show: false, msg: '', type: 'success' };
 
   constructor(
     private route: ActivatedRoute,
-    public router: Router,
-    private resumenService: ResumenesService,
-    private authService: AuthService
+    private resS: ResumenesService,
+    private auth: AuthService,
+    private router: Router
   ) {}
 
-  ngOnInit(): void {
-    this.resumenId = this.route.snapshot.paramMap.get('id') || '';
-    
-    this.authService.getUserAuthenticated().subscribe(user => {
-      if (user) {
-        this.userId = user.uid;
-        this.cargarResumen();
-      }
+  ngOnInit() {
+    this.resumenId = this.route.snapshot.paramMap.get('id');
+    if (this.resumenId) this.cargar();
+  }
+
+  cargar() {
+    this.resS.getResumenById(this.resumenId!).subscribe({
+      next: (data) => {
+        this.resumen = data;
+        this.cargando = false;
+      },
+      error: () => this.showMsg('Error al cargar', 'danger')
     });
   }
 
-cargarResumen() {
-  console.log("Buscando resumen con ID:", this.resumenId, "para el usuario:", this.userId);
-  this.resumenService.getResumenById(this.userId, this.resumenId).subscribe(data => {
-    console.log("Datos recibidos de Firebase:", data);
-    this.resumen = data;
-    this.cargando = false;
+  guardar() {
+    if (!this.resumenId || !this.resumen) return;
     
-    if (!data) {
-      console.warn("Ojo: No se encontró ningún resumen en esa ruta de Firebase.");
-    }
-  });
-}
-
-  guardarCambios() {
-    if (!this.resumen) return;
-    
-    this.guardando = true;
-    this.resumenService.actualizarResumen(this.userId, this.resumenId, this.resumen)
-      .subscribe({
-        next: () => {
-          this.guardando = false;
-          // Opcional: podrías redirigir o mostrar un pequeño check temporal en el HTML
-        },
-        error: (err) => {
-          console.error("Error al guardar:", err);
-          this.guardando = false;
-        }
-      });
+    this.resS.actualizarResumen(this.resumenId, this.resumen).subscribe({
+      next: () => this.showMsg('¡Resumen guardado con exito!', 'success'),
+      error: () => this.showMsg('Error al actualizar', 'danger')
+    });
   }
 
-  // Método auxiliar para contar palabras
-  get contarPalabras(): number {
-    if (!this.resumen?.contenido) return 0;
-    return this.resumen.contenido.trim().split(/\s+/).length;
+  showMsg(msg: string, type: string) {
+    this.notif = { show: true, msg, type };
+    setTimeout(() => this.notif.show = false, 2500);
+  }
+
+  volver() {
+    this.router.navigate(['/componentes/resumenes']);
   }
 }

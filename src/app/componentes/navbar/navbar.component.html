@@ -1,33 +1,57 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm navbar-custom">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm border-bottom border-secondary border-opacity-25 py-3">
   <div class="container-fluid px-4">
-    <a class="navbar-brand fw-bold" href="#">
-      <img src="/assets/logoTfg.png" alt="A&A" width="35" height="35" class="d-inline-block align-text-top me-2">
-      Aprende & Aprueba
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav mx-auto gap-4">
-        <li class="nav-item">
-          <a routerLink="/componentes/apuntes" class="nav-link text-white">Apuntes</a>
-        </li>
-        <li class="nav-item">
-          <a routerLink="/componentes/resumenes" class="nav-link text-white">Resumen</a>
-        </li>
-        <li class="nav-item">
-          <a routerLink="/componentes/pruebas-test" class="nav-link text-white">Pruebas</a>
-        </li>
-      </ul>
-      <div class="d-flex gap-2">
-        <ng-container *ngIf="!usuarioActual">
-          <a routerLink="/componentes/autenticacion/login" class="btn btn-primary rounded-pill px-4">Login</a>
-          <a routerLink="/componentes/autenticacion/sigin" class="btn btn-primary rounded-pill px-4">Sign In</a>
-        </ng-container>
+    <div class="row w-100 align-items-center m-0">
+      
+      <div class="col-4 d-flex justify-content-start p-0">
+        <a class="navbar-brand fw-bold d-flex align-items-center m-0" routerLink="/">
+          <img src="/assets/logoTfg.png" alt="A&A" width="35" height="35" class="me-2">
+          <span class="d-none d-md-inline text-white">Aprende & Aprueba</span>
+        </a>
+      </div>
+
+      <div class="col-4 d-none d-lg-flex justify-content-center p-0">
+        <ul class="navbar-nav gap-5 fw-medium">
+          
+          <li class="nav-item">
+            <a routerLink="/componentes/apuntes" 
+               routerLinkActive="text-primary border border-primary rounded-pill px-3 py-1 shadow-sm opacity-100"
+               [routerLinkActiveOptions]="{exact: true}"
+               class="nav-link link-primary text-white text-opacity-75 transition-all">
+               Apuntes
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a routerLink="/componentes/resumenes" 
+               routerLinkActive="text-primary border border-primary rounded-pill px-3 py-1 shadow-sm opacity-100"
+               class="nav-link link-primary text-white text-opacity-75 transition-all">
+               Resumen
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a routerLink="/componentes/pruebas-test" 
+               routerLinkActive="text-primary border border-primary rounded-pill px-3 py-1 shadow-sm opacity-100"
+               class="nav-link link-primary text-white text-opacity-75 transition-all">
+               Pruebas
+            </a>
+          </li>
+
+        </ul>
+      </div>
+
+      <div class="col-8 col-lg-4 d-flex justify-content-end align-items-center p-0 gap-3">
         <ng-container *ngIf="usuarioActual">
-          <button (click)="logout()" class="btn btn-danger rounded-pill px-4">Logout</button>
+          <div class="d-flex align-items-center border-start border-secondary border-opacity-50 ps-3">
+            <div class="me-3 text-end d-none d-sm-block">
+              <div class="text-white-50 lh-1 small text-uppercase" style="font-size: 0.65rem;">Hola,</div>
+              <div class="text-white fw-bold lh-1">{{ userNameDatabase || usuarioActual.displayName || 'Usuario' }}</div>
+            </div>
+            <button (click)="logout()" class="btn btn-danger rounded-pill px-4 btn-sm shadow-sm">Logout</button>
+          </div>
         </ng-container>
       </div>
+
     </div>
   </div>
 </nav>

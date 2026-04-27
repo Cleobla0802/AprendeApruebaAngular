@@ -12,11 +12,17 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './visualizar-apuntes.component.scss'
 })
 export class VisualizarApuntesComponent {
-apunte: any = null;
+ apunte: any = null;
   apunteId: string = '';
   userId: string = '';
   cargando = true;
   guardando = false;
+
+  notif = { 
+    show: false, 
+    msg: '', 
+    type: 'success' as 'success' | 'danger' | 'warning' | 'info' 
+  };
 
   constructor(
     private route: ActivatedRoute,
@@ -46,14 +52,28 @@ apunte: any = null;
   guardarCambios() {
     if (!this.apunte) return;
     this.guardando = true;
+    this.notif.show = false; 
     
-    // Mantenemos el userId original
     const datos = { ...this.apunte, userId: this.userId };
 
     this.apunteService.actualizarApunteFirebase(this.apunteId, datos)
       .subscribe({
-        next: () => this.guardando = false,
-        error: () => this.guardando = false
+        next: () => {
+          this.guardando = false;
+          this.notif = { 
+            show: true, 
+            msg: '¡Apunte guardado correctamente!', 
+            type: 'success' 
+          };
+        },
+        error: () => {
+          this.guardando = false;
+          this.notif = { 
+            show: true, 
+            msg: 'Error al intentar guardar los cambios.', 
+            type: 'danger' 
+          };
+        }
       });
   }
 }

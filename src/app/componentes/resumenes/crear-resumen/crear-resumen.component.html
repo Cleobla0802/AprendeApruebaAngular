@@ -1,98 +1,101 @@
-<div class="container-fluid py-4">
+<div *ngIf="notif.show" 
+     class="alert alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow-lg z-3 alert-{{notif.type}}" 
+     role="alert">
+  <div class="d-flex align-items-center gap-2">
+    <i class="bi" [ngClass]="notif.type === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'"></i>
+    <span>{{ notif.msg }}</span>
+    <button type="button" class="btn-close" (click)="notif.show = false"></button>
+  </div>
+</div>
+
+<div class="container-fluid py-4 text-light">
   
-  <div class="mb-5">
-    <label class="form-label fw-semibold text-light mb-3">
-      <i class="bi bi-journals text-primary me-2"></i>
-      Selecciona los apuntes
-    </label>
-
-    <div class="d-flex gap-2 mb-4">
-      <div class="input-group flex-grow-1">
-        <span class="input-group-text bg-black border-secondary text-secondary">
-          <i class="bi bi-search"></i>
-        </span>
-        <input type="text" class="form-control bg-black text-light border-secondary" placeholder="Buscar apuntes...">
-      </div>
-      <span class="badge bg-primary bg-opacity-25 text-primary border border-primary border-opacity-25 rounded-3 px-3 d-flex align-items-center gap-1 fs-6">
-        <i class="bi bi-check2-square"></i> {{ seleccionados.length }} seleccionados
-      </span>
+  <div class="mb-4 d-flex justify-content-between align-items-center">
+    <div>
+      <h4 class="m-0 text-primary fw-bold">Crear Resúmenes</h4>
+      <p class="text-secondary small mb-0">Selecciona los apuntes que quieres resumir</p>
     </div>
-
-    <div *ngIf="cargando" class="text-center my-5">
-      <div class="spinner-border text-primary" role="status"></div>
-      <p class="text-secondary mt-2">Cargando tus apuntes...</p>
+    <span class="badge rounded-pill bg-primary px-3 shadow-sm">{{ seleccionados.length }} seleccionados</span>
+  </div>
+    
+  <div class="row g-3 mb-5 p-2 bg-dark bg-opacity-25 rounded-3">
+    <div *ngIf="cargando" class="col-12 text-center py-5">
+      <div class="spinner-border text-primary"></div>
     </div>
-
-    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3" *ngIf="!cargando && listaApuntes.length > 0">
-      <div class="col" *ngFor="let apunte of listaApuntes">
-        <input type="checkbox" class="btn-check" [id]="'apunte-' + apunte.id" (change)="toggleSeleccion(apunte)">
-        <label [for]="'apunte-' + apunte.id" class="card h-100 bg-dark border-primary border-opacity-25 text-decoration-none text-reset shadow w-100 cursor-pointer">
-          <div class="card-body">
-             <div class="d-flex justify-content-between mb-2">
-                <span class="badge text-bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">{{apunte.categoria}}</span>
-                <i class="bi" [ngClass]="seleccionados.includes(apunte) ? 'bi-check-circle-fill text-primary' : 'bi-circle text-secondary'"></i>
-             </div>
-             <h5 class="text-white fw-bold">{{ apunte.titulo }}</h5>
-             <p class="text-secondary small">{{ apunte.contenido | slice:0:80 }}...</p>
+    
+    <div class="col-12 col-md-6 col-xl-4" *ngFor="let a of listaApuntes">
+      <div class="card bg-dark border-secondary h-100" 
+          [class.border-primary]="seleccionados.includes(a)"
+          (click)="toggle(a)"
+          role="button">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <span class="badge bg-secondary bg-opacity-25 text-secondary text-uppercase small">{{a.categoria}}</span>
+            <i class="bi" 
+              [class.bi-check-circle-fill]="seleccionados.includes(a)" 
+              [class.text-primary]="seleccionados.includes(a)"
+              [class.bi-circle]="!seleccionados.includes(a)"></i>
           </div>
-        </label>
+          <h6 class="card-title fw-bold text-white">{{a.titulo}}</h6>
+          <p class="card-text small text-secondary text-truncate">{{a.contenido}}</p>
+        </div>
       </div>
-    </div>
-
-    <div *ngIf="!cargando && listaApuntes.length === 0" class="alert alert-dark border-secondary text-center py-5">
-      <i class="bi bi-inbox fs-1 d-block mb-3 opacity-50"></i>
-      No tienes apuntes disponibles para resumir.
     </div>
   </div>
 
-  <div class="row pt-4 border-top border-secondary border-opacity-25">
+  <div class="row g-4 border-top border-secondary pt-4">
     
     <div class="col-lg-4">
-      <h5 class="text-white mb-3">Configuración del Resumen</h5>
-      <div class="card bg-dark border-secondary p-4">
-        <div class="mb-4">
-          <label class="form-label text-secondary small fw-bold">Categoría del Resumen</label>
-          <div class="d-flex gap-2">
-            <select class="form-select bg-black text-light border-secondary" [(ngModel)]="nuevaCategoria">
-              <option value="" disabled selected>Selecciona una categoría</option>
-              <option *ngFor="let cat of categorias" [value]="cat.valor">{{ cat.nombre }}</option>
-            </select>
-            <button class="btn btn-outline-primary" (click)="toggleCrearCategoria()">
-              <i class="bi bi-plus-lg"></i>
-            </button>
-          </div>
+      <div class="card bg-dark border-secondary p-4 shadow rounded-4">
+        <h6 class="text-white mb-4 fw-bold">
+          <i class="bi bi-sliders me-2 text-primary"></i>Configuración del Resumen
+        </h6>
+        
+        <div class="mb-3">
+          <label class="form-label small fw-bold text-secondary">TÍTULO</label>
+          <input type="text" 
+                 class="form-control bg-black text-light border-secondary shadow-none" 
+                 placeholder="Ej: Resumen Tema 1..." 
+                 [(ngModel)]="nuevoTitulo">
         </div>
 
-        <button class="btn btn-primary w-100 py-3 d-flex align-items-center justify-content-center gap-2"
-                [disabled]="seleccionados.length === 0 || generandoIA"
+        <div class="mb-4">
+          <label class="form-label small fw-bold text-secondary">CATEGORÍA</label>
+          <select class="form-select bg-black text-light border-secondary shadow-none" [(ngModel)]="nuevaCategoria">
+            <option value="" disabled selected>Elegir categoría...</option>
+            <option *ngFor="let c of categorias" [value]="c.valor">{{c.nombre}}</option>
+          </select>
+        </div>
+        
+        <button class="btn btn-primary w-100 fw-bold py-3 rounded-pill shadow" 
+                [disabled]="!seleccionados.length || generandoIA" 
                 (click)="crearResumen()">
-          <span *ngIf="generandoIA" class="spinner-border spinner-border-sm"></span>
-          <i *ngIf="!generandoIA" class="bi bi-stars"></i>
-          {{ generandoIA ? 'Generando...' : 'Generar Resumen' }}
+          <span *ngIf="generandoIA" class="spinner-border spinner-border-sm me-2"></span>
+          <i *ngIf="!generandoIA" class="bi bi-cpu me-2"></i>
+          {{ generandoIA ? 'Generando...' : 'Procesar' }}
         </button>
       </div>
     </div>
 
     <div class="col-lg-8">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="text-white m-0">Resultado del Resumen</h5>
-        <button *ngIf="resumenResultado" class="btn btn-sm btn-success" (click)="guardarResumenFinal()">
-          <i class="bi bi-save me-1"></i> Guardar en Biblioteca
-        </button>
-      </div>
-      
-      <div class="card bg-black border-secondary" style="min-height: 300px;">
-        <div class="card-body p-0 d-flex flex-column">
-          <div *ngIf="!resumenResultado && !generandoIA" class="m-auto text-center text-secondary opacity-50 p-5">
-            <i class="bi bi-robot display-4 mb-3"></i>
-            <p>Selecciona tus apuntes arriba y pulsa "Generar"</p>
+      <div class="card bg-black border-secondary rounded-4 shadow-lg">
+        <div class="card-header border-secondary d-flex justify-content-between align-items-center bg-dark py-3">
+          <span class="small fw-bold text-secondary text-uppercase">Resultado</span>
+          
+          <div class="d-flex gap-2" *ngIf="resumenResultado">
+            <button class="btn btn-sm btn-outline-danger rounded-pill px-3" (click)="limpiarResultado()">
+              <i class="bi bi-trash3 me-1"></i>Limpiar
+            </button>
+            <button class="btn btn-sm btn-success fw-bold px-4 rounded-pill shadow-sm" (click)="guardar()">
+              <i class="bi bi-save2-fill me-2"></i>Guardar Cambios
+            </button>
           </div>
-
-          <textarea *ngIf="resumenResultado" 
-                    class="form-control bg-transparent text-light border-0 p-4 flex-grow-1"
-                    [(ngModel)]="resumenResultado"
-                    style="min-height: 300px; resize: none;"></textarea>
         </div>
+        
+        <textarea [(ngModel)]="resumenResultado" 
+                  class="form-control bg-transparent text-light border-0 p-4 shadow-none" 
+                  rows="15"
+                  placeholder="El resumen aparecera aqui..."></textarea>
       </div>
     </div>
 

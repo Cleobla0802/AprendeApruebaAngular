@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ResumenesService } from '../../services/resumenes.service';
 import { Auth } from '@angular/fire/auth';
@@ -12,12 +12,19 @@ import { CommonModule } from '@angular/common';
   templateUrl: './resumenes.component.html',
   styleUrl: './resumenes.component.scss'
 })
-export class ResumenesComponent {
+export class ResumenesComponent implements OnInit {
 listaResumenes: any[] = []; 
   listaResumenesOriginal: any[] = []; 
   cargando = true;
   buscarResumen: string = '';
   usuarioActual: any = null;
+
+  // Objeto para notificaciones de Bootstrap
+  notif = { 
+    show: false, 
+    msg: '', 
+    type: 'success' as 'success' | 'danger' | 'warning' | 'info' 
+  };
 
   filtrosCategorias: any = {
     matematicas: false,
@@ -45,13 +52,13 @@ listaResumenes: any[] = [];
 
   obtenerResumenes(uid: string) {
     this.cargando = true;
-    this.resumenService.getResumenesByUser(uid).subscribe({
-      next: (data) => {
+    this.resumenService.listarResumenesPorUsuario(uid).subscribe({
+      next: (data: any[]) => {
         this.listaResumenesOriginal = data;
         this.listaResumenes = data;
         this.cargando = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error("Error al recuperar resúmenes", err);
         this.cargando = false;
       }
@@ -87,17 +94,23 @@ listaResumenes: any[] = [];
     return colores[categoria.toLowerCase()] || 'secondary';
   }
 
-  eliminar(id: any) {
-    // Usamos this.usuarioActual que guardamos en el ngOnInit
-    if (this.usuarioActual && confirm('¿Estás seguro de que quieres borrar este resumen?')) {
+  eliminar(id: string) {
+    if (this.usuarioActual) {
       this.resumenService.eliminarResumen(this.usuarioActual.uid, id).subscribe({
         next: () => {
+          // Actualizamos la lista local
           this.listaResumenesOriginal = this.listaResumenesOriginal.filter((r: any) => r.id !== id);
           this.filtrarResumenes();
+          
+          // Feedback visual
+          this.notif = { show: true, msg: '¡Resumen eliminado con éxito!', type: 'success' };
+          setTimeout(() => this.notif.show = false, 2500);
         },
-        error: (err: any) => console.error("Error al eliminar", err)
+        error: (err: any) => {
+          this.notif = { show: true, msg: 'Error al eliminar el resumen.', type: 'danger' };
+          console.error(err);
+        }
       });
     }
   }
-
 }

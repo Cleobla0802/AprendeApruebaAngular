@@ -13,7 +13,6 @@ import { CrearResumenComponent } from './componentes/resumenes/crear-resumen/cre
 import { VisualizarResumenComponent } from './componentes/resumenes/visualizar-resumen/visualizar-resumen.component';
 import { PruebasTestComponent } from './componentes/pruebas-test/pruebas-test.component';
 import { CrearTipoTestComponent } from './componentes/pruebas-test/crear-tipo-test/crear-tipo-test.component';
-import { VisualizarTipoTestComponent } from './componentes/pruebas-test/visualizar-tipo-test/visualizar-tipo-test.component';
 import { RealizarTipoTestComponent } from './componentes/pruebas-test/realizar-tipo-test/realizar-tipo-test.component';
 
 export const routes: Routes = [
@@ -31,9 +30,8 @@ export const routes: Routes = [
     {path: 'componentes/apuntes/visualizar-apuntes/:id', component: VisualizarApuntesComponent},
     {path: 'componentes/apuntes/crear-apuntes', component: CrearApuntesComponent },
 
-    {path: 'componentes/pruebas-test', component: PruebasTestComponent },
+    {path: 'componentes/pruebas-test', component: PruebasTestComponent, ...canActivate(()=>redirectUnauthorizedTo('/componentes/autenticacion/login')) },
     {path: 'componentes/pruebas-test/crear-tipo-test', component: CrearTipoTestComponent },
-    {path: 'componentes/pruebas-test/visualizar-tipo-test/:id', component: VisualizarTipoTestComponent },
     { path: 'componentes/pruebas-test/realizar-test/:id', component: RealizarTipoTestComponent },
 
     

@@ -13,8 +13,7 @@ import { Route, Router } from '@angular/router';
   styleUrl: './crear-apuntes.component.scss'
 })
 export class CrearApuntesComponent {
-// Estados de la interfaz
-  cargando = false;
+cargando = false;
   archivoSeleccionado: File | null = null;
   userId: string | null = null;
   
@@ -23,7 +22,7 @@ export class CrearApuntesComponent {
 
   datosApunte = {
     titulo: '',
-    categoria: 'matematicas' // Valor por defecto para evitar errores
+    categoria: 'matematicas'
   };
 
   categorias = [
@@ -41,17 +40,10 @@ export class CrearApuntesComponent {
   ) {}
 
   ngOnInit(): void {
-    // Obtenemos el UID del usuario logueado en Firebase
     this.authService.getUserAuthenticated().subscribe({
       next: (user: any) => {
-        if (user) {
-          this.userId = user.uid;
-        } else {
-          this.mostrarMensaje('Debes iniciar sesión para crear apuntes', 'danger');
-          // Opcional: this.router.navigate(['/login']);
-        }
-      },
-      error: (err: any) => console.error('Error obteniendo auth', err)
+        if (user) this.userId = user.uid;
+      }
     });
   }
 
@@ -59,54 +51,84 @@ export class CrearApuntesComponent {
     const file = event.target.files[0];
     if (file) {
       this.archivoSeleccionado = file;
-      this.mostrarMensaje('Archivo seleccionado: ' + file.name, 'info');
+      this.mensajeFeedback = null;
     }
   }
 
   crearApuntes(): void {
-    // Validaciones previas
-    if (!this.userId) {
-      this.mostrarMensaje('Usuario no identificado. Reintenta el login.', 'danger');
-      return;
-    }
-
-    if (!this.archivoSeleccionado || !this.datosApunte.titulo) {
-      this.mostrarMensaje('Rellena el título y selecciona una imagen.', 'danger');
-      return;
-    }
+    if (!this.userId || !this.archivoSeleccionado || !this.datosApunte.titulo) return;
 
     this.cargando = true;
-    this.mensajeFeedback = 'Subiendo imagen a ImgBB...';
-    this.tipoFeedback = 'info';
+    this.mensajeFeedback = null; 
 
-    // 1. Subida a ImgBB
     this.apunteService.subirAImgBB(this.archivoSeleccionado).subscribe({
       next: (resImgBB: any) => {
         const urlDirecta = resImgBB.data.url;
-        this.mensajeFeedback = 'Imagen lista. Digitalizando con IA...';
 
-        // 2. Envío a Java (Pasando los 4 argumentos: titulo, url, userId, categoria)
         this.apunteService.digitalizarEnBackend(
           this.datosApunte.titulo, 
           urlDirecta, 
           this.userId!, 
           this.datosApunte.categoria
         ).subscribe({
-          next: (resBackend: any) => {
-            this.cargando = false;
-            this.mostrarMensaje('¡Apunte creado y digitalizado con éxito!', 'success');
-            setTimeout(() => this.router.navigate(['/componentes/apuntes']), 2000);
+          next: (respuestaRaw: string) => {
+            let contenidoFinal: string = respuestaRaw;
+
+            // --- INICIO DE LA LIMPIEZA INTELIGENTE ---
+            try {
+              // 1. ¿Es un JSON?
+              const primeraCapa = JSON.parse(respuestaRaw);
+              if (primeraCapa && primeraCapa.textoIA) {
+                try {
+                  const segundaCapa = JSON.parse(primeraCapa.textoIA);
+                  contenidoFinal = typeof segundaCapa === 'string' ? segundaCapa : JSON.stringify(segundaCapa, null, 2);
+                } catch {
+                  contenidoFinal = primeraCapa.textoIA;
+                }
+              } else {
+                contenidoFinal = JSON.stringify(primeraCapa, null, 2);
+              }
+            } catch (e) {
+              // 2. No es JSON. ¿Es un documento HTML completo?
+              if (respuestaRaw.includes('<body')) {
+                // Extraemos solo lo que está dentro de <body> y </body>
+                const match = respuestaRaw.match(/<body[^>]*>([\s\S]*)<\/body>/i);
+                if (match && match[1]) {
+                  contenidoFinal = match[1].trim();
+                }
+              }
+            }
+            // --- FIN DE LA LIMPIEZA ---
+
+            const apunteParaFirebase = {
+              titulo: this.datosApunte.titulo,
+              contenido: contenidoFinal,
+              categoria: this.datosApunte.categoria,
+              userId: this.userId,
+              fecha: new Date().toISOString()
+            };
+
+            this.apunteService.guardarApunte(apunteParaFirebase).subscribe({
+              next: () => {
+                this.cargando = false;
+                this.mostrarMensaje('¡Apunte creado con éxito!', 'success');
+                setTimeout(() => this.router.navigate(['/componentes/apuntes']), 1500);
+              },
+              error: () => {
+                this.cargando = false;
+                this.mostrarMensaje('Error al guardar en Firebase.', 'danger');
+              }
+            });
           },
-          error: (err: any) => {
+          error: () => {
             this.cargando = false;
-            this.mostrarMensaje('Error en el servidor de Java (IA).', 'danger');
-            console.error(err);
+            this.mostrarMensaje('Error en el servidor de IA.', 'danger');
           }
         });
       },
-      error: (err: any) => {
+      error: () => {
         this.cargando = false;
-        this.mostrarMensaje('Error al subir a ImgBB. Revisa tu API Key.', 'danger');
+        this.mostrarMensaje('Error al subir la imagen.', 'danger');
       }
     });
   }
@@ -114,22 +136,13 @@ export class CrearApuntesComponent {
   mostrarMensaje(texto: string, tipo: 'success' | 'danger' | 'info'): void {
     this.mensajeFeedback = texto;
     this.tipoFeedback = tipo;
-    if (tipo === 'success') {
-      setTimeout(() => this.mensajeFeedback = null, 5000);
-    }
   }
+
   limpiarFormulario(): void {
-    this.datosApunte = {
-      titulo: '',
-      categoria: 'matematicas'
-    };
+    this.datosApunte = { titulo: '', categoria: 'matematicas' };
     this.archivoSeleccionado = null;
     this.mensajeFeedback = null;
-    
-    // Esto es para limpiar el input de tipo file en el HTML
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
-    if (fileInput) {
-      fileInput.value = '';
-    }
+    if (fileInput) fileInput.value = '';
   }
 }

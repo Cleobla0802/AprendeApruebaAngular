@@ -1,8 +1,23 @@
-<div class="mt-5 text-white text-center">
-    <img class="mt-5 mb-5" src="/assets/logoTfg.png">
-    <p class="mt-5 fs-4"><b>Aprende & Aprueba</b> te ayudara a aprobar este año
-    de la forma mas fácil y rápida jamás vista</p>
-    <p class="texto-gradiente display-6 mt-5">Somos tu mejor maestro</p>
-    <p class="opacity-50 mt-5 mb-5 fs-4">Te ayudaremos a mejorar tu capacidad de aprendizaje un 200%</p>
-    <button type="button" class="btn btn-primary btn-lg rounded-pill px-5 py-3 fs-1 mt-5 mb-5" routerLink="/componentes/autenticacion/login">¡Empieza ya a ser productivo!</button>
+<div class="container text-white text-center py-5">
+    <img class="my-5 img-fluid" src="/assets/logoTfg.png" alt="Logo">
+    
+    <p class="mt-5 fs-4 px-3">
+        <span class="fw-bold">Aprende & Aprueba</span> te ayudará a aprobar este año 
+        de la forma más fácil y rápida jamás vista
+    </p>
+    
+    <p class="text-info display-6 mt-5 fw-semibold">Somos tu mejor maestro</p>
+    
+    <p class="opacity-50 mt-5 mb-5 fs-4">
+        Te ayudaremos a mejorar tu capacidad de aprendizaje un 200%
+    </p>
+    
+    <button 
+        type="button" 
+        class="btn btn-primary btn-lg rounded-pill px-5 py-3 fs-3 mt-5 mb-5 shadow-lg fw-bold" 
+        (click)="navegarSegunEstado()">
+        {{ estaAutenticado ? 'Ir a mis apuntes' : '¡Empieza ya a ser productivo!' }}
+    </button>
 </div>
+
+<app-footer></app-footer>
