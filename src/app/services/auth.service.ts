@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Auth, authState, createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut, User, UserCredential } from '@angular/fire/auth';
+import { Auth, authState, createUserWithEmailAndPassword, fetchSignInMethodsForEmail, getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut, User, UserCredential } from '@angular/fire/auth';
 import { Database, ref, set } from '@angular/fire/database';
 import { Router } from '@angular/router';
 import { sendPasswordResetEmail } from 'firebase/auth';
@@ -12,6 +12,10 @@ import { ApunteService } from './apuntes.service';
 export class AuthService {
 
   constructor(private db: Database, private auth: Auth, private router: Router) { }
+
+  checkEmailExists(email: string): Promise<boolean> {
+    return fetchSignInMethodsForEmail(this.auth, email).then(methods => methods.length > 0);
+  }
 
   register(email: string, password: string) {
     return createUserWithEmailAndPassword(this.auth, email, password);
