@@ -8,96 +8,118 @@
   </div>
 </div>
 
-<div class="container-fluid py-4 text-light">
+<div class="container-fluid py-3 py-md-5 text-light" *ngIf="!cargando; else cargandoTemplate">
   
-  <div class="mb-4 d-flex justify-content-between align-items-center">
-    <div>
-      <h4 class="m-0 text-primary fw-bold">Crear Resúmenes</h4>
-      <p class="text-secondary small mb-0">Selecciona los apuntes que quieres resumir</p>
+  <div class="mb-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
+    <div class="d-flex align-items-center gap-3">
+      <button class="btn btn-outline-secondary rounded-pill px-3 py-2 fw-bold border-2 shadow-sm" (click)="volver()">
+        <i class="bi bi-arrow-left me-1"></i> <span class="d-none d-sm-inline">VOLVER</span>
+      </button>
+      <div>
+        <h4 class="m-0 text-primary fw-bold text-uppercase fs-5">Crear Resúmenes</h4>
+        <p class="text-secondary small mb-0 d-none d-md-block">Selecciona los apuntes que quieres resumir</p>
+      </div>
     </div>
-    <span class="badge rounded-pill bg-primary px-3 shadow-sm">{{ seleccionados.length }} seleccionados</span>
+    <span class="badge rounded-pill bg-primary px-3 py-2 shadow-sm">{{ seleccionados.length }} seleccionados</span>
   </div>
     
-  <div class="row g-3 mb-5 p-2 bg-dark bg-opacity-25 rounded-3">
+  <div class="row g-3 mb-4 mb-md-5 p-2 p-md-3 bg-dark bg-opacity-25 rounded-4 border border-secondary border-opacity-25">
     <div *ngIf="cargando" class="col-12 text-center py-5">
       <div class="spinner-border text-primary"></div>
+      <p class="text-secondary mt-2">Cargando tus apuntes...</p>
     </div>
     
     <div class="col-12 col-md-6 col-xl-4" *ngFor="let a of listaApuntes">
-      <div class="card bg-dark border-secondary h-100" 
-          [class.border-primary]="seleccionados.includes(a)"
-          (click)="toggle(a)"
-          role="button">
+      <div class="card bg-dark border-secondary h-100 shadow-sm transition-all" 
+           [class.border-primary]="seleccionados.includes(a)"
+           (click)="toggle(a)"
+           role="button">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-start mb-2">
-            <span class="badge bg-secondary bg-opacity-25 text-secondary text-uppercase small">{{a.categoria}}</span>
+            <span class="badge bg-secondary bg-opacity-10 text-secondary text-uppercase x-small">{{a.categoria}}</span>
             <i class="bi" 
-              [class.bi-check-circle-fill]="seleccionados.includes(a)" 
-              [class.text-primary]="seleccionados.includes(a)"
-              [class.bi-circle]="!seleccionados.includes(a)"></i>
+              [ngClass]="seleccionados.includes(a) ? 'bi-check-circle-fill text-primary' : 'bi-circle text-secondary'"></i>
           </div>
-          <h6 class="card-title fw-bold text-white">{{a.titulo}}</h6>
-          <p class="card-text small text-secondary text-truncate">{{a.contenido}}</p>
+          <h6 class="card-title fw-bold text-white mb-1">{{a.titulo}}</h6>
+          <p class="card-text small text-secondary opacity-75 mb-0">
+            {{ a.descripcion || 'Sin descripción disponible.' }}
+          </p>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="row g-4 border-top border-secondary pt-4">
+  <div class="row g-4 border-top border-secondary border-opacity-25 pt-4">
     
-    <div class="col-lg-4">
-      <div class="card bg-dark border-secondary p-4 shadow rounded-4">
-        <h6 class="text-white mb-4 fw-bold">
-          <i class="bi bi-sliders me-2 text-primary"></i>Configuración del Resumen
+    <div class="col-12 col-lg-4">
+      <div class="card bg-dark border-secondary p-3 p-md-4 shadow rounded-4">
+        <h6 class="text-white mb-4 fw-bold text-uppercase small tracking-wider">
+          <i class="bi bi-sliders me-2 text-primary"></i>Configuración
         </h6>
         
         <div class="mb-3">
-          <label class="form-label small fw-bold text-secondary">TÍTULO</label>
+          <label class="form-label small fw-bold text-secondary text-uppercase">Título del resumen</label>
           <input type="text" 
-                 class="form-control bg-black text-light border-secondary shadow-none" 
-                 placeholder="Ej: Resumen Tema 1..." 
+                 class="form-control bg-black text-light border-secondary shadow-none py-2" 
+                 placeholder="Ej: Gran Resumen de Historia..." 
                  [(ngModel)]="nuevoTitulo">
         </div>
 
-        <div class="mb-4">
-          <label class="form-label small fw-bold text-secondary">CATEGORÍA</label>
-          <select class="form-select bg-black text-light border-secondary shadow-none" [(ngModel)]="nuevaCategoria">
-            <option value="" disabled selected>Elegir categoría...</option>
+        <div class="mb-3">
+          <label class="form-label small fw-bold text-secondary text-uppercase">Categoría</label>
+          <select class="form-select bg-black text-light border-secondary shadow-none py-2" [(ngModel)]="nuevaCategoria">
             <option *ngFor="let c of categorias" [value]="c.valor">{{c.nombre}}</option>
           </select>
         </div>
+
+        <div class="mb-4">
+          <div class="d-flex justify-content-between">
+            <label class="form-label small fw-bold text-secondary text-uppercase">Descripción</label>
+            <small [ngClass]="nuevaDescripcion.length >= 150 ? 'text-danger' : 'text-secondary'">
+              {{ nuevaDescripcion.length }}/150
+            </small>
+          </div>
+          <textarea class="form-control bg-black text-light border-secondary shadow-none" 
+                    rows="3" maxlength="150" [(ngModel)]="nuevaDescripcion"
+                    placeholder="De qué trata este resumen..."></textarea>
+        </div>
         
-        <button class="btn btn-primary w-100 fw-bold py-3 rounded-pill shadow" 
+        <button class="btn btn-primary w-100 fw-bold py-3 rounded-pill shadow-lg border-0" 
                 [disabled]="!seleccionados.length || generandoIA" 
                 (click)="crearResumen()">
           <span *ngIf="generandoIA" class="spinner-border spinner-border-sm me-2"></span>
-          <i *ngIf="!generandoIA" class="bi bi-cpu me-2"></i>
-          {{ generandoIA ? 'Generando...' : 'Procesar' }}
+          {{ generandoIA ? 'PROCESANDO...' : 'Crear resumen con IA' }}
         </button>
       </div>
     </div>
 
-    <div class="col-lg-8">
-      <div class="card bg-black border-secondary rounded-4 shadow-lg">
-        <div class="card-header border-secondary d-flex justify-content-between align-items-center bg-dark py-3">
-          <span class="small fw-bold text-secondary text-uppercase">Resultado</span>
+    <div class="col-12 col-lg-8">
+      <div class="card bg-black border-secondary rounded-4 shadow-lg overflow-hidden h-100">
+        <div class="card-header border-secondary d-flex flex-wrap justify-content-between align-items-center gap-2 bg-dark bg-opacity-50 py-3 px-3 px-md-4">
+          <span class="small fw-bold text-primary text-uppercase ms-2 tracking-widest">Resultado IA</span>
           
-          <div class="d-flex gap-2" *ngIf="resumenResultado">
+          <div class="d-flex gap-2 w-100 w-sm-auto justify-content-end" *ngIf="resumenResultado">
             <button class="btn btn-sm btn-outline-danger rounded-pill px-3" (click)="limpiarResultado()">
               <i class="bi bi-trash3 me-1"></i>Limpiar
             </button>
             <button class="btn btn-sm btn-success fw-bold px-4 rounded-pill shadow-sm" (click)="guardar()">
-              <i class="bi bi-save2-fill me-2"></i>Guardar Cambios
+              <i class="bi bi-save2-fill me-2"></i>Guardar
             </button>
           </div>
         </div>
         
         <textarea [(ngModel)]="resumenResultado" 
-                  class="form-control bg-transparent text-light border-0 p-4 shadow-none" 
-                  rows="15"
-                  placeholder="El resumen aparecera aqui..."></textarea>
+                  class="form-control bg-transparent text-light border-0 p-4 shadow-none custom-scrollbar h-100"
+                  placeholder="El contenido creado aparecerá aquí..."></textarea>
       </div>
     </div>
 
   </div>
 </div>
+
+<ng-template #cargandoTemplate>
+  <div class="d-flex flex-column align-items-center justify-content-center py-5 min-vh-100 text-center px-3">
+    <div class="spinner-border text-primary mb-3"></div>
+    <p class="text-secondary fw-bold text-uppercase tracking-widest small">Cargando tus apuntes...</p>
+  </div>
+</ng-template>

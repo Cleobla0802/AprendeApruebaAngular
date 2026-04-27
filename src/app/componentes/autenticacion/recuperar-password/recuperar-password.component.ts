@@ -14,26 +14,39 @@ export class RecuperarPasswordComponent {
 
   email: string = '';
   cargando: boolean = false;
-  mostrarAlert: boolean = false;
-  mensaje: string = '';
+
+  // Objeto de notificación idéntico al resto de componentes
+  notif = { 
+    show: false, 
+    msg: '', 
+    type: 'success' as 'success' | 'danger' | 'warning' | 'info' 
+  };
 
   constructor(private authService: AuthService) {}
 
   enviarEmail() {
     if (!this.email) return;
     this.cargando = true;
+
     this.authService.resetPassword(this.email)
       .then(() => {
-        this.mensaje = 'Se ha enviado un correo para restablecer tu contraseña.';
-        this.mostrarAlert = true;
+        this.mostrarNotif('¡Correo enviado! Revisa tu bandeja de entrada.', 'success');
+        this.email = ''; // Limpiamos el campo tras el éxito
       })
       .catch((error) => {
-        this.mensaje = `Error: ${error.message}`;
-        this.mostrarAlert = true;
+        console.error(error);
+        this.mostrarNotif('Error: No se pudo enviar el correo de recuperación.', 'danger');
       })
       .finally(() => {
         this.cargando = false;
       });
+  }
+
+  private mostrarNotif(msg: string, type: 'success' | 'danger' | 'warning' | 'info') {
+    this.notif = { show: true, msg, type };
+    setTimeout(() => {
+      this.notif.show = false;
+    }, 3000);
   }
   
 }

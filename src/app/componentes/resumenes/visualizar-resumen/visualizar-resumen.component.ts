@@ -12,45 +12,86 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './visualizar-resumen.component.scss'
 })
 export class VisualizarResumenComponent implements OnInit {
-resumenId: string | null = null;
+  resumenId: string | null = null;
   resumen: any = null;
   cargando = true;
-  notif = { show: false, msg: '', type: 'success' };
+  guardando = false;
+
+  notif = { show: false, msg: '', type: 'success' as 'success' | 'danger' | 'warning' | 'info' };
+
+  categorias = [
+    { valor: 'matematicas', nombre: 'Matemáticas' },
+    { valor: 'ciencias', nombre: 'Ciencias' },
+    { valor: 'ingles', nombre: 'Inglés' },
+    { valor: 'historia', nombre: 'Historia' },
+    { valor: 'tecnologia', nombre: 'Tecnología' }
+  ];
 
   constructor(
     private route: ActivatedRoute,
     private resS: ResumenesService,
     private auth: AuthService,
-    private router: Router
+    public router: Router
   ) {}
 
   ngOnInit() {
     this.resumenId = this.route.snapshot.paramMap.get('id');
-    if (this.resumenId) this.cargar();
+    if (this.resumenId) {
+      this.cargar();
+    }
   }
 
   cargar() {
+    this.cargando = true;
     this.resS.getResumenById(this.resumenId!).subscribe({
       next: (data) => {
         this.resumen = data;
+        // Inicializamos la descripción si no existe para evitar errores en el .length del HTML
+        if (!this.resumen.descripcion) {
+          this.resumen.descripcion = '';
+        }
         this.cargando = false;
       },
-      error: () => this.showMsg('Error al cargar', 'danger')
+      error: () => {
+        this.showMsg('Error al cargar el resumen', 'danger');
+        this.cargando = false;
+      }
     });
   }
 
   guardar() {
     if (!this.resumenId || !this.resumen) return;
-    
+
+    // --- VALIDACIONES ANTES DE GUARDAR ---
+    if (!this.resumen.titulo?.trim()) {
+      return this.showMsg('El título no puede estar vacío', 'warning');
+    }
+
+    if (this.resumen.descripcion?.length > 150) {
+      return this.showMsg('La descripción no puede superar los 150 caracteres', 'warning');
+    }
+
+    this.guardando = true;
+
+    // Enviamos el objeto 'resumen' completo. 
+    // Firebase actualizará título, descripción y resumenTexto automáticamente.
     this.resS.actualizarResumen(this.resumenId, this.resumen).subscribe({
-      next: () => this.showMsg('¡Resumen guardado con exito!', 'success'),
-      error: () => this.showMsg('Error al actualizar', 'danger')
+      next: () => {
+        this.guardando = false;
+        this.showMsg('¡Cambios guardados correctamente!', 'success');
+      },
+      error: () => {
+        this.guardando = false;
+        this.showMsg('Error al intentar actualizar el resumen', 'danger');
+      }
     });
   }
 
-  showMsg(msg: string, type: string) {
+  showMsg(msg: string, type: 'success' | 'danger' | 'warning' | 'info') {
     this.notif = { show: true, msg, type };
-    setTimeout(() => this.notif.show = false, 2500);
+    // Si es un error, lo dejamos un poco más de tiempo
+    const tiempo = type === 'danger' ? 4000 : 2500;
+    setTimeout(() => this.notif.show = false, tiempo);
   }
 
   volver() {

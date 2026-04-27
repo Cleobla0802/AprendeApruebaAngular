@@ -12,9 +12,9 @@ import { CommonModule } from '@angular/common';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-loginForm = new FormGroup({
+  loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required])
+    password: new FormControl('', [Validators.required, Validators.minLength(8)])
   });
 
   errores = false;
@@ -24,34 +24,34 @@ loginForm = new FormGroup({
   constructor(private authService: AuthService, private router: Router) { }
 
   login() {
-    if (this.loginForm.valid && !this.loading) {
+    // Si el formulario es válido, procedemos
+    if (this.loginForm.valid) {
       this.loading = true;
       this.errores = false;
+      this.mensajeError = '';
       
       const { email, password } = this.loginForm.value;
 
-      // Usamos los valores directamente del formulario
       this.authService.login(email!, password!)
-        .then((user: UserCredential) => {
+        .then(() => {
           this.router.navigate(['/componentes/apuntes']);
         })
         .catch((error) => {
-          this.errores = true;
           this.loading = false;
+          this.errores = true;
           
-          // Control simple de errores de inicio de sesión
-          if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
-            this.mensajeError = 'Correo o contraseña incorrectos.';
+          // Errores de Firebase (Servidor)
+          if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password') {
+            this.mensajeError = 'Credenciales incorrectas. Revisa el correo o la contraseña.';
           } else if (error.code === 'auth/too-many-requests') {
-            this.mensajeError = 'Demasiados intentos. Inténtalo más tarde.';
+            this.mensajeError = 'Demasiados intentos. Prueba en unos minutos.';
           } else {
-            this.mensajeError = 'Error al iniciar sesión. Inténtalo de nuevo.';
+            this.mensajeError = 'Vaya, algo ha fallado. Prueba otra vez.';
           }
-          console.log(error.code);
         });
     } else {
-      this.errores = true;
-      this.mensajeError = 'Por favor, rellena todos los campos correctamente.';
+      // Si el usuario le da a "Entrar" y falta algo, forzamos que salgan los alerts rojos de bootstrap
+      this.loginForm.markAllAsTouched();
     }
   }
 

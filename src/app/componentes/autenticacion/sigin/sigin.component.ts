@@ -12,7 +12,6 @@ import { CommonModule } from '@angular/common';
   styleUrl: './sigin.component.scss'
 })
 export class SiginComponent {
-
 registerForm: FormGroup;
   errores = false;
   loading = false; 
@@ -27,10 +26,12 @@ registerForm: FormGroup;
   }
 
   register() {
-    if (this.registerForm.valid && !this.loading) {
+    if (this.registerForm.valid) {
+      if (this.loading) return;
+
       this.loading = true;
       this.errores = false;
-      this.mensajeError = ''; // Limpiamos errores previos
+      this.mensajeError = '';
       
       const { username, email, password } = this.registerForm.value;
 
@@ -45,7 +46,6 @@ registerForm: FormGroup;
           this.errores = true;
           this.loading = false;
 
-          // CONTROL DE CORREO DUPLICADO
           if (error.code === 'auth/email-already-in-use') {
             this.mensajeError = 'Este correo electrónico ya está en uso por otra cuenta.';
           } else if (error.code === 'auth/invalid-email') {
@@ -55,9 +55,10 @@ registerForm: FormGroup;
           } else {
             this.mensajeError = 'Ocurrió un error al intentar registrarte.';
           }
-          
-          console.error('Error de Firebase:', error.code);
         });
+    } else {
+      // Forzamos que se vean los alerts rojos de Bootstrap si el formulario es inválido
+      this.registerForm.markAllAsTouched();
     }
   }
 

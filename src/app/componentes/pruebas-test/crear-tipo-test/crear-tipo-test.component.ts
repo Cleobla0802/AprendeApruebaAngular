@@ -14,7 +14,7 @@ import { PruebasService } from '../../../services/pruebas.service';
   styleUrl: './crear-tipo-test.component.scss'
 })
 export class CrearTipoTestComponent {
-  listaApuntes: any[] = [];
+listaApuntes: any[] = [];
   listaResumenes: any[] = [];
   
   tabActiva: 'apuntes' | 'resumenes' = 'apuntes';
@@ -22,9 +22,9 @@ export class CrearTipoTestComponent {
   cargando = true;
   generando = false;
   userId: string = '';
+  
   notif = { show: false, msg: '', type: 'success' as 'success' | 'danger' | 'warning' | 'info' };
 
-  // Actualizado a Render para ser consistente con tus servicios anteriores
   private apiBackend = 'https://api-aprende-aprueba-1.onrender.com/api/tests/generar';
 
   constructor(
@@ -49,24 +49,21 @@ export class CrearTipoTestComponent {
 
   cargarDatos() {
     this.cargando = true;
-    // 1. Cargamos Apuntes desde Firebase
     this.apunteService.listarApuntesPorUsuario(this.userId).subscribe({
-      next: (apuntes: any[]) => { // Tipado explícito para evitar error TS7006
+      next: (apuntes: any[]) => {
         this.listaApuntes = apuntes;
-        
-        // 2. Cargamos Resúmenes desde Firebase (usando el nuevo nombre del método)
         this.resumenService.listarResumenesPorUsuario(this.userId).subscribe({
           next: (resumenes: any[]) => {
             this.listaResumenes = resumenes;
             this.cargando = false;
           },
-          error: (err: any) => {
+          error: (err) => {
             console.error("Error al cargar resúmenes", err);
             this.cargando = false;
           }
         });
       },
-      error: (err: any) => {
+      error: (err) => {
         console.error("Error al cargar apuntes", err);
         this.cargando = false;
       }
@@ -84,45 +81,60 @@ export class CrearTipoTestComponent {
   generarTest() {
     if (!this.seleccionado) return;
     this.generando = true;
-    this.notif = { show: false, msg: '', type: 'info' };
+    this.notif.show = false;
+
+    // Adaptación dinámica del contenido:
+    const textoAProcesar = this.tabActiva === 'apuntes' 
+      ? this.seleccionado.contenido 
+      : this.seleccionado.resumenTexto;
 
     const payload = {
-      contenido: this.seleccionado.contenido,
+      contenido: textoAProcesar,
       userId: this.userId,
       titulo: this.seleccionado.titulo,
       categoria: this.seleccionado.categoria
     };
 
-    // 1. Pedimos las preguntas a la IA (Java)
+    // 1. Pedimos las preguntas a la IA (Backend Java)
     this.http.post<any>(this.apiBackend, payload).subscribe({
       next: (testDeIA) => {
-        // 2. Guardamos el test en Firebase para obtener un ID real
+        
+        // --- AQUÍ ESTÁ EL CAMBIO CLAVE ---
+        // El objeto testDeIA viene con las preguntas, pero no con la descripción.
+        // Se la asignamos manualmente del material origen (apunte o resumen).
+        testDeIA.descripcion = this.seleccionado.descripcion || '';
+
+        // 2. Guardamos el test completo en Firebase
         this.pruebasService.crearTest(testDeIA).subscribe({
           next: (testGuardado) => {
             this.generando = false;
-            
-            // Verificamos que el ID exista antes de navegar
             if (testGuardado && testGuardado.id) {
-              this.notif = { show: true, msg: '¡Test generado!', type: 'success' };
+              this.showMsg('¡Test generado con éxito!', 'success');
               setTimeout(() => {
                 this.router.navigate(['/componentes/pruebas-test/realizar-test', testGuardado.id]);
-              }, 1000);
+              }, 1500);
             }
           },
-          error: () => {
-            this.generando = false;
-            this.notif = { show: true, msg: 'Error al guardar en Firebase', type: 'danger' };
-          }
+          error: () => this.handleError('Error al guardar el test')
         });
       },
-      error: () => {
-        this.generando = false;
-        this.notif = { show: true, msg: 'Error al generar preguntas con IA', type: 'danger' };
-      }
+      error: () => this.handleError('La IA no pudo generar las preguntas')
     });
   }
 
+  // Centralización de mensajes para ser consistente con los otros .ts
+  showMsg(msg: string, type: 'success' | 'danger' | 'warning' | 'info') {
+    this.notif = { show: true, msg, type };
+    setTimeout(() => this.notif.show = false, 3000);
+  }
+
+  handleError(msg: string) {
+    this.generando = false;
+    this.showMsg(msg, 'danger');
+  }
+
   getBgColor(categoria: string): string {
+    if (!categoria) return 'secondary';
     const colores: any = {
       'matematicas': 'primary',
       'ciencias': 'success',
@@ -130,6 +142,6 @@ export class CrearTipoTestComponent {
       'historia': 'warning',
       'tecnologia': 'danger'
     };
-    return colores[categoria?.toLowerCase()] || 'secondary';
+    return colores[categoria.toLowerCase()] || 'secondary';
   }
 }

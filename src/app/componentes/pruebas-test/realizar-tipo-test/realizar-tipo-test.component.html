@@ -8,35 +8,52 @@
   </div>
 </div>
 
-<div class="container py-5" *ngIf="test; else cargando">
+<div class="container py-3 py-md-5" *ngIf="test; else cargando">
   
   <div class="row justify-content-center mb-4" *ngIf="!testFinalizado">
-    <div class="col-md-8">
-      <div class="d-flex justify-content-between align-items-end border-bottom border-secondary border-opacity-25 pb-3">
-        <div>
-          <h2 class="text-white fw-bold mb-0">{{ test?.titulo }}</h2>
-          <small class="text-secondary text-uppercase">Categoría: {{ test?.categoria }}</small>
-        </div>
-        <div class="text-end">
-          <span class="badge bg-primary rounded-pill px-3">
-            Pregunta {{ preguntaActualIndex + 1 }} de {{ test?.preguntas?.length || 0 }}
-          </span>
+    <div class="col-12 col-md-8">
+      
+      <button class="btn btn-sm btn-outline-secondary rounded-pill px-3 mb-3 border-opacity-25 fw-bold" (click)="finalizar()">
+        <i class="bi bi-chevron-left me-1"></i> SALIR DEL TEST
+      </button>
+
+      <div class="border-bottom border-secondary border-opacity-25 pb-3">
+        <div class="d-flex justify-content-between align-items-start gap-2">
+          <div class="flex-grow-1">
+            <h2 class="text-white fw-bold mb-1">{{ test?.titulo }}</h2>
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-3 py-1 small">
+                {{ test?.categoria | titlecase }}
+              </span>
+            </div>
+            
+            <p class="text-secondary small mb-0 mt-2 opacity-75" *ngIf="test?.descripcion">
+              <i class="bi bi-info-circle me-1"></i>
+              {{ test.descripcion }}
+            </p>
+          </div>
+          
+          <div class="text-end ms-2">
+            <span class="badge bg-primary rounded-pill px-3 shadow-sm">
+              Pregunta {{ preguntaActualIndex + 1 }} de {{ test?.preguntas?.length || 0 }}
+            </span>
+          </div>
         </div>
       </div>
       
       <div class="progress mt-3 bg-dark border border-secondary border-opacity-25">
         <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" 
              role="progressbar" 
-             [style.width]="test?.preguntas ? ((preguntaActualIndex + 1) / test.preguntas.length * 100) + '%' : '0%'">
+             [style.width.%]="test?.preguntas ? ((preguntaActualIndex + 1) / test.preguntas.length * 100) : 0">
         </div>
       </div>
     </div>
   </div>
 
   <div class="row justify-content-center" *ngIf="!testFinalizado && preguntaActual">
-    <div class="col-md-8">
-      <div class="card bg-dark border-secondary shadow-lg p-4 rounded-4">
-        <h4 class="text-white mb-4 lh-base">{{ preguntaActual?.enunciado }}</h4>
+    <div class="col-12 col-md-8">
+      <div class="card bg-dark border-secondary shadow-lg p-3 p-md-4 rounded-4">
+        <h4 class="text-white mb-4 lh-base fw-normal">{{ preguntaActual?.enunciado }}</h4>
         
         <div class="d-grid gap-3">
           <button *ngFor="let opcion of preguntaActual?.opciones; let i = index"
@@ -46,7 +63,7 @@
           </button>
         </div>
 
-        <div class="d-flex justify-content-between mt-5">
+        <div class="d-flex justify-content-between mt-4 mt-md-5 pt-3 border-top border-secondary border-opacity-10">
           <button class="btn btn-sm btn-link text-secondary text-decoration-none" 
                   [disabled]="preguntaActualIndex === 0"
                   (click)="preguntaActualIndex = preguntaActualIndex - 1">
@@ -62,22 +79,26 @@
     </div>
   </div>
 
-  <div class="row justify-content-center text-center py-5" *ngIf="testFinalizado">
-    <div class="col-md-6">
-      <div class="card bg-dark border-secondary p-5 rounded-5 shadow-lg">
-        <h1 class="display-1 fw-bold mb-0" [class.text-success]="nota >= 5" [class.text-danger]="nota < 5">
+  <div class="row justify-content-center text-center py-3 py-md-5" *ngIf="testFinalizado">
+    <div class="col-12 col-md-6">
+      <div class="card bg-dark border-secondary p-4 p-md-5 rounded-5 shadow-lg">
+        <h1 class="display-3 display-md-1 fw-bold mb-0" [class.text-success]="nota >= 5" [class.text-danger]="nota < 5">
           {{ nota | number:'1.1-1' }}
         </h1>
         <p class="text-secondary fs-5 mb-4 text-uppercase">Calificación Final</p>
         
-        <div class="alert bg-opacity-10 border-0 mb-5" [class.bg-success]="nota >= 5" [class.bg-danger]="nota < 5">
+        <div class="mb-4" *ngIf="test?.descripcion">
+          <p class="text-secondary small px-2 px-md-4">"{{ test.descripcion }}"</p>
+        </div>
+
+        <div class="alert bg-opacity-10 border-0 mb-4 mb-md-5 py-3" [class.bg-success]="nota >= 5" [class.bg-danger]="nota < 5">
           <h5 class="mb-0 fw-bold" [class.text-success]="nota >= 5" [class.text-danger]="nota < 5">
-            {{ nota >= 5 ? '¡Excelente trabajo, aprobado!' : 'Vaya, necesitas repasar un poco más' }}
+            {{ nota >= 5 ? '¡Excelente trabajo, aprobado!' : 'Necesitas repasar un poco más' }}
           </h5>
         </div>
 
-        <button class="btn btn-primary btn-lg w-100 rounded-pill shadow" (click)="finalizar()">
-          Volver al menú de pruebas
+        <button class="btn btn-primary btn-lg w-100 rounded-pill shadow fw-bold" (click)="finalizar()">
+          VOLVER AL MENÚ DE PRUEBAS
         </button>
       </div>
     </div>
@@ -85,8 +106,8 @@
 </div>
 
 <ng-template #cargando>
-  <div class="d-flex flex-column align-items-center justify-content-center py-5">
+  <div class="container min-vh-100 d-flex flex-column align-items-center justify-content-center">
     <div class="spinner-border text-primary mb-3" role="status"></div>
-    <p class="text-secondary fw-light fs-5">Sincronizando con Firebase...</p>
+    <p class="text-secondary fw-bold text-uppercase small">Sincronizando con Firebase...</p>
   </div>
 </ng-template>

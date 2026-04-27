@@ -1,6 +1,5 @@
 <div *ngIf="notif.show" 
-     class="alert alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow-lg alert-{{notif.type}}" 
-     style="z-index: 1080;"
+     class="alert alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow-lg alert-{{notif.type}} z-3" 
      role="alert">
   <div class="d-flex align-items-center gap-2">
     <i class="bi" [ngClass]="notif.type === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'"></i>
@@ -9,44 +8,21 @@
   </div>
 </div>
 
-<div class="container-fluid py-5" *ngIf="!cargando && apunte; else cargandoTemplate">
-
-  <div class="mb-5 d-flex flex-wrap align-items-center justify-content-between gap-3">
-    <div>
-      <h1 class="display-5 fw-bold text-white mb-2">Editor de Apuntes</h1>
-      <p class="text-secondary mb-0">
-        <i class="bi bi-pencil-square me-2"></i>
-        Crea y edita tus apuntes con nuestro editor avanzado
-      </p>
-    </div>
-    <div class="d-flex gap-2 flex-wrap">
-      <button class="btn btn-outline-secondary rounded-pill px-4 shadow-sm" (click)="router.navigate(['/componentes/apuntes'])">
-        <i class="bi bi-arrow-left me-2"></i>Volver
-      </button>
-      <button class="btn btn-primary rounded-pill px-4 shadow-sm" (click)="guardarCambios()" [disabled]="guardando">
-        <span *ngIf="guardando" class="spinner-border spinner-border-sm me-2"></span>
-        <i *ngIf="!guardando" class="bi bi-save me-2"></i>Guardar cambios
-      </button>
-    </div>
-  </div>
-
+<div class="container-fluid py-3 py-md-5" *ngIf="!cargando && apunte; else cargandoTemplate">
   <div class="row g-4">
-    <div class="col-lg-4">
-      <div class="card bg-secondary bg-opacity-10 text-white rounded-4 shadow-lg border-0">
-        <div class="card-header bg-secondary bg-opacity-25 d-flex align-items-center p-4">
-          <i class="bi bi-info-circle-fill me-2 fs-5"></i>
-          <h5 class="mb-0 fw-semibold">Información del apunte</h5>
-        </div>
-
+    
+    <div class="col-12 col-lg-4">
+      <div class="card bg-secondary bg-opacity-10 text-white rounded-4 border-0 shadow">
         <div class="card-body p-4">
+          
           <div class="mb-4">
-            <label class="form-label small fw-semibold text-secondary mb-2">Título</label>
+            <label class="form-label small fw-bold text-secondary text-uppercase">Título</label>
             <input type="text" class="form-control bg-dark text-white border-secondary shadow-none" 
                    [(ngModel)]="apunte.titulo">
           </div>
 
           <div class="mb-4">
-            <label class="form-label small fw-semibold text-secondary mb-2">Categoría</label>
+            <label class="form-label small fw-bold text-secondary text-uppercase">Categoría</label>
             <select class="form-select bg-dark text-white border-secondary shadow-none" [(ngModel)]="apunte.categoria">
               <option value="matematicas">Matemáticas</option>
               <option value="ciencias">Ciencias</option>
@@ -56,31 +32,43 @@
             </select>
           </div>
 
-          <div class="mb-1">
-            <label class="form-label small fw-semibold text-secondary mb-2">Fecha de registro</label>
-            <p class="text-white small m-0">{{ apunte.fecha | date:'medium' }}</p>
+          <div class="mb-4">
+            <label class="form-label small fw-bold text-secondary text-uppercase">Descripción</label>
+            <textarea class="form-control bg-dark text-white border-secondary shadow-none" 
+                      rows="4" maxlength="150" [(ngModel)]="apunte.descripcion"></textarea>
+            <div class="text-end mt-1">
+               <small class="text-secondary">{{ apunte.descripcion?.length || 0 }}/150</small>
+            </div>
+          </div>
+
+          <div class="mt-2 pt-3 border-top border-secondary border-opacity-25">
+            <button class="btn btn-primary w-100 rounded-pill mb-2" (click)="guardarCambios()">
+              Guardar Cambios
+            </button>
+            <button class="btn btn-outline-secondary w-100 rounded-pill" (click)="router.navigate(['/componentes/apuntes'])">
+              Volver
+            </button>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="col-lg-8">
-      <div class="card bg-dark text-white rounded-4 shadow-lg border-secondary">
-        <div class="p-4 border-bottom border-secondary border-opacity-25"></div>
-
-        <textarea 
-          [(ngModel)]="apunte.contenido"
-          class="form-control bg-transparent text-white border-0 p-4 shadow-none" 
-          rows="18"
-          placeholder="Escribe el contenido de tu apunte...">
-        </textarea>
+    <div class="col-12 col-lg-8">
+      <div class="card bg-dark text-white rounded-4 border-secondary shadow overflow-hidden h-100">
+        <div class="bg-black bg-opacity-50 p-3 border-bottom border-secondary border-opacity-25">
+          <small class="fw-bold text-primary text-uppercase ms-2">Contenido del Apunte</small>
+        </div>
+        <textarea [(ngModel)]="apunte.contenido" 
+                  class="form-control bg-transparent text-white border-0 p-4 shadow-none" 
+                  rows="12 rows-lg-22"></textarea>
       </div>
     </div>
+
   </div>
 </div>
 
 <ng-template #cargandoTemplate>
-  <div class="d-flex flex-column align-items-center justify-content-center py-5">
+  <div class="d-flex flex-column align-items-center justify-content-center py-5 min-vh-100">
     <div class="spinner-border text-primary mb-3" role="status"></div>
     <p class="text-secondary">Cargando apunte...</p>
   </div>

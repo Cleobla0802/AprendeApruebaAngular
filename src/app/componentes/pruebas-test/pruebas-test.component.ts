@@ -12,7 +12,7 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './pruebas-test.component.scss'
 })
 export class PruebasTestComponent implements OnInit {
-listaTests: any[] = [];
+ listaTests: any[] = [];
   listaTestsOriginal: any[] = [];
   cargando = true;
   buscarTest: string = '';
@@ -24,6 +24,13 @@ listaTests: any[] = [];
     ingles: false,
     historia: false,
     tecnologia: false
+  };
+
+  // Notificación
+  notif = { 
+    show: false, 
+    msg: '', 
+    type: 'success' as 'success' | 'danger' | 'warning' | 'info' 
   };
 
   constructor(
@@ -75,12 +82,31 @@ listaTests: any[] = [];
   }
 
   eliminar(id: string) {
-    if (confirm('¿Estás seguro de que quieres borrar esta prueba?')) {
-      this.testService.eliminarTest(id).subscribe(() => {
+    // Borrado directo sin confirm()
+    this.testService.eliminarTest(id).subscribe({
+      next: () => {
+        // 1. Filtrar localmente para que desaparezca de la vista al momento
         this.listaTestsOriginal = this.listaTestsOriginal.filter(t => t.id !== id);
         this.filtrarTests();
-      });
-    }
+
+        // 2. Notificación de éxito (2.5s como en Apuntes)
+        this.notif = { 
+          show: true, 
+          msg: '¡Prueba borrada con éxito!', 
+          type: 'success' 
+        };
+        setTimeout(() => this.notif.show = false, 2500);
+      },
+      error: () => {
+        // Notificación de error en rojo
+        this.notif = { 
+          show: true, 
+          msg: 'Error: No se pudo eliminar la prueba.', 
+          type: 'danger' 
+        };
+        setTimeout(() => this.notif.show = false, 2500);
+      }
+    });
   }
 
   getBgColor(categoria: string): string {

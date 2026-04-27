@@ -13,7 +13,7 @@ import { Route, Router } from '@angular/router';
   styleUrl: './crear-apuntes.component.scss'
 })
 export class CrearApuntesComponent {
-cargando = false;
+  cargando = false;
   archivoSeleccionado: File | null = null;
   userId: string | null = null;
   
@@ -22,9 +22,9 @@ cargando = false;
 
   datosApunte = {
     titulo: '',
-    categoria: 'matematicas'
+    categoria: 'matematicas',
+    descripcion: ''
   };
-
   categorias = [
     { valor: 'matematicas', nombre: 'Matemáticas' },
     { valor: 'ciencias', nombre: 'Ciencias' },
@@ -74,9 +74,8 @@ cargando = false;
           next: (respuestaRaw: string) => {
             let contenidoFinal: string = respuestaRaw;
 
-            // --- INICIO DE LA LIMPIEZA INTELIGENTE ---
+            // --- Lógica de limpieza (se mantiene igual) ---
             try {
-              // 1. ¿Es un JSON?
               const primeraCapa = JSON.parse(respuestaRaw);
               if (primeraCapa && primeraCapa.textoIA) {
                 try {
@@ -89,19 +88,18 @@ cargando = false;
                 contenidoFinal = JSON.stringify(primeraCapa, null, 2);
               }
             } catch (e) {
-              // 2. No es JSON. ¿Es un documento HTML completo?
               if (respuestaRaw.includes('<body')) {
-                // Extraemos solo lo que está dentro de <body> y </body>
                 const match = respuestaRaw.match(/<body[^>]*>([\s\S]*)<\/body>/i);
                 if (match && match[1]) {
                   contenidoFinal = match[1].trim();
                 }
               }
             }
-            // --- FIN DE LA LIMPIEZA ---
 
+            // --- Guardado con DESCRIPCIÓN ---
             const apunteParaFirebase = {
               titulo: this.datosApunte.titulo,
+              descripcion: this.datosApunte.descripcion, // Nuevo campo
               contenido: contenidoFinal,
               categoria: this.datosApunte.categoria,
               userId: this.userId,
@@ -139,7 +137,7 @@ cargando = false;
   }
 
   limpiarFormulario(): void {
-    this.datosApunte = { titulo: '', categoria: 'matematicas' };
+    this.datosApunte = { titulo: '', categoria: 'matematicas', descripcion: '' };
     this.archivoSeleccionado = null;
     this.mensajeFeedback = null;
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;

@@ -70,9 +70,13 @@ listaResumenes: any[] = [];
     const categoriasActivas = Object.keys(this.filtrosCategorias).filter(cat => this.filtrosCategorias[cat]);
 
     this.listaResumenes = this.listaResumenesOriginal.filter(resumen => {
-      const coincideTexto = resumen.titulo.toLowerCase().includes(texto);
+      // Búsqueda en título O en descripción
+      const coincideTexto = resumen.titulo.toLowerCase().includes(texto) || 
+                           (resumen.descripcion && resumen.descripcion.toLowerCase().includes(texto));
+      
       const categoriaResumen = resumen.categoria ? resumen.categoria.toLowerCase() : '';
       const coincideCategoria = categoriasActivas.length === 0 || categoriasActivas.includes(categoriaResumen);
+      
       return coincideTexto && coincideCategoria;
     });
   }

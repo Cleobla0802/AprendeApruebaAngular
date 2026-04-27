@@ -13,10 +13,16 @@ import { Router } from '@angular/router';
   styleUrl: './crear-resumen.component.scss'
 })
 export class CrearResumenComponent implements OnInit {
-cargando = false; generandoIA = false; uid = '';
-  resumenResultado = ''; nuevaCategoria = '';
-  nuevoTitulo = ''; // Nueva variable para el título del resumen
-  listaApuntes: any[] = []; seleccionados: any[] = [];
+  cargando = false; 
+  generandoIA = false; 
+  uid = '';
+  resumenResultado = ''; 
+  nuevaCategoria = 'matematicas';
+  nuevoTitulo = ''; 
+  nuevaDescripcion = '';
+  
+  listaApuntes: any[] = []; 
+  seleccionados: any[] = [];
   
   notif = { show: false, msg: '', type: 'success' };
 
@@ -83,7 +89,8 @@ cargando = false; generandoIA = false; uid = '';
 
     const data = {
       titulo: this.nuevoTitulo,
-      resumenTexto: this.resumenResultado, // Asegúrate que el campo coincida con tu interfaz de Firebase
+      descripcion: this.nuevaDescripcion,
+      resumenTexto: this.resumenResultado,
       categoria: this.nuevaCategoria || 'general',
       userId: this.uid,
       fecha: new Date().getTime()
@@ -91,7 +98,7 @@ cargando = false; generandoIA = false; uid = '';
 
     this.resS.guardarResumen(data).subscribe({
       next: () => {
-        this.showMsg('¡Resumen guardado! Redirigiendo...', 'success');
+        this.showMsg('¡Resumen guardado!', 'success');
         setTimeout(() => this.router.navigate(['/componentes/resumenes']), 1500);
       },
       error: () => this.showMsg('Error al guardar en la base de datos', 'danger')
@@ -101,5 +108,9 @@ cargando = false; generandoIA = false; uid = '';
   showMsg(msg: string, type: string) {
     this.notif = { show: true, msg, type };
     setTimeout(() => this.notif.show = false, 2500);
+  }
+
+  volver() {
+  this.router.navigate(['/componentes/resumenes']);
   }
 }

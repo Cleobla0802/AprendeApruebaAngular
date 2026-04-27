@@ -1,17 +1,16 @@
 <div class="d-flex justify-content-center align-items-center min-vh-100 position-relative overflow-hidden">
-  
-  <div class="container py-5 z-1">
+  <div class="container py-3 py-sm-4 py-md-5 z-1">
     <div class="row justify-content-center">
       <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
         
-        <div class="text-center mb-5 mt-4">
+        <div class="text-center mb-4 mb-md-5 mt-2 mt-md-4">
           <div class="mb-3">
             <i class="bi bi-person-badge display-1 text-primary shadow-sm"></i>
           </div>
           <h1 class="display-6 fw-bold mb-3 text-uppercase text-white text-center">
             ¡Regístrate y <span class="text-primary fw-bolder">Aprende</span>!
           </h1>
-          <p class="text-white-50 fs-6 px-4">Crea tu cuenta en segundos y únete a nuestra comunidad de aprendizaje avanzada</p>
+          <p class="text-white-50 fs-6 px-2 px-sm-4">Crea tu cuenta en segundos y únete a nuestra comunidad de aprendizaje avanzada</p>
         </div>
 
         <div class="card bg-dark bg-opacity-75 border border-secondary border-opacity-50 shadow-lg rounded-4 overflow-hidden">
@@ -22,8 +21,15 @@
                 <label for="username" class="form-label fw-semibold text-white small mb-2 tracking-wide">NOMBRE DE USUARIO</label>
                 <div class="input-group">
                   <span class="input-group-text bg-black border-secondary text-white-50"><i class="bi bi-person fs-5"></i></span>
-                  <input type="text" class="form-control form-control-lg bg-black text-white border-secondary shadow-none fs-6"
+                  <input type="text" 
+                    class="form-control form-control-lg bg-black text-white border-secondary shadow-none fs-6"
+                    [class.border-danger]="registerForm.get('username')?.invalid && (registerForm.get('username')?.dirty || registerForm.get('username')?.touched)"
                     id="username" placeholder="Tu nombre único" formControlName="username" />
+                </div>
+                <div *ngIf="registerForm.get('username')?.invalid && (registerForm.get('username')?.dirty || registerForm.get('username')?.touched)" 
+                     class="alert alert-danger bg-transparent border-danger text-danger mt-2 py-2 small d-flex align-items-center gap-2 mb-0" role="alert">
+                  <i class="bi bi-exclamation-circle"></i>
+                  <span>El nombre de usuario es obligatorio.</span>
                 </div>
               </div>
 
@@ -31,8 +37,16 @@
                 <label for="email" class="form-label fw-semibold text-white small mb-2 tracking-wide">CORREO ELECTRÓNICO</label>
                 <div class="input-group">
                   <span class="input-group-text bg-black border-secondary text-white-50"><i class="bi bi-envelope fs-5"></i></span>
-                  <input type="email" class="form-control form-control-lg bg-black text-white border-secondary shadow-none fs-6"
+                  <input type="email" 
+                    class="form-control form-control-lg bg-black text-white border-secondary shadow-none fs-6"
+                    [class.border-danger]="registerForm.get('email')?.invalid && (registerForm.get('email')?.dirty || registerForm.get('email')?.touched)"
                     id="email" placeholder="ejemplo@correo.com" formControlName="email" />
+                </div>
+                <div *ngIf="registerForm.get('email')?.invalid && (registerForm.get('email')?.dirty || registerForm.get('email')?.touched)" 
+                     class="alert alert-danger bg-transparent border-danger text-danger mt-2 py-2 small d-flex align-items-center gap-2 mb-0" role="alert">
+                  <i class="bi bi-exclamation-circle"></i>
+                  <span *ngIf="registerForm.get('email')?.hasError('required')">El correo es obligatorio.</span>
+                  <span *ngIf="registerForm.get('email')?.hasError('email')">Formato de correo inválido.</span>
                 </div>
               </div>
 
@@ -41,12 +55,19 @@
                 <div class="input-group">
                   <span class="input-group-text bg-black border-secondary text-white-50"><i class="bi bi-lock fs-5"></i></span>
                   <input type="password"
-                    class="form-control form-control-lg bg-black text-white border-secondary shadow-none fs-6" id="password"
-                    placeholder="Mínimo 8 caracteres" formControlName="password" />
+                    class="form-control form-control-lg bg-black text-white border-secondary shadow-none fs-6" 
+                    [class.border-danger]="registerForm.get('password')?.invalid && (registerForm.get('password')?.dirty || registerForm.get('password')?.touched)"
+                    id="password" placeholder="Mínimo 8 caracteres" formControlName="password" />
+                </div>
+                <div *ngIf="registerForm.get('password')?.invalid && (registerForm.get('password')?.dirty || registerForm.get('password')?.touched)" 
+                     class="alert alert-danger bg-transparent border-danger text-danger mt-2 py-2 small d-flex align-items-center gap-2 mb-0" role="alert">
+                  <i class="bi bi-exclamation-circle"></i>
+                  <span *ngIf="registerForm.get('password')?.hasError('required')">La contraseña es obligatoria.</span>
+                  <span *ngIf="registerForm.get('password')?.hasError('minlength')">Debe tener al menos 8 caracteres.</span>
                 </div>
               </div>
 
-              <div class="d-grid gap-2 mb-4 mt-5">
+              <div class="d-grid gap-2 mb-4 mt-3 mt-md-5">
                 <button type="submit" class="btn btn-primary btn-lg rounded-pill py-3 fw-bold shadow-sm tracking-wider fs-6 text-uppercase"
                   [disabled]="registerForm.invalid || loading">
                   <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
@@ -75,7 +96,7 @@
                 </button>
               </div>
 
-              <div class="text-center mt-5 pt-3 border-top border-secondary border-opacity-25">
+              <div class="text-center mt-4 mt-md-5 pt-3 border-top border-secondary border-opacity-25">
                 <p class="small text-white-50 mb-0">¿Ya eres parte de la comunidad? 
                   <a routerLink="/componentes/autenticacion/login" class="text-primary text-decoration-none fw-bold ms-1">Inicia sesión</a>
                 </p>
@@ -84,9 +105,7 @@
             </form>
           </div>
         </div>
-        
-        <div class="py-4"></div>
-
+        <div class="py-3 py-md-4"></div>
       </div>
     </div>
   </div>

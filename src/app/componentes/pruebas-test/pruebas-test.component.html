@@ -1,13 +1,23 @@
-<div class="container py-5">
-  <h1 class="text-center text-white mb-5 display-4 fw-bold">
+<div class="container py-3 py-md-5">
+  <h1 class="text-center text-white mb-4 mb-md-5 display-6 fw-bold">
     ¡AQUÍ TIENE SUS PRUEBAS TIPO TEST!
   </h1>
 
+  <div *ngIf="notif.show" 
+       class="alert alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow-lg z-3 alert-{{notif.type}}" 
+       role="alert">
+    <div class="d-flex align-items-center gap-2">
+      <i class="bi" [ngClass]="notif.type === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'"></i>
+      <span>{{ notif.msg }}</span>
+      <button type="button" class="btn-close" (click)="notif.show = false"></button>
+    </div>
+  </div>
+
   <div class="row mb-4">
     <div class="col-12 col-lg-8 mx-auto">
-      <label for="buscadorTests" class="form-label text-secondary mb-2 ms-1">
-        <i class="bi bi-info-circle me-1"></i> 
-        BUSCA TUS EXÁMENES Y PRUEBAS GENERADAS
+      <label for="buscadorApuntes" class="form-label text-secondary mb-2 ms-1 small">
+        <i class="bi bi-search me-1"></i> 
+        BUSCA TUS TIPO TEST
       </label>
       <div class="input-group input-group-lg shadow-sm">
         <span class="input-group-text bg-dark border-secondary text-secondary">
@@ -16,15 +26,14 @@
         <input 
           id="buscadorTests"
           type="text" 
-          class="form-control bg-dark text-white border-secondary shadow-none" 
-          placeholder="Ej: Test de Biología Celular..."
+          class="form-control bg-dark text-white border-secondary shadow-none"
           [(ngModel)]="buscarTest"
           (input)="filtrarTests()">
       </div>
     </div>
   </div>
 
-  <div class="d-flex flex-wrap gap-2 mb-5 justify-content-center">
+  <div class="d-flex flex-wrap gap-2 mb-4 mb-md-5 justify-content-center">
     <input type="checkbox" class="btn-check" id="t-matematicas" (change)="toggleCategoria('matematicas')">
     <label class="btn btn-outline-primary btn-sm rounded-pill px-3" for="t-matematicas">Matemáticas</label>
 
@@ -42,7 +51,6 @@
   </div>
 
   <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
-
     <div class="col-12 text-center py-5" *ngIf="cargando">
       <div class="spinner-border text-primary mb-3" role="status"></div>
       <p class="text-secondary fw-light">Cargando tus pruebas...</p>
@@ -122,7 +130,7 @@
     </div>
   </div>
 
-  <div class="text-center mt-5">
+  <div class="text-center mt-4 mt-md-5">
     <a routerLink="/componentes/pruebas-test/crear-tipo-test" class="btn btn-primary btn-lg rounded-pill px-5 shadow fw-bold">
       <i class="bi bi-plus-lg me-2"></i>Nueva Prueba
     </a>
