@@ -107,11 +107,13 @@ export class CrearApuntesComponent {
             };
 
             this.apunteService.guardarApunte(apunteParaFirebase).subscribe({
-              next: () => {
-                this.cargando = false;
-                this.mostrarMensaje('¡Apunte creado con éxito!', 'success');
-                setTimeout(() => this.router.navigate(['/componentes/apuntes']), 1500);
-              },
+                next: () => {
+                    this.mostrarMensaje('¡Apunte creado con éxito!', 'success');
+                    setTimeout(() => {
+                        this.cargando = false;
+                        this.router.navigate(['/componentes/apuntes']);
+                    }, 1500);
+                },
               error: () => {
                 this.cargando = false;
                 this.mostrarMensaje('Error al guardar en Firebase.', 'danger');

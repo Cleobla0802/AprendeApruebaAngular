@@ -1,3 +1,10 @@
+<div *ngIf="cargando" 
+     class="position-fixed top-0 start-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center bg-dark bg-opacity-75 z-3">
+  <div class="spinner-border text-primary mb-3" role="status"></div>
+  <h5 class="text-white fw-bold">Digitalizando apunte...</h5>
+  <p class="text-secondary small">Esto puede tardar un poco...</p>
+</div>
+
 <div class="container-fluid min-vh-100 py-3 py-md-5">
   <div class="row justify-content-center">
     <div class="col-12 col-md-10 col-lg-8 col-xl-7">

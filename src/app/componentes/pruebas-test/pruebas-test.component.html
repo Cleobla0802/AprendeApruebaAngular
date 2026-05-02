@@ -1,138 +1,134 @@
-<div class="container py-3 py-md-5">
-  <h1 class="text-center text-white mb-4 mb-md-5 display-6 fw-bold">
+<div *ngIf="notif.show"
+     class="alert alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow-lg z-3 alert-{{notif.type}}"
+     role="alert">
+  <div class="d-flex align-items-center gap-2">
+    <i class="bi" [ngClass]="notif.type === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'"></i>
+    <span>{{ notif.msg }}</span>
+    <button type="button" class="btn-close" (click)="notif.show = false"></button>
+  </div>
+</div>
+
+<div class="container py-4 d-flex flex-column">
+
+  <h1 class="text-center text-white mb-4 display-6 fw-bold">
     ¡AQUÍ TIENE SUS PRUEBAS TIPO TEST!
   </h1>
 
-  <div *ngIf="notif.show" 
-       class="alert alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow-lg z-3 alert-{{notif.type}}" 
-       role="alert">
-    <div class="d-flex align-items-center gap-2">
-      <i class="bi" [ngClass]="notif.type === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'"></i>
-      <span>{{ notif.msg }}</span>
-      <button type="button" class="btn-close" (click)="notif.show = false"></button>
-    </div>
-  </div>
-
-  <div class="row mb-4">
-    <div class="col-12 col-lg-8 mx-auto">
-      <label for="buscadorApuntes" class="form-label text-secondary mb-2 ms-1 small">
-        <i class="bi bi-search me-1"></i> 
-        BUSCA TUS TIPO TEST
+  <div class="row mb-3">
+    <div class="col-12 col-md-8 col-lg-6 mx-auto">
+      <label for="buscadorTests" class="form-label text-secondary mb-1 ms-1 small">
+        <i class="bi bi-search me-1"></i> BUSCA TUS TIPO TEST
       </label>
-      <div class="input-group input-group-lg shadow-sm">
+      <div class="input-group">
         <span class="input-group-text bg-dark border-secondary text-secondary">
           <i class="bi bi-search"></i>
         </span>
-        <input 
-          id="buscadorTests"
-          type="text" 
-          class="form-control bg-dark text-white border-secondary shadow-none"
-          [(ngModel)]="buscarTest"
-          (input)="filtrarTests()">
+        <input id="buscadorTests" type="text"
+               class="form-control bg-dark text-white border-secondary shadow-none"
+               [(ngModel)]="buscarTest" (input)="filtrarTests()">
       </div>
     </div>
   </div>
 
-  <div class="d-flex flex-wrap gap-2 mb-4 mb-md-5 justify-content-center">
+  <div class="d-flex flex-wrap gap-2 mb-4 justify-content-center">
     <input type="checkbox" class="btn-check" id="t-matematicas" (change)="toggleCategoria('matematicas')">
     <label class="btn btn-outline-primary btn-sm rounded-pill px-3" for="t-matematicas">Matemáticas</label>
-
     <input type="checkbox" class="btn-check" id="t-ciencias" (change)="toggleCategoria('ciencias')">
     <label class="btn btn-outline-success btn-sm rounded-pill px-3" for="t-ciencias">Ciencias</label>
-
     <input type="checkbox" class="btn-check" id="t-ingles" (change)="toggleCategoria('ingles')">
     <label class="btn btn-outline-info btn-sm rounded-pill px-3" for="t-ingles">Inglés</label>
-
     <input type="checkbox" class="btn-check" id="t-historia" (change)="toggleCategoria('historia')">
     <label class="btn btn-outline-warning btn-sm rounded-pill px-3" for="t-historia">Historia</label>
-
     <input type="checkbox" class="btn-check" id="t-tecnologia" (change)="toggleCategoria('tecnologia')">
     <label class="btn btn-outline-danger btn-sm rounded-pill px-3" for="t-tecnologia">Tecnología</label>
   </div>
 
-  <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
-    <div class="col-12 text-center py-5" *ngIf="cargando">
+  <div class="mb-4">
+
+    <div class="text-center py-5" *ngIf="cargando">
       <div class="spinner-border text-primary mb-3" role="status"></div>
       <p class="text-secondary fw-light">Cargando tus pruebas...</p>
     </div>
 
-    <div class="col-12 text-center py-5" *ngIf="!cargando && listaTests.length === 0">
+    <div class="text-center py-5" *ngIf="!cargando && listaTests.length === 0">
       <div class="display-1 text-secondary opacity-25 mb-3">
         <i class="bi bi-folder-x"></i>
       </div>
       <h4 class="text-secondary fw-light">No se han encontrado pruebas tipo test</h4>
     </div>
 
-    <div class="col" *ngFor="let test of listaTests">
-      <div class="card h-100 bg-dark border-secondary shadow rounded-4 overflow-hidden">
-        <div class="card-body p-4 d-flex flex-column">
-          
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <span [class]="'badge rounded-pill px-3 py-2 bg-' + getBgColor(test.categoria) + ' bg-opacity-10 text-' + getBgColor(test.categoria)">
-              {{ (test.categoria || 'Sin categoría') | titlecase }}
-            </span>
-            <small class="text-secondary opacity-75">
-              <i class="bi bi-calendar3 me-1"></i>{{ test.fecha | date:'dd/MM/yy' }}
-            </small>
-          </div>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4" *ngIf="!cargando && listaTests.length > 0">
+      <div class="col" *ngFor="let test of listaTests">
+        <div class="card h-100 bg-dark border-secondary shadow rounded-4 overflow-hidden">
+          <div class="card-body p-3 p-md-4 d-flex flex-column">
 
-          <h5 class="card-title text-white fw-bold mb-3">{{ test.titulo }}</h5>
-          
-          <div class="d-flex flex-wrap gap-2 mb-3">
-             <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25">
-                <i class="bi bi-question-circle me-1"></i> {{ test.preguntas?.length || 0 }} Preguntas
-             </span>
-             <span *ngIf="test.calificacion !== undefined" 
-                   class="badge bg-opacity-10 border border-opacity-25"
-                   [class.bg-success]="test.calificacion >= 5" 
-                   [class.text-success]="test.calificacion >= 5"
-                   [class.bg-danger]="test.calificacion < 5"
-                   [class.text-danger]="test.calificacion < 5">
-                <i class="bi bi-star-fill me-1"></i> {{ test.calificacion | number:'1.1-1' }} / 10
-             </span>
-          </div>
-
-          <p class="card-text text-secondary small flex-grow-1 text-truncate">
-            {{ test.descripcion || 'Prueba generada con IA para estudiar tus apuntes.' }}
-          </p>
-
-          <div class="mt-4 mb-3">
-            <div class="d-flex justify-content-between align-items-center mb-1">
-              <span class="small text-secondary text-uppercase fw-bold">Progreso</span>
-              <span class="small fw-bold text-white" *ngIf="test.calificacion !== undefined">
-                {{ test.calificacion * 10 }}%
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <span [class]="'badge rounded-pill px-3 py-2 bg-' + getBgColor(test.categoria) + ' bg-opacity-10 text-' + getBgColor(test.categoria)">
+                {{ (test.categoria || 'Sin categoría') | titlecase }}
               </span>
-              <span class="small text-muted" *ngIf="test.calificacion === undefined">0%</span>
+              <small class="text-secondary opacity-75">
+                <i class="bi bi-calendar3 me-1"></i>{{ test.fecha | date:'dd/MM/yy' }}
+              </small>
             </div>
-            <div class="progress bg-secondary bg-opacity-10">
-              <div *ngIf="test.calificacion" 
-                   class="progress-bar progress-bar-striped" 
-                   [class.bg-success]="test.calificacion >= 5" 
-                   [class.bg-danger]="test.calificacion < 5"
-                   role="progressbar" 
-                   [style.width]="(test.calificacion * 10) + '%'">
+
+            <h5 class="card-title text-white fw-bold mb-3">{{ test.titulo }}</h5>
+
+            <div class="d-flex flex-wrap gap-2 mb-3">
+              <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25">
+                <i class="bi bi-question-circle me-1"></i> {{ test.preguntas?.length || 0 }} Preguntas
+              </span>
+              <span *ngIf="test.calificacion !== undefined"
+                    class="badge bg-opacity-10 border border-opacity-25"
+                    [class.bg-success]="test.calificacion >= 5"
+                    [class.text-success]="test.calificacion >= 5"
+                    [class.bg-danger]="test.calificacion < 5"
+                    [class.text-danger]="test.calificacion < 5">
+                <i class="bi bi-star-fill me-1"></i> {{ test.calificacion | number:'1.1-1' }} / 10
+              </span>
+            </div>
+
+            <p class="card-text text-secondary small flex-grow-1 text-truncate">
+              {{ test.descripcion || 'Prueba generada con IA para estudiar tus apuntes.' }}
+            </p>
+
+            <div class="mt-3 mb-3">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="small text-secondary text-uppercase fw-bold">Progreso</span>
+                <span class="small fw-bold text-white" *ngIf="test.calificacion !== undefined">{{ test.calificacion * 10 }}%</span>
+                <span class="small text-muted" *ngIf="test.calificacion === undefined">0%</span>
+              </div>
+              <div class="progress bg-secondary bg-opacity-10">
+                <div *ngIf="test.calificacion"
+                     class="progress-bar progress-bar-striped"
+                     [class.bg-success]="test.calificacion >= 5"
+                     [class.bg-danger]="test.calificacion < 5"
+                     role="progressbar"
+                     [style.width]="(test.calificacion * 10) + '%'">
+                </div>
               </div>
             </div>
-          </div>
 
-          <div class="pt-3 border-top border-secondary border-opacity-25 d-flex gap-2">
-            <button [routerLink]="['/componentes/pruebas-test/realizar-test', test.id]" 
-                    class="btn btn-sm btn-primary rounded-pill flex-grow-1 py-2 fw-bold">
-              <i class="bi bi-play-fill me-1"></i> {{ test.calificacion ? 'Reintentar' : 'Comenzar' }}
-            </button>
-            <button class="btn btn-sm btn-outline-danger rounded-circle p-2" (click)="eliminar(test.id)">
-              <i class="bi bi-trash"></i>
-            </button>
-          </div>
+            <div class="pt-3 border-top border-secondary border-opacity-25 d-flex gap-2">
+              <button [routerLink]="['/componentes/pruebas-test/realizar-test', test.id]"
+                      class="btn btn-sm btn-primary rounded-pill flex-grow-1 py-2 fw-bold">
+                <i class="bi bi-play-fill me-1"></i> {{ test.calificacion ? 'Reintentar' : 'Comenzar' }}
+              </button>
+              <button class="btn btn-sm btn-outline-danger rounded-circle p-2" (click)="eliminar(test.id)">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
 
+          </div>
         </div>
       </div>
     </div>
+
   </div>
 
-  <div class="text-center mt-4 mt-md-5">
+  <div class="text-center pb-2">
     <a routerLink="/componentes/pruebas-test/crear-tipo-test" class="btn btn-primary btn-lg rounded-pill px-5 shadow fw-bold">
       <i class="bi bi-plus-lg me-2"></i>Nueva Prueba
     </a>
   </div>
+
 </div>

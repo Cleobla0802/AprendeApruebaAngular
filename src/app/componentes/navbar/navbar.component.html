@@ -14,7 +14,7 @@
 
     <div class="collapse navbar-collapse" id="navbarNav">
       
-      <ul class="navbar-nav mx-auto gap-2 gap-lg-5 fw-medium my-3 my-lg-0 text-center">
+      <ul class="navbar-nav mx-auto gap-2 gap-lg-5 fw-medium my-3 my-lg-0 text-center" *ngIf="usuarioActual">
         <li class="nav-item">
           <a routerLink="/componentes/apuntes" 
              routerLinkActive="text-primary border border-primary rounded-pill px-3 py-1 shadow-sm opacity-100"
