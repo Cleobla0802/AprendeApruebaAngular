@@ -31,6 +31,9 @@ export class ApuntesComponent {
   msg: '', 
   type: 'success' as 'success' | 'danger' | 'warning' | 'info' 
   };
+  mostrarModalEliminar = false;
+  apunteAEliminarId: string | null = null;
+  apunteAEliminarTitulo = '';
 
   constructor(
     private apunteService: ApunteService,
@@ -90,7 +93,22 @@ export class ApuntesComponent {
     this.filtrarApuntes();
   }
 
-  eliminar(id: any) {
+  solicitarEliminar(id: string, titulo: string) {
+    this.apunteAEliminarId = id;
+    this.apunteAEliminarTitulo = titulo;
+    this.mostrarModalEliminar = true;
+  }
+
+  cancelarEliminar() {
+    this.mostrarModalEliminar = false;
+    this.apunteAEliminarId = null;
+    this.apunteAEliminarTitulo = '';
+  }
+
+  confirmarEliminar() {
+    if (!this.apunteAEliminarId) return;
+    const id = this.apunteAEliminarId;
+
     // Llamamos al servicio para eliminar
     this.apunteService.eliminarApunte(id).subscribe({
       next: () => {
@@ -107,6 +125,7 @@ export class ApuntesComponent {
 
         // 3. La ocultamos automáticamente tras 2.5 segundos
         setTimeout(() => this.notif.show = false, 2500);
+        this.cancelarEliminar();
       },
       error: () => {
         // Si algo falla (ej. sin internet), avisamos en rojo
@@ -115,6 +134,7 @@ export class ApuntesComponent {
           msg: 'Error: No se pudo eliminar el elemento.', 
           type: 'danger' 
         };
+        this.cancelarEliminar();
       }
     });
   }

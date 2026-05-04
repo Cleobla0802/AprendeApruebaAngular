@@ -54,16 +54,50 @@
                 <label for="password" class="form-label fw-semibold text-white small mb-2 tracking-wide">CONTRASEÑA</label>
                 <div class="input-group">
                   <span class="input-group-text bg-black border-secondary text-white-50"><i class="bi bi-lock fs-5"></i></span>
-                  <input type="password"
+                  <input [type]="showPassword ? 'text' : 'password'"
                     class="form-control form-control-lg bg-black text-white border-secondary shadow-none fs-6" 
                     [class.border-danger]="registerForm.get('password')?.invalid && (registerForm.get('password')?.dirty || registerForm.get('password')?.touched)"
                     id="password" placeholder="Mínimo 8 caracteres" formControlName="password" />
+                  <button type="button"
+                    class="btn btn-outline-secondary border-secondary text-white-50"
+                    (click)="togglePasswordVisibility()"
+                    [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+                    <i class="bi" [class.bi-eye]="!showPassword" [class.bi-eye-slash]="showPassword"></i>
+                  </button>
                 </div>
                 <div *ngIf="registerForm.get('password')?.invalid && (registerForm.get('password')?.dirty || registerForm.get('password')?.touched)" 
                      class="alert alert-danger bg-transparent border-danger text-danger mt-2 py-2 small d-flex align-items-center gap-2 mb-0" role="alert">
                   <i class="bi bi-exclamation-circle"></i>
                   <span *ngIf="registerForm.get('password')?.hasError('required')">La contraseña es obligatoria.</span>
                   <span *ngIf="registerForm.get('password')?.hasError('minlength')">Debe tener al menos 8 caracteres.</span>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <label for="confirmPassword" class="form-label fw-semibold text-white small mb-2 tracking-wide">REPETIR CONTRASEÑA</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-black border-secondary text-white-50"><i class="bi bi-shield-lock fs-5"></i></span>
+                  <input [type]="showConfirmPassword ? 'text' : 'password'"
+                    class="form-control form-control-lg bg-black text-white border-secondary shadow-none fs-6"
+                    [class.border-danger]="(registerForm.get('confirmPassword')?.invalid && (registerForm.get('confirmPassword')?.dirty || registerForm.get('confirmPassword')?.touched)) || (registerForm.hasError('passwordMismatch') && (registerForm.get('confirmPassword')?.dirty || registerForm.get('confirmPassword')?.touched))"
+                    id="confirmPassword" placeholder="Repite tu contraseña" formControlName="confirmPassword" />
+                  <button type="button"
+                    class="btn btn-outline-secondary border-secondary text-white-50"
+                    (click)="toggleConfirmPasswordVisibility()"
+                    [attr.aria-label]="showConfirmPassword ? 'Ocultar contraseña repetida' : 'Mostrar contraseña repetida'">
+                    <i class="bi" [class.bi-eye]="!showConfirmPassword" [class.bi-eye-slash]="showConfirmPassword"></i>
+                  </button>
+                </div>
+                <div *ngIf="registerForm.get('confirmPassword')?.invalid && (registerForm.get('confirmPassword')?.dirty || registerForm.get('confirmPassword')?.touched)"
+                     class="alert alert-danger bg-transparent border-danger text-danger mt-2 py-2 small d-flex align-items-center gap-2 mb-0" role="alert">
+                  <i class="bi bi-exclamation-circle"></i>
+                  <span *ngIf="registerForm.get('confirmPassword')?.hasError('required')">Debes repetir la contraseña.</span>
+                  <span *ngIf="registerForm.get('confirmPassword')?.hasError('minlength')">Debe tener al menos 8 caracteres.</span>
+                </div>
+                <div *ngIf="!registerForm.get('confirmPassword')?.invalid && registerForm.hasError('passwordMismatch') && (registerForm.get('confirmPassword')?.dirty || registerForm.get('confirmPassword')?.touched)"
+                     class="alert alert-danger bg-transparent border-danger text-danger mt-2 py-2 small d-flex align-items-center gap-2 mb-0" role="alert">
+                  <i class="bi bi-exclamation-circle"></i>
+                  <span>Las contraseñas no coinciden.</span>
                 </div>
               </div>
 

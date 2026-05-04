@@ -25,6 +25,9 @@ listaResumenes: any[] = [];
     msg: '', 
     type: 'success' as 'success' | 'danger' | 'warning' | 'info' 
   };
+  mostrarModalEliminar = false;
+  resumenAEliminarId: string | null = null;
+  resumenAEliminarTitulo = '';
 
   filtrosCategorias: any = {
     matematicas: false,
@@ -98,7 +101,22 @@ listaResumenes: any[] = [];
     return colores[categoria.toLowerCase()] || 'secondary';
   }
 
-  eliminar(id: string) {
+  solicitarEliminar(id: string, titulo: string) {
+    this.resumenAEliminarId = id;
+    this.resumenAEliminarTitulo = titulo;
+    this.mostrarModalEliminar = true;
+  }
+
+  cancelarEliminar() {
+    this.mostrarModalEliminar = false;
+    this.resumenAEliminarId = null;
+    this.resumenAEliminarTitulo = '';
+  }
+
+  confirmarEliminar() {
+    if (!this.resumenAEliminarId || !this.usuarioActual) return;
+    const id = this.resumenAEliminarId;
+
     if (this.usuarioActual) {
       this.resumenService.eliminarResumen(this.usuarioActual.uid, id).subscribe({
         next: () => {
@@ -109,10 +127,12 @@ listaResumenes: any[] = [];
           // Feedback visual
           this.notif = { show: true, msg: '¡Resumen eliminado con éxito!', type: 'success' };
           setTimeout(() => this.notif.show = false, 2500);
+          this.cancelarEliminar();
         },
         error: (err: any) => {
           this.notif = { show: true, msg: 'Error al eliminar el resumen.', type: 'danger' };
           console.error(err);
+          this.cancelarEliminar();
         }
       });
     }

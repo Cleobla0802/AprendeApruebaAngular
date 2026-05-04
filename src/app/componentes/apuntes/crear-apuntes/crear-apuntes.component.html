@@ -17,6 +17,9 @@
       <div class="card bg-dark border border-secondary shadow-lg rounded-4">
         <div class="card-body p-4 p-md-5">
           <form (ngSubmit)="crearApuntes()" #formulario="ngForm">
+            <div *ngIf="mensajeFeedback" class="alert mb-4" [ngClass]="'alert-' + tipoFeedback" role="alert">
+              {{ mensajeFeedback }}
+            </div>
 
             <div class="row mb-4">
               <div class="col-12 col-md-8">
@@ -48,11 +51,14 @@
             </div>
 
             <div class="mb-4 mb-md-5">
-              <div class="border border-secondary border-2 rounded-4 p-3 p-md-5 text-center bg-black">
+              <div class="border border-secondary border-2 rounded-4 p-3 p-md-5 text-center bg-black"
+                   (dragover)="onDragOver($event)"
+                   (drop)="onDrop($event)">
                 <i class="bi bi-image text-secondary mb-3 d-block display-4"></i>
                 <h5 class="text-light">Sube la foto de tu apunte</h5>
                 <input type="file" id="fileInput" (change)="onFileSelected($event)" accept="image/*"
                        class="form-control bg-dark text-light border-secondary mt-3 shadow-none">
+                <small class="text-secondary d-block mt-2">También puedes arrastrar una imagen aquí</small>
               </div>
             </div>
 

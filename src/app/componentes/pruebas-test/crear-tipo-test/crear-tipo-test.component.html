@@ -1,7 +1,14 @@
-<div class="container py-3 py-md-5">
+<div class="container py-3 py-md-5 position-relative">
+  <div *ngIf="generando"
+       class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-75 d-flex flex-column align-items-center justify-content-center z-3">
+    <div class="spinner-border text-primary mb-3" role="status"></div>
+    <p class="text-white fw-bold mb-1 text-uppercase">Generando tipo test</p>
+    <small class="text-white-50">Esto puede tardar unos segundos...</small>
+  </div>
+
   <div class="text-center mb-4 mb-md-5">
     <h1 class="display-6 display-md-5 fw-bold text-white text-uppercase">Creacion de tipo test</h1>
-    <p class="text-secondary">Selecciona el material para crear su tipo tes, apunte o resumen como prefiera</p>
+    <p class="text-secondary">Selecciona el material para crear su tipo test, apunte o resumen como prefiera</p>
   </div>
 
   <div class="row justify-content-center mb-4 mb-md-5">
@@ -11,7 +18,6 @@
         <label class="btn btn-outline-primary py-2 py-md-3 fw-bold border-0" for="tab1">
           <i class="bi bi-journal-text me-2"></i>APUNTES
         </label>
-
         <input type="radio" class="btn-check" name="tab" id="tab2" (click)="tabActiva = 'resumenes'; seleccionado = null">
         <label class="btn btn-outline-primary py-2 py-md-3 fw-bold border-0" for="tab2">
           <i class="bi bi-file-earmark-text me-2"></i>RESÚMENES
@@ -20,21 +26,31 @@
     </div>
   </div>
 
-  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-4 mb-md-5">
-    
-    <div class="col-12 text-center py-5" *ngIf="cargando">
-      <div class="spinner-border text-primary" role="status"></div>
-      <p class="text-secondary mt-3">Cargando material disponible...</p>
-    </div>
+  <div class="col-12 text-center py-5" *ngIf="cargando">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="text-secondary mt-3">Cargando material disponible...</p>
+  </div>
 
+  <div class="d-flex flex-column align-items-center justify-content-center py-5" 
+       *ngIf="!cargando && getListaActual().length === 0">
+    <i class="bi bi-journal-x display-1 text-secondary opacity-25 mb-3"></i>
+    <h5 class="text-secondary fw-light">
+      No tienes {{ tabActiva === 'apuntes' ? 'apuntes' : 'resúmenes' }} disponibles
+    </h5>
+    <p class="text-secondary small">
+      Crea {{ tabActiva === 'apuntes' ? 'un apunte' : 'un resumen' }} primero para poder generar un tipo test.
+    </p>
+  </div>
+
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-4 mb-md-5" 
+       *ngIf="!cargando && getListaActual().length > 0">
     <div class="col" *ngFor="let item of getListaActual()">
       <div (click)="seleccionar(item)"
-           class="card h-100 bg-dark text-white shadow-sm border-2 rounded-4 user-select-none cursor-pointer"
+           class="card h-100 bg-dark text-white shadow-sm border-2 rounded-4 user-select-none"
            [class.border-primary]="seleccionado?.id === item.id"
            [class.border-secondary]="seleccionado?.id !== item.id"
            [class.opacity-50]="seleccionado && seleccionado.id !== item.id"
            role="button">
-        
         <div class="card-body p-4 d-flex flex-column">
           <div class="d-flex justify-content-between align-items-start mb-3">
             <span [class]="'badge rounded-pill px-3 py-2 bg-' + getBgColor(item.categoria) + ' bg-opacity-10 text-' + getBgColor(item.categoria)">
@@ -46,9 +62,7 @@
                [class.bi-circle]="seleccionado?.id !== item.id"
                [class.text-secondary]="seleccionado?.id !== item.id"></i>
           </div>
-
           <h5 class="card-title fw-bold mb-2">{{ item.titulo }}</h5>
-          
           <p class="card-text text-secondary small flex-grow-1 opacity-75">
             {{ item.descripcion || (item.contenido | slice:0:100) + '...' }}
           </p>
@@ -57,14 +71,36 @@
     </div>
   </div>
 
-  <div class="fixed-bottom py-2 py-md-4 bg-dark border-top border-secondary border-opacity-25 shadow-lg z-3" *ngIf="seleccionado">
-    <div class="container d-flex justify-content-center px-3">
-      <button class="btn btn-primary btn-lg rounded-pill px-4 px-md-5 shadow fw-bold text-uppercase tracking-wider w-100 w-md-auto" 
+  <div class="py-2 py-md-4 mt-3 mt-md-4 bg-dark border border-secondary border-opacity-25 rounded-4 shadow-lg" *ngIf="seleccionado">
+    <div class="px-3">
+      <div class="row g-3 mb-3">
+        <div class="col-12 col-md-8">
+          <label class="form-label small fw-bold text-white text-uppercase">Título del tipo test</label>
+          <input type="text"
+                 class="form-control bg-black text-white border-secondary shadow-none"
+                 [(ngModel)]="tituloPersonalizado"
+                 [maxLength]="maxTituloLength"
+                 placeholder="Escribe el título de tu test">
+          <small class="text-secondary">{{ tituloPersonalizado.length }}/{{ maxTituloLength }}</small>
+        </div>
+        <div class="col-12 col-md-4">
+          <label class="form-label small fw-bold text-white text-uppercase">Preguntas</label>
+          <input type="number"
+                 class="form-control bg-black text-white border-secondary shadow-none"
+                 [(ngModel)]="cantidadPreguntas"
+                 min="1"
+                 max="30">
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-center">
+      <button class="btn btn-primary btn-lg rounded-pill px-4 px-md-5 shadow fw-bold text-uppercase w-100 w-md-auto" 
               (click)="generarTest()" 
-              [disabled]="generando">
+              [disabled]="generando || !tituloPersonalizado.trim()">
         <span *ngIf="generando" class="spinner-border spinner-border-sm me-2" role="status"></span>
-        {{ generando ? 'Generando Examen...' : 'Crear Test: ' + seleccionado.titulo }}
+        {{ generando ? 'Generando Examen...' : 'Crear Test' }}
       </button>
+      </div>
     </div>
   </div>
 </div>

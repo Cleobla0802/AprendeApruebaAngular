@@ -64,6 +64,11 @@ export class RealizarTipoTestComponent implements OnInit {
     }
   }
 
+  terminarTest() {
+    if (!this.test || this.testFinalizado) return;
+    this.calcularResultado();
+  }
+
   calcularResultado() {
     let aciertos = 0;
     this.test.preguntas.forEach((p: any, i: number) => {

@@ -6,10 +6,11 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PruebasService } from '../../../services/pruebas.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-crear-tipo-test',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './crear-tipo-test.component.html',
   styleUrl: './crear-tipo-test.component.scss'
 })
@@ -22,8 +23,12 @@ listaApuntes: any[] = [];
   cargando = true;
   generando = false;
   userId: string = '';
+  tituloPersonalizado = '';
+  cantidadPreguntas = 10;
+  readonly maxTituloLength = 80;
   
   notif = { show: false, msg: '', type: 'success' as 'success' | 'danger' | 'warning' | 'info' };
+  private readonly limiteContenidoIA = 12000;
 
   private apiBackend = 'https://api-aprende-aprueba-1.onrender.com/api/tests/generar';
 
@@ -76,23 +81,36 @@ listaApuntes: any[] = [];
 
   seleccionar(item: any) {
     this.seleccionado = item;
+    this.tituloPersonalizado = item?.titulo || '';
   }
 
   generarTest() {
     if (!this.seleccionado) return;
+    if (!this.tituloPersonalizado.trim()) {
+      this.showMsg('Escribe un título para el tipo test.', 'warning');
+      return;
+    }
+    this.cantidadPreguntas = Math.min(30, Math.max(1, Math.floor(this.cantidadPreguntas || 10)));
+
     this.generando = true;
     this.notif.show = false;
 
     // Adaptación dinámica del contenido:
-    const textoAProcesar = this.tabActiva === 'apuntes' 
+    const textoOriginal = this.tabActiva === 'apuntes' 
       ? this.seleccionado.contenido 
       : this.seleccionado.resumenTexto;
+    const textoAProcesar = this.prepararContenidoParaIA(textoOriginal);
+
+    if (textoOriginal && textoOriginal.length > this.limiteContenidoIA) {
+      this.showMsg('Contenido muy largo: se ha recortado para acelerar la generación.', 'info');
+    }
 
     const payload = {
       contenido: textoAProcesar,
       userId: this.userId,
-      titulo: this.seleccionado.titulo,
-      categoria: this.seleccionado.categoria
+      titulo: this.tituloPersonalizado.trim(),
+      categoria: this.seleccionado.categoria,
+      cantidadPreguntas: this.cantidadPreguntas
     };
 
     // 1. Pedimos las preguntas a la IA (Backend Java)
@@ -103,6 +121,7 @@ listaApuntes: any[] = [];
         // El objeto testDeIA viene con las preguntas, pero no con la descripción.
         // Se la asignamos manualmente del material origen (apunte o resumen).
         testDeIA.descripcion = this.seleccionado.descripcion || '';
+        testDeIA.titulo = this.tituloPersonalizado.trim();
 
         // 2. Guardamos el test completo en Firebase
         this.pruebasService.crearTest(testDeIA).subscribe({
@@ -131,6 +150,13 @@ listaApuntes: any[] = [];
   handleError(msg: string) {
     this.generando = false;
     this.showMsg(msg, 'danger');
+  }
+
+  private prepararContenidoParaIA(contenido: string): string {
+    if (!contenido) return '';
+    return contenido.length > this.limiteContenidoIA
+      ? contenido.slice(0, this.limiteContenidoIA)
+      : contenido;
   }
 
   getBgColor(categoria: string): string {

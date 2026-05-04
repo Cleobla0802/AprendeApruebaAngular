@@ -20,6 +20,7 @@ export class LoginComponent {
   errores = false;
   loading = false;
   mensajeError = '';
+  showPassword = false;
 
   constructor(private authService: AuthService, private router: Router) { }
 
@@ -69,5 +70,9 @@ export class LoginComponent {
         this.errores = true;
         this.mensajeError = 'Error al conectar con Google.';
       });
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
   }
 }

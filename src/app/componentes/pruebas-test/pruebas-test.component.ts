@@ -32,6 +32,9 @@ export class PruebasTestComponent implements OnInit {
     msg: '', 
     type: 'success' as 'success' | 'danger' | 'warning' | 'info' 
   };
+  mostrarModalEliminar = false;
+  testAEliminarId: string | null = null;
+  testAEliminarTitulo = '';
 
   constructor(
     private testService: PruebasService,
@@ -81,8 +84,22 @@ export class PruebasTestComponent implements OnInit {
     this.filtrarTests();
   }
 
-  eliminar(id: string) {
-    // Borrado directo sin confirm()
+  solicitarEliminar(id: string, titulo: string) {
+    this.testAEliminarId = id;
+    this.testAEliminarTitulo = titulo;
+    this.mostrarModalEliminar = true;
+  }
+
+  cancelarEliminar() {
+    this.mostrarModalEliminar = false;
+    this.testAEliminarId = null;
+    this.testAEliminarTitulo = '';
+  }
+
+  confirmarEliminar() {
+    if (!this.testAEliminarId) return;
+    const id = this.testAEliminarId;
+
     this.testService.eliminarTest(id).subscribe({
       next: () => {
         // 1. Filtrar localmente para que desaparezca de la vista al momento
@@ -96,6 +113,7 @@ export class PruebasTestComponent implements OnInit {
           type: 'success' 
         };
         setTimeout(() => this.notif.show = false, 2500);
+        this.cancelarEliminar();
       },
       error: () => {
         // Notificación de error en rojo
@@ -105,6 +123,7 @@ export class PruebasTestComponent implements OnInit {
           type: 'danger' 
         };
         setTimeout(() => this.notif.show = false, 2500);
+        this.cancelarEliminar();
       }
     });
   }

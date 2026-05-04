@@ -25,6 +25,8 @@ export class CrearResumenComponent implements OnInit {
   seleccionados: any[] = [];
   
   notif = { show: false, msg: '', type: 'success' };
+  mostrarModalConfirmacion = false;
+  accionPendiente: 'guardar' | 'limpiar' | null = null;
 
   categorias = [
     { valor: 'matematicas', nombre: 'Matemáticas' },
@@ -45,10 +47,8 @@ export class CrearResumenComponent implements OnInit {
 
   limpiarResultado() {
     if (this.resumenResultado === '') return;
-    
-    // Simplemente vaciamos las variables
-    this.resumenResultado = '';
-    this.showMsg('Resultado borrado', 'info');
+    this.accionPendiente = 'limpiar';
+    this.mostrarModalConfirmacion = true;
   }
 
   cargar() {
@@ -60,21 +60,30 @@ export class CrearResumenComponent implements OnInit {
   }
 
   toggle(a: any) {
-    const i = this.seleccionados.indexOf(a);
-    i > -1 ? this.seleccionados.splice(i, 1) : this.seleccionados.push(a);
+    if (this.seleccionados.length && this.seleccionados[0] === a) {
+      this.seleccionados = [];
+      return;
+    }
+    this.seleccionados = [a];
   }
 
   crearResumen() {
-    if (!this.seleccionados.length) return this.showMsg('Selecciona al menos un apunte', 'warning');
+    if (!this.seleccionados.length) return this.showMsg('Selecciona un apunte', 'warning');
     
     this.generandoIA = true;
-    const body = this.seleccionados.map(a => `${a.titulo}: ${a.contenido}`).join('\n');
+    const apunteSeleccionado = this.seleccionados[0];
+    const body = `${apunteSeleccionado.titulo}: ${apunteSeleccionado.contenido}`;
 
     this.resS.generarConIA(body).subscribe({
-      next: (r) => { 
-        this.resumenResultado = r.resumen; 
-        this.generandoIA = false; 
-        this.showMsg('Resumen generado con éxito', 'success');
+      next: (r) => {
+        if (!r.resumen || r.resumen.trim() === '' || r.resumen === 'null') {
+          this.resumenResultado = 'La IA no pudo generar el resumen en este momento. Por favor, inténtalo de nuevo.';
+          this.showMsg('La IA no devolvió contenido, inténtalo de nuevo', 'warning');
+        } else {
+          this.resumenResultado = r.resumen;
+          this.showMsg('Resumen generado con éxito', 'success');
+        }
+        this.generandoIA = false;
       },
       error: () => { 
         this.showMsg('Error al conectar con la IA', 'danger'); 
@@ -86,6 +95,25 @@ export class CrearResumenComponent implements OnInit {
   guardar() {
     if (!this.nuevoTitulo.trim()) return this.showMsg('Escribe un título para tu resumen', 'warning');
     if (!this.resumenResultado) return this.showMsg('No hay contenido para guardar', 'warning');
+
+    this.accionPendiente = 'guardar';
+    this.mostrarModalConfirmacion = true;
+  }
+
+  cancelarConfirmacion() {
+    this.mostrarModalConfirmacion = false;
+    this.accionPendiente = null;
+  }
+
+  confirmarAccion() {
+    if (!this.accionPendiente) return;
+
+    if (this.accionPendiente === 'limpiar') {
+      this.resumenResultado = '';
+      this.showMsg('Resultado borrado', 'info');
+      this.cancelarConfirmacion();
+      return;
+    }
 
     const data = {
       titulo: this.nuevoTitulo,
@@ -99,9 +127,13 @@ export class CrearResumenComponent implements OnInit {
     this.resS.guardarResumen(data).subscribe({
       next: () => {
         this.showMsg('¡Resumen guardado!', 'success');
+        this.cancelarConfirmacion();
         setTimeout(() => this.router.navigate(['/componentes/resumenes']), 1500);
       },
-      error: () => this.showMsg('Error al guardar en la base de datos', 'danger')
+      error: () => {
+        this.showMsg('Error al guardar en la base de datos', 'danger');
+        this.cancelarConfirmacion();
+      }
     });
   }
 

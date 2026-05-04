@@ -13,10 +13,10 @@
   <div class="mb-4 mb-md-5 d-flex flex-wrap align-items-center justify-content-between gap-3">
     <div>
       <h1 class="display-5 fw-bold text-white mb-2 text-uppercase">Editor de Resumen</h1>
-      <p class="text-secondary mb-0">Modifica el contenido del resumen y ajusta los detalles</p>
+      <p class="text-white mb-0">Modifica el contenido del resumen y ajusta los detalles</p>
     </div>
     <div class="d-flex gap-3">
-      <button class="btn btn-outline-secondary rounded-pill px-4 fw-bold border-2" (click)="volver()">
+      <button class="btn btn-outline-primary rounded-pill px-4 fw-bold border-2" (click)="volver()">
         <i class="bi bi-arrow-left me-2"></i>VOLVER
       </button>
       <button class="btn btn-primary rounded-pill px-4 shadow fw-bold border-0" (click)="guardar()" [disabled]="guardando">
@@ -35,15 +35,15 @@
 
         <div class="card-body p-4">
           <div class="mb-4">
-            <label class="form-label small fw-bold text-secondary text-uppercase mb-2">Título del resumen</label>
+            <label class="form-label small fw-bold text-white text-uppercase mb-2">Título del resumen</label>
             <input type="text" [(ngModel)]="resumen.titulo" 
                    class="form-control bg-black text-white border-secondary border-opacity-50 shadow-none py-2">
           </div>
 
           <div class="mb-4">
             <div class="d-flex justify-content-between align-items-center mb-2">
-              <label class="form-label small fw-bold text-secondary text-uppercase m-0">Descripción</label>
-              <span class="badge" [ngClass]="resumen.descripcion?.length > 140 ? 'text-danger' : 'text-secondary opacity-50'">
+              <label class="form-label small fw-bold text-white text-uppercase m-0">Descripción</label>
+              <span class="badge" [ngClass]="resumen.descripcion?.length > 140 ? 'text-danger' : 'text-white'">
                 {{ resumen.descripcion?.length || 0 }}/150
               </span>
             </div>
@@ -55,7 +55,7 @@
           </div>
 
           <div class="mb-4">
-            <label class="form-label small fw-bold text-secondary text-uppercase mb-2">Categoría</label>
+            <label class="form-label small fw-bold text-white text-uppercase mb-2">Categoría</label>
             <select class="form-select bg-black text-white border-secondary border-opacity-50 shadow-none py-2" 
                     [(ngModel)]="resumen.categoria">
               <option *ngFor="let cat of categorias" [value]="cat.valor">{{ cat.nombre }}</option>
@@ -65,7 +65,7 @@
           <div class="mt-4 pt-4 border-top border-secondary border-opacity-25">
             <div class="d-flex align-items-center text-secondary small opacity-75">
               <i class="bi bi-calendar3 me-2"></i>
-              <span>Creado el {{ resumen.fecha | date:'dd MMM, yyyy' }}</span>
+              <span class="text-white">Creado el {{ resumen.fecha | date:'dd MMM, yyyy' }}</span>
             </div>
           </div>
         </div>
@@ -76,7 +76,7 @@
       <div class="card bg-black border-secondary border-opacity-25 rounded-4 shadow-sm overflow-hidden h-100">
         <div class="card-header bg-dark bg-opacity-50 border-secondary border-opacity-25 py-3 d-flex justify-content-between align-items-center">
           <small class="fw-bold text-primary text-uppercase tracking-wider">Cuerpo del Resumen</small>
-          <span class="badge bg-dark border border-secondary border-opacity-25 text-secondary fw-normal">
+          <span class="badge bg-dark border border-secondary border-opacity-25 text-white fw-normal">
             {{ resumen.resumenTexto?.split(' ').length || 0 }} palabras
           </span>
         </div>

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApunteService } from '../../../services/apuntes.service';
 import { AuthService } from '../../../services/auth.service';
-import { Route, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-crear-apuntes',
@@ -49,19 +49,41 @@ export class CrearApuntesComponent {
 
   onFileSelected(event: any): void {
     const file = event.target.files[0];
-    if (file) {
-      this.archivoSeleccionado = file;
-      this.mensajeFeedback = null;
-    }
+    if (!file) return;
+    this.procesarArchivo(file);
   }
 
-  crearApuntes(): void {
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+  }
+
+  onDrop(event: DragEvent): void {
+    event.preventDefault();
+    const file = event.dataTransfer?.files?.[0];
+    if (!file) return;
+    this.procesarArchivo(file);
+  }
+
+  private procesarArchivo(file: File): void {
+    if (!file.type.startsWith('image/')) {
+      this.archivoSeleccionado = null;
+      this.mostrarMensaje('Formato no compatible. Arrastra o sube solo imágenes.', 'danger');
+      return;
+    }
+
+    this.archivoSeleccionado = file;
+    this.mostrarMensaje(`Imagen seleccionada: ${file.name}`, 'info');
+  }
+
+  async crearApuntes(): Promise<void> {
     if (!this.userId || !this.archivoSeleccionado || !this.datosApunte.titulo) return;
 
     this.cargando = true;
     this.mensajeFeedback = null; 
 
-    this.apunteService.subirAImgBB(this.archivoSeleccionado).subscribe({
+    const archivoParaSubir = await this.comprimirImagen(this.archivoSeleccionado);
+
+    this.apunteService.subirAImgBB(archivoParaSubir).subscribe({
       next: (resImgBB: any) => {
         const urlDirecta = resImgBB.data.url;
 
@@ -97,28 +119,7 @@ export class CrearApuntesComponent {
             }
 
             // --- Guardado con DESCRIPCIÓN ---
-            const apunteParaFirebase = {
-              titulo: this.datosApunte.titulo,
-              descripcion: this.datosApunte.descripcion, // Nuevo campo
-              contenido: contenidoFinal,
-              categoria: this.datosApunte.categoria,
-              userId: this.userId,
-              fecha: new Date().toISOString()
-            };
-
-            this.apunteService.guardarApunte(apunteParaFirebase).subscribe({
-                next: () => {
-                    this.mostrarMensaje('¡Apunte creado con éxito!', 'success');
-                    setTimeout(() => {
-                        this.cargando = false;
-                        this.router.navigate(['/componentes/apuntes']);
-                    }, 1500);
-                },
-              error: () => {
-                this.cargando = false;
-                this.mostrarMensaje('Error al guardar en Firebase.', 'danger');
-              }
-            });
+            this.guardarApunteFinal(contenidoFinal);
           },
           error: () => {
             this.cargando = false;
@@ -130,6 +131,73 @@ export class CrearApuntesComponent {
         this.cargando = false;
         this.mostrarMensaje('Error al subir la imagen.', 'danger');
       }
+    });
+  }
+
+  private guardarApunteFinal(contenidoFinal: string): void {
+    const apunteParaFirebase = {
+      titulo: this.datosApunte.titulo,
+      descripcion: this.datosApunte.descripcion,
+      contenido: contenidoFinal,
+      categoria: this.datosApunte.categoria,
+      userId: this.userId,
+      fecha: new Date().toISOString()
+    };
+
+    this.apunteService.guardarApunte(apunteParaFirebase).subscribe({
+      next: () => {
+        this.mostrarMensaje('¡Apunte creado con éxito!', 'success');
+        setTimeout(() => {
+          this.cargando = false;
+          this.router.navigate(['/componentes/apuntes']);
+        }, 1500);
+      },
+      error: () => {
+        this.cargando = false;
+        this.mostrarMensaje('Error al guardar en Firebase.', 'danger');
+      }
+    });
+  }
+
+  private async comprimirImagen(file: File): Promise<File> {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const img = new Image();
+        img.onload = () => {
+          const maxDimension = 1600;
+          const ratio = Math.min(maxDimension / img.width, maxDimension / img.height, 1);
+          const width = Math.round(img.width * ratio);
+          const height = Math.round(img.height * ratio);
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            resolve(file);
+            return;
+          }
+
+          ctx.drawImage(img, 0, 0, width, height);
+          canvas.toBlob(
+            (blob) => {
+              if (!blob) {
+                resolve(file);
+                return;
+              }
+              resolve(new File([blob], file.name.replace(/\.[^.]+$/, '.jpg'), { type: 'image/jpeg' }));
+            },
+            'image/jpeg',
+            0.75
+          );
+        };
+        img.onerror = () => resolve(file);
+        img.src = reader.result as string;
+      };
+      reader.onerror = () => resolve(file);
+      reader.readAsDataURL(file);
     });
   }
 

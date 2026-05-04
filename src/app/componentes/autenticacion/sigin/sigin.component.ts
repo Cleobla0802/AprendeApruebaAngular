@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { UserCredential } from '@angular/fire/auth';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -16,13 +16,16 @@ registerForm: FormGroup;
   errores = false;
   loading = false; 
   mensajeError = ''; 
+  showPassword = false;
+  showConfirmPassword = false;
 
   constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     this.registerForm = this.fb.group({
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]]
-    });
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      confirmPassword: ['', [Validators.required, Validators.minLength(8)]]
+    }, { validators: this.passwordsMatchValidator });
   }
 
   register() {
@@ -72,5 +75,20 @@ registerForm: FormGroup;
         this.mensajeError = 'Error al conectar con Google.';
         this.loading = false;
       });
+  }
+
+  private passwordsMatchValidator(group: AbstractControl): ValidationErrors | null {
+    const password = group.get('password')?.value;
+    const confirmPassword = group.get('confirmPassword')?.value;
+
+    return password === confirmPassword ? null : { passwordMismatch: true };
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPasswordVisibility() {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 }
