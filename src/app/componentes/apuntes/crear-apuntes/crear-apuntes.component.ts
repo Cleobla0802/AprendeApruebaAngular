@@ -75,64 +75,83 @@ export class CrearApuntesComponent {
     this.mostrarMensaje(`Imagen seleccionada: ${file.name}`, 'info');
   }
 
-  async crearApuntes(): Promise<void> {
-    if (!this.userId || !this.archivoSeleccionado || !this.datosApunte.titulo) return;
+async crearApuntes(): Promise<void> {
+  if (!this.userId || !this.archivoSeleccionado || !this.datosApunte.titulo) return;
 
-    this.cargando = true;
-    this.mensajeFeedback = null; 
+  this.cargando = true;
+  this.mensajeFeedback = null;
 
-    const archivoParaSubir = await this.comprimirImagen(this.archivoSeleccionado);
+  const archivoParaSubir = await this.comprimirImagen(this.archivoSeleccionado);
 
-    this.apunteService.subirAImgBB(archivoParaSubir).subscribe({
-      next: (resImgBB: any) => {
-        const urlDirecta = resImgBB.data.url;
+  const apunteInicial = {
+    titulo: this.datosApunte.titulo,
+    descripcion: this.datosApunte.descripcion,
+    contenido: 'Generando sus apuntes, espere...',
+    categoria: this.datosApunte.categoria,
+    userId: this.userId,
+    fecha: new Date().toISOString()
+  };
 
-        this.apunteService.digitalizarEnBackend(
-          this.datosApunte.titulo, 
-          urlDirecta, 
-          this.userId!, 
-          this.datosApunte.categoria
-        ).subscribe({
-          next: (respuestaRaw: string) => {
-            let contenidoFinal: string = respuestaRaw;
+  this.apunteService.guardarApunte(apunteInicial).subscribe({
+    next: (apunteGuardado: any) => {
+      const idApunte = apunteGuardado.key;
 
-            // --- Lógica de limpieza (se mantiene igual) ---
-            try {
-              const primeraCapa = JSON.parse(respuestaRaw);
-              if (primeraCapa && primeraCapa.textoIA) {
-                try {
-                  const segundaCapa = JSON.parse(primeraCapa.textoIA);
-                  contenidoFinal = typeof segundaCapa === 'string' ? segundaCapa : JSON.stringify(segundaCapa, null, 2);
-                } catch {
-                  contenidoFinal = primeraCapa.textoIA;
+      this.cargando = false;
+      this.mostrarMensaje('¡Apunte creado! Digitalizando en segundo plano...', 'success');
+      setTimeout(() => {
+        this.router.navigate(['/componentes/apuntes']);
+      }, 1500);
+
+      this.apunteService.subirAImgBB(archivoParaSubir).subscribe({
+        next: (resImgBB: any) => {
+          const urlDirecta = resImgBB.data.url;
+
+          this.apunteService.digitalizarEnBackend(
+            this.datosApunte.titulo,
+            urlDirecta,
+            this.userId!,
+            this.datosApunte.categoria
+          ).subscribe({
+            next: (respuestaRaw: string) => {
+              let contenidoFinal = respuestaRaw;
+
+              try {
+                const primeraCapa = JSON.parse(respuestaRaw);
+                if (primeraCapa && primeraCapa.textoIA) {
+                  try {
+                    const segundaCapa = JSON.parse(primeraCapa.textoIA);
+                    contenidoFinal = typeof segundaCapa === 'string' ? segundaCapa : JSON.stringify(segundaCapa, null, 2);
+                  } catch {
+                    contenidoFinal = primeraCapa.textoIA;
+                  }
+                } else {
+                  contenidoFinal = JSON.stringify(primeraCapa, null, 2);
                 }
-              } else {
-                contenidoFinal = JSON.stringify(primeraCapa, null, 2);
-              }
-            } catch (e) {
-              if (respuestaRaw.includes('<body')) {
-                const match = respuestaRaw.match(/<body[^>]*>([\s\S]*)<\/body>/i);
-                if (match && match[1]) {
-                  contenidoFinal = match[1].trim();
+              } catch (e) {
+                if (respuestaRaw.includes('<body')) {
+                  const match = respuestaRaw.match(/<body[^>]*>([\s\S]*)<\/body>/i);
+                  if (match && match[1]) contenidoFinal = match[1].trim();
                 }
               }
+
+              this.apunteService.actualizarContenidoApunte(idApunte, contenidoFinal).subscribe();
+            },
+            error: () => {
+              this.apunteService.actualizarContenidoApunte(idApunte, 'Error al digitalizar. Edita el contenido manualmente.').subscribe();
             }
-
-            // --- Guardado con DESCRIPCIÓN ---
-            this.guardarApunteFinal(contenidoFinal);
-          },
-          error: () => {
-            this.cargando = false;
-            this.mostrarMensaje('Error en el servidor de IA.', 'danger');
-          }
-        });
-      },
-      error: () => {
-        this.cargando = false;
-        this.mostrarMensaje('Error al subir la imagen.', 'danger');
-      }
-    });
-  }
+          });
+        },
+        error: () => {
+          this.apunteService.actualizarContenidoApunte(idApunte, 'Error al subir imagen. Edita el contenido manualmente.').subscribe();
+        }
+      });
+    },
+    error: () => {
+      this.cargando = false;
+      this.mostrarMensaje('Error al guardar en Firebase.', 'danger');
+    }
+  });
+}
 
   private guardarApunteFinal(contenidoFinal: string): void {
     const apunteParaFirebase = {

@@ -81,27 +81,45 @@
       <div class="col" *ngFor="let apunte of listaApuntes">
         <div class="card h-100 bg-dark border-secondary shadow rounded-4 overflow-hidden">
           <div class="card-body p-3 p-md-4 d-flex flex-column">
+
             <div class="d-flex justify-content-between align-items-center mb-3">
               <span [class]="'badge rounded-pill px-3 py-2 bg-' + getBgColor(apunte.categoria) + ' bg-opacity-10 text-' + getBgColor(apunte.categoria)">
                 {{ (apunte.categoria || 'Sin categoría') | titlecase }}
               </span>
-              <small class="text-secondary opacity-75 small">
-                <i class="bi bi-calendar3 me-1"></i>{{ apunte.fecha | date:'dd/MM/yy' }}
-              </small>
+              <div class="d-flex align-items-center gap-2">
+                <span *ngIf="apunte.contenido === 'Generando sus apuntes, espere...'"
+                      class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 d-flex align-items-center gap-1">
+                  <span class="spinner-border spinner-border-sm" style="width: 0.6rem; height: 0.6rem;"></span>
+                  Digitalizando...
+                </span>
+                <small class="text-secondary opacity-75 small">
+                  <i class="bi bi-calendar3 me-1"></i>{{ apunte.fecha | date:'dd/MM/yy' }}
+                </small>
+              </div>
             </div>
+
             <h5 class="card-title text-white fw-bold mb-2">{{ apunte.titulo }}</h5>
             <p class="card-text text-secondary small flex-grow-1 mb-0 opacity-75">
               {{ apunte.descripcion || 'Sin descripción.' }}
             </p>
+
             <div class="mt-3 pt-3 border-top border-secondary border-opacity-25 d-flex gap-2">
-              <a [routerLink]="['/componentes/apuntes/visualizar-apuntes', apunte.id]"
-                 class="btn btn-sm btn-outline-light rounded-pill flex-grow-1">
-                Ver detalles
+              <a [routerLink]="apunte.contenido === 'Generando con IA, espere...' ? null : ['/componentes/apuntes/visualizar-apuntes', apunte.id]"
+                 class="btn btn-sm rounded-pill flex-grow-1"
+                 [ngClass]="apunte.contenido === 'Generando con IA, espere...' ? 'btn-outline-secondary disabled' : 'btn-outline-light'">
+                <span *ngIf="apunte.contenido === 'Generando con IA, espere...'">
+                  <span class="spinner-border spinner-border-sm me-1" style="width: 0.6rem; height: 0.6rem;"></span>
+                  Procesando...
+                </span>
+                <span *ngIf="apunte.contenido !== 'Generando con IA, espere...'">Ver detalles</span>
               </a>
-              <button class="btn btn-sm btn-outline-danger rounded-circle" (click)="solicitarEliminar(apunte.id, apunte.titulo)">
+              <button class="btn btn-sm btn-outline-danger rounded-circle"
+                      [disabled]="apunte.contenido === 'Generando con IA, espere...'"
+                      (click)="solicitarEliminar(apunte.id, apunte.titulo)">
                 <i class="bi bi-trash"></i>
               </button>
             </div>
+
           </div>
         </div>
       </div>

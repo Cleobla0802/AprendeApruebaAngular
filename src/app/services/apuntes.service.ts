@@ -41,6 +41,10 @@ export class ApunteService {
     return objectVal(apunteRef, { keyField: 'id' }) as Observable<Apunte | null>;
   }
 
+  actualizarContenidoApunte(id: string, contenido: string): Observable<void> {
+    return this.actualizarApunteFirebase(id, { contenido });
+  }
+
   /**
    * FIREBASE: Eliminar un apunte
    */

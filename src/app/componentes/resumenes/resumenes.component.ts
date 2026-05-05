@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './resumenes.component.scss'
 })
 export class ResumenesComponent implements OnInit {
-listaResumenes: any[] = []; 
+  listaResumenes: any[] = []; 
   listaResumenesOriginal: any[] = []; 
   cargando = true;
   buscarResumen: string = '';

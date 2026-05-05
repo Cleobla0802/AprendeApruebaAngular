@@ -33,9 +33,13 @@ export class ResumenesService {
   }
 
   guardarResumen(resumen: any): Observable<any> {
-  const resumenesRef = ref(this.db, 'resumenes');
-  // push(ref, data) crea un nuevo nodo con un ID único automático
-  return from(push(resumenesRef, resumen));
+    const resumenesRef = ref(this.db, 'resumenes');
+    return from(push(resumenesRef, resumen));
+  }
+
+  actualizarContenidoResumen(id: string, resumenTexto: string): Observable<void> {
+    const resumenRef = ref(this.db, `resumenes/${id}`);
+    return from(update(resumenRef, { resumenTexto }));
   }
 
   /**

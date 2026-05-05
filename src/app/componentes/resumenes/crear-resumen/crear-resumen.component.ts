@@ -60,13 +60,18 @@ export class CrearResumenComponent implements OnInit {
   }
 
   toggle(a: any) {
+    if (a.contenido === 'Generando sus apuntes, espere...') {
+      this.showMsg('Este apunte todavía se está digitalizando, espera a que termine', 'warning');
+      return;
+    }
+
     if (this.seleccionados.length && this.seleccionados[0] === a) {
       this.seleccionados = [];
       this.nuevoTitulo = '';
       return;
     }
+
     this.seleccionados = [a];
-    
     if (a.titulo) {
       this.nuevoTitulo = a.titulo.slice(0, 30);
     }
@@ -74,26 +79,41 @@ export class CrearResumenComponent implements OnInit {
 
   crearResumen() {
     if (!this.seleccionados.length) return this.showMsg('Selecciona un apunte', 'warning');
-    
-    this.generandoIA = true;
-    const apunteSeleccionado = this.seleccionados[0];
-    const body = `${apunteSeleccionado.titulo}: ${apunteSeleccionado.contenido}`;
+    if (!this.nuevoTitulo.trim()) return this.showMsg('Escribe un título para el resumen', 'warning');
 
-    this.resS.generarConIA(body).subscribe({
-      next: (r) => {
-        if (!r.resumen || r.resumen.trim() === '' || r.resumen === 'null') {
-          this.resumenResultado = 'La IA no pudo generar el resumen en este momento. Por favor, inténtalo de nuevo.';
-          this.showMsg('La IA no devolvió contenido, inténtalo de nuevo', 'warning');
-        } else {
-          this.resumenResultado = r.resumen;
-          this.showMsg('Resumen generado con éxito', 'success');
-        }
-        this.generandoIA = false;
+    const apunteSeleccionado = this.seleccionados[0];
+
+    const resumenInicial = {
+      titulo: this.nuevoTitulo,
+      descripcion: this.nuevaDescripcion,
+      resumenTexto: 'Generando sus apuntes, espere...',
+      categoria: this.nuevaCategoria || 'general',
+      userId: this.uid,
+      fecha: new Date().getTime()
+    };
+
+    this.resS.guardarResumen(resumenInicial).subscribe({
+      next: (resumenGuardado: any) => {
+        const idResumen = resumenGuardado.key;
+
+        this.showMsg('¡Resumen creado! Generando contenido en segundo plano...', 'success');
+        this.router.navigate(['/componentes/resumenes'])
+
+        const body = `${apunteSeleccionado.titulo}: ${apunteSeleccionado.contenido}`;
+
+        this.resS.generarConIA(body).subscribe({
+          next: (r) => {
+            const contenido = (!r.resumen || r.resumen.trim() === '' || r.resumen === 'null')
+              ? 'La IA no pudo generar el resumen. Edita el contenido manualmente.'
+              : r.resumen;
+            this.resS.actualizarContenidoResumen(idResumen, contenido).subscribe();
+          },
+          error: () => {
+            this.resS.actualizarContenidoResumen(idResumen, 'Error al generar con IA. Edita el contenido manualmente.').subscribe();
+          }
+        });
       },
-      error: () => { 
-        this.showMsg('Error al conectar con la IA', 'danger'); 
-        this.generandoIA = false; 
-      }
+      error: () => this.showMsg('Error al guardar en Firebase', 'danger')
     });
   }
 
