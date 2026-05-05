@@ -3,19 +3,19 @@ import { ApunteService } from '../../../services/apuntes.service';
 import { ResumenesService } from '../../../services/resumenes.service';
 import { AuthService } from '../../../services/auth.service';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PruebasService } from '../../../services/pruebas.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-crear-tipo-test',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './crear-tipo-test.component.html',
   styleUrl: './crear-tipo-test.component.scss'
 })
 export class CrearTipoTestComponent {
-listaApuntes: any[] = [];
+  listaApuntes: any[] = [];
   listaResumenes: any[] = [];
   
   tabActiva: 'apuntes' | 'resumenes' = 'apuntes';
@@ -25,7 +25,7 @@ listaApuntes: any[] = [];
   userId: string = '';
   tituloPersonalizado = '';
   cantidadPreguntas = 10;
-  readonly maxTituloLength = 80;
+  readonly maxTituloLength = 30;
   
   notif = { show: false, msg: '', type: 'success' as 'success' | 'danger' | 'warning' | 'info' };
   private readonly limiteContenidoIA = 12000;
@@ -81,7 +81,7 @@ listaApuntes: any[] = [];
 
   seleccionar(item: any) {
     this.seleccionado = item;
-    this.tituloPersonalizado = item?.titulo || '';
+    this.tituloPersonalizado = (item?.titulo || '').slice(0, 30);
   }
 
   generarTest() {

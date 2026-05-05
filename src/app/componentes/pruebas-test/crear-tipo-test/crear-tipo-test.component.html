@@ -6,9 +6,14 @@
     <small class="text-white-50">Esto puede tardar unos segundos...</small>
   </div>
 
-  <div class="text-center mb-4 mb-md-5">
-    <h1 class="display-6 display-md-5 fw-bold text-white text-uppercase">Creacion de tipo test</h1>
-    <p class="text-secondary">Selecciona el material para crear su tipo test, apunte o resumen como prefiera</p>
+  <div class="d-flex align-items-center mb-4 mb-md-5">
+    <a routerLink="/componentes/pruebas-test" class="btn btn-primary me-3 ">
+      <i class="bi bi-arrow-left fs-3"></i>
+    </a>
+    <div class="text-center flex-grow-1 me-5">
+      <h1 class="display-6 display-md-5 fw-bold text-white text-uppercase m-0">Creacion de tipo test</h1>
+      <p class="text-secondary m-0">Selecciona el material para crear su tipo test, apunte o resumen como prefiera</p>
+    </div>
   </div>
 
   <div class="row justify-content-center mb-4 mb-md-5">
@@ -75,13 +80,18 @@
     <div class="px-3">
       <div class="row g-3 mb-3">
         <div class="col-12 col-md-8">
-          <label class="form-label small fw-bold text-white text-uppercase">Título del tipo test</label>
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <label class="form-label small fw-bold text-white text-uppercase m-0">Título del tipo test</label>
+            <span class="badge rounded-pill" 
+                  [ngClass]="tituloPersonalizado.length >= 30 ? 'bg-danger' : 'bg-secondary bg-opacity-25 text-secondary'">
+              {{ tituloPersonalizado.length }} / 30
+            </span>
+          </div>
           <input type="text"
                  class="form-control bg-black text-white border-secondary shadow-none"
                  [(ngModel)]="tituloPersonalizado"
-                 [maxLength]="maxTituloLength"
+                 [maxLength]="30"
                  placeholder="Escribe el título de tu test">
-          <small class="text-secondary">{{ tituloPersonalizado.length }}/{{ maxTituloLength }}</small>
         </div>
         <div class="col-12 col-md-4">
           <label class="form-label small fw-bold text-white text-uppercase">Preguntas</label>

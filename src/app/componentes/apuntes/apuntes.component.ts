@@ -69,22 +69,26 @@ export class ApuntesComponent {
   // Se activa al escribir en el buscador o pulsar un checkbox
   filtrarApuntes() {
     const texto = this.buscarApunte.toLowerCase().trim();
-    
     const categoriasActivas = Object.keys(this.filtrosCategorias).filter(cat => this.filtrosCategorias[cat]);
 
     this.listaApuntes = this.listaApuntesOriginal.filter(apunte => {
-      // 1. Filtro por texto (Ahora busca en título Y en descripción)
       const titulo = apunte.titulo ? apunte.titulo.toLowerCase() : '';
       const descripcion = apunte.descripcion ? apunte.descripcion.toLowerCase() : '';
-      
       const coincideTexto = titulo.includes(texto) || descripcion.includes(texto);
-      
-      // 2. Filtro por categoría
-      const categoriaApunte = apunte.categoria ? apunte.categoria.toLowerCase() : '';
+
+      const categoriaApunte = apunte.categoria 
+        ? this.normalizarCategoria(apunte.categoria) 
+        : '';
       const coincideCategoria = categoriasActivas.length === 0 || categoriasActivas.includes(categoriaApunte);
 
       return coincideTexto && coincideCategoria;
     });
+  }
+
+  normalizarCategoria(categoria: string): string {
+    return categoria.toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
   }
 
   // Método para los checkboxes
@@ -141,6 +145,7 @@ export class ApuntesComponent {
 
   getBgColor(categoria: string): string {
     if (!categoria) return 'secondary';
+    const normalizada = this.normalizarCategoria(categoria);
     const colores: any = {
       'matematicas': 'primary',
       'ciencias': 'success',
@@ -148,6 +153,6 @@ export class ApuntesComponent {
       'historia': 'warning',
       'tecnologia': 'danger'
     };
-    return colores[categoria.toLowerCase()] || 'secondary';
+    return colores[normalizada] || 'secondary';
   }
 }

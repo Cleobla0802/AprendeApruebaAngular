@@ -72,11 +72,17 @@ export class PruebasTestComponent implements OnInit {
 
     this.listaTests = this.listaTestsOriginal.filter(test => {
       const coincideTexto = test.titulo.toLowerCase().includes(texto);
-      const categoriaTest = test.categoria ? test.categoria.toLowerCase() : '';
+      const categoriaTest = test.categoria ? this.normalizarCategoria(test.categoria) : '';
       const coincideCategoria = categoriasActivas.length === 0 || categoriasActivas.includes(categoriaTest);
 
       return coincideTexto && coincideCategoria;
     });
+  }
+
+  normalizarCategoria(categoria: string): string {
+  return categoria.toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
   }
 
   toggleCategoria(cat: string) {
@@ -130,6 +136,7 @@ export class PruebasTestComponent implements OnInit {
 
   getBgColor(categoria: string): string {
     if (!categoria) return 'secondary';
+    const normalizada = this.normalizarCategoria(categoria);
     const colores: any = {
       'matematicas': 'primary',
       'ciencias': 'success',
@@ -137,6 +144,6 @@ export class PruebasTestComponent implements OnInit {
       'historia': 'warning',
       'tecnologia': 'danger'
     };
-    return colores[categoria.toLowerCase()] || 'secondary';
+    return colores[normalizada] || 'secondary';
   }
 }

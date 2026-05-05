@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Database, get, ref, set } from '@angular/fire/database';
 
 @Component({
   selector: 'app-sigin',
@@ -19,7 +20,7 @@ registerForm: FormGroup;
   showPassword = false;
   showConfirmPassword = false;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router, private db:Database) {
     this.registerForm = this.fb.group({
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -38,9 +39,10 @@ registerForm: FormGroup;
       
       const { username, email, password } = this.registerForm.value;
 
-      this.authService.register(email, password)
+        this.authService.register(email, password)
         .then((userCredential: UserCredential) => {
-          return this.authService.saveUsername(userCredential.user.uid, username);
+          return this.authService.saveUsername(userCredential.user.uid, username)
+            .then(() => this.authService.guardarEmailUsuario(userCredential.user.uid, email));
         })
         .then(() => {
           this.router.navigate(['/componentes/apuntes']);

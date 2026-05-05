@@ -62,9 +62,14 @@ export class CrearResumenComponent implements OnInit {
   toggle(a: any) {
     if (this.seleccionados.length && this.seleccionados[0] === a) {
       this.seleccionados = [];
+      this.nuevoTitulo = '';
       return;
     }
     this.seleccionados = [a];
+    
+    if (a.titulo) {
+      this.nuevoTitulo = a.titulo.slice(0, 30);
+    }
   }
 
   crearResumen() {

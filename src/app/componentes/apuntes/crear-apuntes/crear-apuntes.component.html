@@ -9,9 +9,14 @@
   <div class="row justify-content-center">
     <div class="col-12 col-md-10 col-lg-8 col-xl-7">
 
-      <div class="text-center mb-4 mb-md-5">
-        <i class="bi bi-journal-plus text-primary mb-3 d-block display-3"></i>
-        <h1 class="fw-bold text-light">Crear Apuntes</h1>
+      <div class="d-flex align-items-center mb-4 mb-md-5">
+        <a routerLink="/componentes/apuntes" class="btn btn-primary me-3 ">
+          <i class="bi bi-arrow-left fs-3"></i>
+        </a>
+        <div class="text-center flex-grow-1 me-5">
+          <i class="bi bi-journal-plus text-primary mb-2 d-block display-4"></i>
+          <h1 class="fw-bold text-light m-0">Crear Apuntes</h1>
+        </div>
       </div>
 
       <div class="card bg-dark border border-secondary shadow-lg rounded-4">
@@ -23,10 +28,16 @@
 
             <div class="row mb-4">
               <div class="col-12 col-md-8">
-                <label class="form-label fw-semibold text-light small uppercase">Título del apunte</label>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <label class="form-label fw-semibold text-light small uppercase m-0">Título del apunte</label>
+                  <span class="badge rounded-pill" 
+                        [ngClass]="datosApunte.titulo.length >= 30 ? 'bg-danger' : 'bg-secondary bg-opacity-25 text-secondary'">
+                    {{ datosApunte.titulo.length }} / 30
+                  </span>
+                </div>
                 <input type="text" name="titulo" [(ngModel)]="datosApunte.titulo"
                        class="form-control form-control-lg bg-black text-light border-secondary rounded-3 shadow-none"
-                       placeholder="Ej: Historia del Arte..." required>
+                       placeholder="Ej: Historia del Arte..." required maxlength="30">
               </div>
               <div class="col-12 col-md-4 mt-3 mt-md-0">
                 <label class="form-label fw-semibold text-light small uppercase">Categoría</label>
@@ -41,7 +52,7 @@
               <div class="d-flex justify-content-between align-items-center mb-2">
                 <label class="form-label fw-semibold text-light m-0">Descripción</label>
                 <span class="badge rounded-pill" 
-                      [ngClass]="datosApunte.descripcion.length >= 140 ? 'bg-danger' : 'bg-secondary bg-opacity-25 text-secondary'">
+                      [ngClass]="datosApunte.descripcion.length >= 150 ? 'bg-danger' : 'bg-secondary bg-opacity-25 text-secondary'">
                   {{ datosApunte.descripcion.length }} / 150
                 </span>
               </div>
@@ -58,18 +69,20 @@
                 <h5 class="text-light">Sube la foto de tu apunte</h5>
                 <input type="file" id="fileInput" (change)="onFileSelected($event)" accept="image/*"
                        class="form-control bg-dark text-light border-secondary mt-3 shadow-none">
-                <small class="text-secondary d-block mt-2">También puedes arrastrar una imagen aquí</small>
+                <small class="text-secondary d-block mt-2">También puedes arrastrar una imagen aquí si estas en PC</small>
               </div>
             </div>
 
-            <div class="d-flex justify-content-end gap-3">
-              <button type="button" class="btn btn-outline-light btn-lg rounded-pill px-4" (click)="limpiarFormulario()">
-                Limpiar
-              </button>
-              <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4 shadow" 
-                      [disabled]="formulario.invalid || !archivoSeleccionado || cargando">
-                <span>{{ cargando ? 'Digitalizando...' : 'Crear apuntes' }}</span>
-              </button>
+            <div class="d-flex flex-wrap justify-content-end gap-3">
+              <div class="d-flex gap-3">
+                <button type="button" class="btn btn-outline-light btn-lg rounded-pill px-4" (click)="limpiarFormulario()">
+                  Limpiar
+                </button>
+                <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4 shadow" 
+                        [disabled]="formulario.invalid || !archivoSeleccionado || cargando">
+                  <span>{{ cargando ? 'Digitalizando...' : 'Crear apuntes' }}</span>
+                </button>
+              </div>
             </div>
           </form>
         </div>

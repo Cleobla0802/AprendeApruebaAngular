@@ -24,36 +24,35 @@ export class RecuperarPasswordComponent {
   constructor(private authService: AuthService) {}
 
   enviarEmail() {
-    if (!this.email) return;
-    this.cargando = true;
+  if (!this.email) return;
+  this.cargando = true;
 
-    this.authService.checkEmailExists(this.email)
-      .then((exists) => {
-        if (!exists) {
-          this.mostrarNotif('Este correo electrónico no está registrado en nuestro sistema.', 'danger');
-          return;
-        }
-        return this.authService.resetPassword(this.email).then(() => {
-          this.mostrarNotif('¡Correo enviado! Revisa tu bandeja de entrada.', 'success');
-          this.email = '';
-        });
-      })
-      .catch((error) => {
-        switch (error.code) {
-          case 'auth/invalid-email':
-            this.mostrarNotif('El formato del correo electrónico no es válido.', 'danger');
-            break;
-          case 'auth/too-many-requests':
-            this.mostrarNotif('Demasiados intentos. Inténtalo de nuevo más tarde.', 'danger');
-            break;
-          default:
-            this.mostrarNotif('No se pudo procesar la solicitud. Inténtalo de nuevo.', 'danger');
-            break;
-        }
-      })
-      .finally(() => {
+  this.authService.checkEmailEnDatabase(this.email)
+    .then((existe) => {
+      if (!existe) {
+        this.mostrarNotif('Este correo no está registrado en nuestro sistema.', 'danger');
         this.cargando = false;
+        return;
+      }
+      return this.authService.resetPassword(this.email).then(() => {
+        this.mostrarNotif('¡Correo enviado! Revisa tu bandeja de entrada.', 'success');
+        this.email = '';
       });
+    })
+    .catch((error) => {
+      switch (error.code) {
+        case 'auth/invalid-email':
+          this.mostrarNotif('El formato del correo no es válido.', 'danger');
+          break;
+        case 'auth/too-many-requests':
+          this.mostrarNotif('Demasiados intentos. Inténtalo más tarde.', 'danger');
+          break;
+        default:
+          this.mostrarNotif('No se pudo procesar la solicitud.', 'danger');
+          break;
+      }
+    })
+    .finally(() => { this.cargando = false; });
   }
 
   private mostrarNotif(msg: string, type: 'success' | 'danger' | 'warning' | 'info') {

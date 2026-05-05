@@ -101,11 +101,18 @@
           </div>
 
           <div class="mb-3">
-            <label class="form-label small fw-bold text-white text-uppercase">Título del resumen</label>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <label class="form-label small fw-bold text-white text-uppercase m-0">Título del resumen</label>
+              <span class="badge rounded-pill" 
+                    [ngClass]="nuevoTitulo.length >= 30 ? 'bg-danger' : 'bg-secondary bg-opacity-25 text-secondary'">
+                {{ nuevoTitulo.length }} / 30
+              </span>
+            </div>
             <input type="text"
                    class="form-control bg-black text-light border-secondary shadow-none py-2"
                    placeholder="Ej: Gran Resumen de Historia..."
                    [(ngModel)]="nuevoTitulo"
+                   maxlength="30"
                    [disabled]="seleccionados.length === 0">
           </div>
 

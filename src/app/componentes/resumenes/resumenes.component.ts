@@ -73,11 +73,10 @@ listaResumenes: any[] = [];
     const categoriasActivas = Object.keys(this.filtrosCategorias).filter(cat => this.filtrosCategorias[cat]);
 
     this.listaResumenes = this.listaResumenesOriginal.filter(resumen => {
-      // Búsqueda en título O en descripción
       const coincideTexto = resumen.titulo.toLowerCase().includes(texto) || 
-                           (resumen.descripcion && resumen.descripcion.toLowerCase().includes(texto));
+                          (resumen.descripcion && resumen.descripcion.toLowerCase().includes(texto));
       
-      const categoriaResumen = resumen.categoria ? resumen.categoria.toLowerCase() : '';
+      const categoriaResumen = resumen.categoria ? this.normalizarCategoria(resumen.categoria) : '';
       const coincideCategoria = categoriasActivas.length === 0 || categoriasActivas.includes(categoriaResumen);
       
       return coincideTexto && coincideCategoria;
@@ -89,8 +88,15 @@ listaResumenes: any[] = [];
     this.filtrarResumenes();
   }
 
+  normalizarCategoria(categoria: string): string {
+  return categoria.toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+  }
+
   getBgColor(categoria: string): string {
     if (!categoria) return 'secondary';
+    const normalizada = this.normalizarCategoria(categoria);
     const colores: any = {
       'matematicas': 'primary',
       'ciencias': 'success',
@@ -98,7 +104,7 @@ listaResumenes: any[] = [];
       'historia': 'warning',
       'tecnologia': 'danger'
     };
-    return colores[categoria.toLowerCase()] || 'secondary';
+    return colores[normalizada] || 'secondary';
   }
 
   solicitarEliminar(id: string, titulo: string) {
