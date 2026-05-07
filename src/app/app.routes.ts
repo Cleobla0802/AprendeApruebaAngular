@@ -14,6 +14,7 @@ import { VisualizarResumenComponent } from './componentes/resumenes/visualizar-r
 import { PruebasTestComponent } from './componentes/pruebas-test/pruebas-test.component';
 import { CrearTipoTestComponent } from './componentes/pruebas-test/crear-tipo-test/crear-tipo-test.component';
 import { RealizarTipoTestComponent } from './componentes/pruebas-test/realizar-tipo-test/realizar-tipo-test.component';
+import { PerfilComponent } from './componentes/autenticacion/perfil/perfil.component';
 
 export const routes: Routes = [
     {path: 'componentes/presentacion' ,component:PresentacionComponent},
@@ -32,9 +33,10 @@ export const routes: Routes = [
 
     {path: 'componentes/pruebas-test', component: PruebasTestComponent, ...canActivate(()=>redirectUnauthorizedTo('/componentes/autenticacion/login')) },
     {path: 'componentes/pruebas-test/crear-tipo-test', component: CrearTipoTestComponent },
-    { path: 'componentes/pruebas-test/realizar-test/:id', component: RealizarTipoTestComponent },
+    {path: 'componentes/pruebas-test/realizar-test/:id', component: RealizarTipoTestComponent },
 
-    
+    {path: 'componentes/autenticacion/perfil', component: PerfilComponent, ...canActivate((()=>redirectUnauthorizedTo('/componentes/autenticacion/LoginComponent'))) },
+
     {path: '', redirectTo:'componentes/presentacion', pathMatch:'full'},
     {path: '**', redirectTo:'componentes/presentacion', pathMatch:'full'}
 ];

@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Auth, authState, createUserWithEmailAndPassword, fetchSignInMethodsForEmail, getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut, User, UserCredential } from '@angular/fire/auth';
-import { Database, get, ref, set, update } from '@angular/fire/database';
+import { Auth, authState, createUserWithEmailAndPassword, deleteUser, EmailAuthProvider, GoogleAuthProvider, reauthenticateWithCredential, reauthenticateWithPopup, signInWithEmailAndPassword, signInWithPopup, signOut, User, UserCredential } from '@angular/fire/auth';
+import { Database, get, ref, remove, set, update } from '@angular/fire/database';
 import { Router } from '@angular/router';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { Observable } from 'rxjs';
-import { ApunteService } from './apuntes.service';
 
 @Injectable({
   providedIn: 'root'
@@ -67,4 +66,28 @@ export class AuthService {
     });
   }
 
+  isGoogleUser(): boolean {
+    const currentUser = this.auth.currentUser;
+    if (!currentUser) return false;
+    return currentUser.providerData.some(p => p.providerId === 'google.com');
+  }
+
+  async deleteAccount(password?: string): Promise<void> {
+    const currentUser = this.auth.currentUser;
+    if (!currentUser) throw new Error('No hay usuario activo');
+
+    if (this.isGoogleUser()) {
+      const provider = new GoogleAuthProvider();
+      await reauthenticateWithPopup(currentUser, provider);
+    } else {
+      if (!password || !currentUser.email) throw new Error('Contraseña requerida');
+      const credential = EmailAuthProvider.credential(currentUser.email, password);
+      await reauthenticateWithCredential(currentUser, credential);
+    }
+
+    const uid = currentUser.uid;
+    await remove(ref(this.db, `usuarios/${uid}`));
+    await deleteUser(currentUser);
+    this.router.navigate(['/login']);
+  }
 }

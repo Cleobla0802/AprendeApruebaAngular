@@ -40,11 +40,17 @@
 
       <div class="d-flex align-items-center justify-content-center justify-content-lg-end gap-3 pt-2 pt-lg-0 border-top border-secondary border-opacity-10 border-lg-0">
         <ng-container *ngIf="usuarioActual">
-          <div class="d-flex align-items-center border-start-lg border-secondary border-opacity-50 ps-lg-3">
-            <div class="me-3 text-end d-sm-block">
-              <div class="text-white-50 lh-1 x-small text-uppercase d-none d-lg-block" style="font-size: 0.7rem;">Hola,</div>
+          <div class="d-flex align-items-center gap-2 border-start-lg border-secondary border-opacity-50 ps-lg-3">
+            <div class="me-1 text-end d-sm-block">
+              <div class="text-white-50 lh-1 x-small text-uppercase d-none d-lg-block">Hola,</div>
               <div class="text-white fw-bold lh-1 small">{{ userNameDatabase || usuarioActual.displayName || 'Usuario' }}</div>
             </div>
+            <a routerLink="/componentes/autenticacion/perfil"
+               routerLinkActive="active"
+               class="btn btn-outline-light rounded-pill px-3 btn-sm shadow-sm">
+              <i class="bi bi-person-circle me-lg-2"></i>
+              <span class="d-none d-lg-inline">Perfil</span>
+            </a>
             <button (click)="logout()" class="btn btn-danger rounded-pill px-4 btn-sm shadow-sm">
               <i class="bi bi-box-arrow-right d-lg-none me-2"></i>Logout
             </button>

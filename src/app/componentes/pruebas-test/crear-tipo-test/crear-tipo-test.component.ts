@@ -17,7 +17,7 @@ import { FormsModule } from '@angular/forms';
 export class CrearTipoTestComponent {
   listaApuntes: any[] = [];
   listaResumenes: any[] = [];
-  
+
   tabActiva: 'apuntes' | 'resumenes' = 'apuntes';
   seleccionado: any = null;
   cargando = true;
@@ -26,7 +26,7 @@ export class CrearTipoTestComponent {
   tituloPersonalizado = '';
   cantidadPreguntas = 10;
   readonly maxTituloLength = 30;
-  
+
   notif = { show: false, msg: '', type: 'success' as 'success' | 'danger' | 'warning' | 'info' };
   private readonly limiteContenidoIA = 12000;
 
@@ -39,7 +39,7 @@ export class CrearTipoTestComponent {
     private authService: AuthService,
     private http: HttpClient,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.authService.getUserAuthenticated().subscribe(user => {
@@ -80,6 +80,12 @@ export class CrearTipoTestComponent {
   }
 
   seleccionar(item: any) {
+    const enProceso = item.contenido === 'Generando su tipo test, espere...' || 
+                      item.resumenTexto === 'Generando su tipo test, espere...';
+    if (enProceso) {
+      this.showMsg('Este elemento todavía se está procesando, espera a que termine', 'warning');
+      return;
+    }
     this.seleccionado = item;
     this.tituloPersonalizado = (item?.titulo || '').slice(0, 30);
   }
@@ -90,54 +96,52 @@ export class CrearTipoTestComponent {
       this.showMsg('Escribe un título para el tipo test.', 'warning');
       return;
     }
+
     this.cantidadPreguntas = Math.min(30, Math.max(1, Math.floor(this.cantidadPreguntas || 10)));
-
     this.generando = true;
-    this.notif.show = false;
 
-    // Adaptación dinámica del contenido:
-    const textoOriginal = this.tabActiva === 'apuntes' 
-      ? this.seleccionado.contenido 
+    const textoOriginal = this.tabActiva === 'apuntes'
+      ? this.seleccionado.contenido
       : this.seleccionado.resumenTexto;
     const textoAProcesar = this.prepararContenidoParaIA(textoOriginal);
 
-    if (textoOriginal && textoOriginal.length > this.limiteContenidoIA) {
-      this.showMsg('Contenido muy largo: se ha recortado para acelerar la generación.', 'info');
-    }
-
-    const payload = {
-      contenido: textoAProcesar,
+    const testInicial = {
       userId: this.userId,
       titulo: this.tituloPersonalizado.trim(),
       categoria: this.seleccionado.categoria,
-      cantidadPreguntas: this.cantidadPreguntas
+      descripcion: this.seleccionado.descripcion || '',
+      preguntas: [],
+      fecha: new Date().getTime(),
+      completado: false,
+      ultimaNota: 0
     };
 
-    // 1. Pedimos las preguntas a la IA (Backend Java)
-    this.http.post<any>(this.apiBackend, payload).subscribe({
-      next: (testDeIA) => {
-        
-        // --- AQUÍ ESTÁ EL CAMBIO CLAVE ---
-        // El objeto testDeIA viene con las preguntas, pero no con la descripción.
-        // Se la asignamos manualmente del material origen (apunte o resumen).
-        testDeIA.descripcion = this.seleccionado.descripcion || '';
-        testDeIA.titulo = this.tituloPersonalizado.trim();
+    this.pruebasService.crearTest(testInicial).subscribe({
+      next: (testGuardado: any) => {
+        const idTest = testGuardado.key;
+        this.generando = false;
+        this.showMsg('¡Test creado! Generando preguntas en segundo plano...', 'success');
+        setTimeout(() => this.router.navigate(['/componentes/pruebas-test']), 1500);
 
-        // 2. Guardamos el test completo en Firebase
-        this.pruebasService.crearTest(testDeIA).subscribe({
-          next: (testGuardado) => {
-            this.generando = false;
-            if (testGuardado && testGuardado.id) {
-              this.showMsg('¡Test generado con éxito!', 'success');
-              setTimeout(() => {
-                this.router.navigate(['/componentes/pruebas-test/realizar-test', testGuardado.id]);
-              }, 1500);
-            }
+        const payload = {
+          contenido: textoAProcesar,
+          userId: this.userId,
+          titulo: this.tituloPersonalizado.trim(),
+          categoria: this.seleccionado.categoria,
+          cantidadPreguntas: this.cantidadPreguntas
+        };
+
+        this.http.post<any>(this.apiBackend, payload).subscribe({
+          next: (testDeIA) => {
+            const preguntas = testDeIA.preguntas || [];
+            this.pruebasService.actualizarPreguntasTest(idTest, preguntas).subscribe();
           },
-          error: () => this.handleError('Error al guardar el test')
+          error: () => {
+            this.pruebasService.actualizarPreguntasTest(idTest, []).subscribe();
+          }
         });
       },
-      error: () => this.handleError('La IA no pudo generar las preguntas')
+      error: () => this.handleError('Error al guardar el test')
     });
   }
 

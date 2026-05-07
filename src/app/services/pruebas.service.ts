@@ -45,4 +45,9 @@ constructor(private db: Database) {}
     }));
   }
 
+  actualizarPreguntasTest(id: string, preguntas: any[]): Observable<void> {
+    const testRef = ref(this.db, `tests/${id}`);
+    return from(update(testRef, { preguntas }));
+  }
+
 }
