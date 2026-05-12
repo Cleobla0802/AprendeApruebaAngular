@@ -104,7 +104,7 @@ export class CrearResumenComponent implements OnInit {
         this.resS.generarConIA(body).subscribe({
           next: (r) => {
             const contenido = (!r.resumen || r.resumen.trim() === '' || r.resumen === 'null')
-              ? 'La IA no pudo generar el resumen. Edita el contenido manualmente.'
+              ? 'La IA no pudo generar el resumen. Edita el contenido manualmente o intentelo de nuevo.'
               : r.resumen;
             this.resS.actualizarContenidoResumen(idResumen, contenido).subscribe();
           },

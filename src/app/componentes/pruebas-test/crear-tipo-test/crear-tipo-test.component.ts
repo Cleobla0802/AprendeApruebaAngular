@@ -97,7 +97,7 @@ export class CrearTipoTestComponent {
       return;
     }
 
-    this.cantidadPreguntas = Math.min(30, Math.max(1, Math.floor(this.cantidadPreguntas || 10)));
+    if (![5, 10, 15, 20].includes(this.cantidadPreguntas)) this.cantidadPreguntas = 10;
     this.generando = true;
 
     const textoOriginal = this.tabActiva === 'apuntes'
