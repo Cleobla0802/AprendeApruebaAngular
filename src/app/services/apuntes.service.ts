@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { from, Observable } from 'rxjs';
-import { Database, equalTo, listVal, objectVal, orderByChild, push, query, ref, remove, set, update } from '@angular/fire/database';
+import { Database, equalTo, get, listVal, objectVal, orderByChild, push, query, ref, remove, set, update } from '@angular/fire/database';
 import { Apunte } from '../models/apunte.model';
 
 @Injectable({
@@ -58,7 +58,10 @@ export class ApunteService {
    */
   actualizarApunteFirebase(apunteId: string, datos: Partial<Apunte>): Observable<void> {
     const apunteRef = ref(this.db, `apuntes/${apunteId}`);
-    return from(update(apunteRef, datos));
+    return from(get(apunteRef).then(snapshot => {
+      if (!snapshot.exists()) return;
+      return update(apunteRef, datos);
+    }));
   }
 
   /**

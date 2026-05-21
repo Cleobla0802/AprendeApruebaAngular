@@ -114,7 +114,6 @@
                 <span *ngIf="resumen.resumenTexto !== 'Generando sus apuntes, espere...'">Ver Detalles</span>
               </a>
               <button class="btn btn-sm btn-outline-danger rounded-circle"
-                      [disabled]="resumen.resumenTexto === 'Generando sus apuntes, espere...'"
                       (click)="solicitarEliminar(resumen.id, resumen.titulo)">
                 <i class="bi bi-trash"></i>
               </button>

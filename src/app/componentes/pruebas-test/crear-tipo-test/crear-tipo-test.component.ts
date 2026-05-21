@@ -7,6 +7,7 @@ import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PruebasService } from '../../../services/pruebas.service';
 import { FormsModule } from '@angular/forms';
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-crear-tipo-test',
@@ -22,13 +23,15 @@ export class CrearTipoTestComponent {
   seleccionado: any = null;
   cargando = true;
   generando = false;
-  userId: string = '';
+  userId = '';
   tituloPersonalizado = '';
   cantidadPreguntas = 10;
   readonly maxTituloLength = 30;
 
   notif = { show: false, msg: '', type: 'success' as 'success' | 'danger' | 'warning' | 'info' };
   private readonly limiteContenidoIA = 12000;
+  private readonly textoApunteEnProceso = 'Generando sus apuntes, espere...';
+  private readonly textoResumenEnProceso = 'Generando sus apuntes, espere...';
 
   private apiBackend = 'https://api-aprende-aprueba-1.onrender.com/api/tests/generar';
 
@@ -54,22 +57,17 @@ export class CrearTipoTestComponent {
 
   cargarDatos() {
     this.cargando = true;
-    this.apunteService.listarApuntesPorUsuario(this.userId).subscribe({
-      next: (apuntes: any[]) => {
+    combineLatest([
+      this.apunteService.listarApuntesPorUsuario(this.userId),
+      this.resumenService.listarResumenesPorUsuario(this.userId)
+    ]).subscribe({
+      next: ([apuntes, resumenes]) => {
         this.listaApuntes = apuntes;
-        this.resumenService.listarResumenesPorUsuario(this.userId).subscribe({
-          next: (resumenes: any[]) => {
-            this.listaResumenes = resumenes;
-            this.cargando = false;
-          },
-          error: (err) => {
-            console.error("Error al cargar resúmenes", err);
-            this.cargando = false;
-          }
-        });
+        this.listaResumenes = resumenes;
+        this.cargando = false;
       },
       error: (err) => {
-        console.error("Error al cargar apuntes", err);
+        console.error('Error al cargar material', err);
         this.cargando = false;
       }
     });
@@ -80,18 +78,23 @@ export class CrearTipoTestComponent {
   }
 
   seleccionar(item: any) {
-    const enProceso = item.contenido === 'Generando su tipo test, espere...' || 
-                      item.resumenTexto === 'Generando su tipo test, espere...';
-    if (enProceso) {
+    if (this.estaEnProceso(item)) {
       this.showMsg('Este elemento todavía se está procesando, espera a que termine', 'warning');
       return;
     }
+
     this.seleccionado = item;
-    this.tituloPersonalizado = (item?.titulo || '').slice(0, 30);
+    this.tituloPersonalizado = (item?.titulo || '').slice(0, this.maxTituloLength);
   }
 
   generarTest() {
     if (!this.seleccionado) return;
+
+    if (this.estaEnProceso(this.seleccionado)) {
+      this.showMsg('El material seleccionado todavía se está procesando.', 'warning');
+      return;
+    }
+
     if (!this.tituloPersonalizado.trim()) {
       this.showMsg('Escribe un título para el tipo test.', 'warning');
       return;
@@ -99,11 +102,18 @@ export class CrearTipoTestComponent {
 
     if (![5, 10, 15, 20].includes(this.cantidadPreguntas)) this.cantidadPreguntas = 10;
     this.generando = true;
+    const inicioGeneracion = performance.now();
 
     const textoOriginal = this.tabActiva === 'apuntes'
       ? this.seleccionado.contenido
       : this.seleccionado.resumenTexto;
     const textoAProcesar = this.prepararContenidoParaIA(textoOriginal);
+    console.info('[TipoTest] Inicio de generacion', {
+      cantidadPreguntas: this.cantidadPreguntas,
+      tipoMaterial: this.tabActiva,
+      caracteresOriginales: textoOriginal?.length || 0,
+      caracteresEnviados: textoAProcesar.length
+    });
 
     const testInicial = {
       userId: this.userId,
@@ -111,6 +121,7 @@ export class CrearTipoTestComponent {
       categoria: this.seleccionado.categoria,
       descripcion: this.seleccionado.descripcion || '',
       preguntas: [],
+      estado: 'generando',
       fecha: new Date().getTime(),
       completado: false,
       ultimaNota: 0
@@ -118,7 +129,11 @@ export class CrearTipoTestComponent {
 
     this.pruebasService.crearTest(testInicial).subscribe({
       next: (testGuardado: any) => {
-        const idTest = testGuardado.key;
+        const idTest = testGuardado.id;
+        console.info('[TipoTest] Test inicial guardado en Firebase', {
+          idTest,
+          ms: Math.round(performance.now() - inicioGeneracion)
+        });
         this.generando = false;
         this.showMsg('¡Test creado! Generando preguntas en segundo plano...', 'success');
         setTimeout(() => this.router.navigate(['/componentes/pruebas-test']), 1500);
@@ -130,14 +145,35 @@ export class CrearTipoTestComponent {
           categoria: this.seleccionado.categoria,
           cantidadPreguntas: this.cantidadPreguntas
         };
+        const inicioBackend = performance.now();
 
         this.http.post<any>(this.apiBackend, payload).subscribe({
           next: (testDeIA) => {
-            const preguntas = testDeIA.preguntas || [];
-            this.pruebasService.actualizarPreguntasTest(idTest, preguntas).subscribe();
+            const preguntas = (testDeIA.preguntas || []).slice(0, this.cantidadPreguntas);
+            const estado = preguntas.length > 0 ? 'listo' : 'error';
+            console.info('[TipoTest] Backend IA respondio', {
+              preguntasRecibidas: testDeIA.preguntas?.length || 0,
+              preguntasGuardadas: preguntas.length,
+              estado,
+              msBackend: Math.round(performance.now() - inicioBackend),
+              msTotal: Math.round(performance.now() - inicioGeneracion)
+            });
+            const inicioUpdate = performance.now();
+            this.pruebasService.actualizarPreguntasTest(idTest, preguntas, estado).subscribe({
+              next: () => console.info('[TipoTest] Preguntas actualizadas en Firebase', {
+                idTest,
+                estado,
+                msUpdate: Math.round(performance.now() - inicioUpdate),
+                msTotal: Math.round(performance.now() - inicioGeneracion)
+              })
+            });
           },
           error: () => {
-            this.pruebasService.actualizarPreguntasTest(idTest, []).subscribe();
+            console.warn('[TipoTest] Error del backend IA', {
+              msBackend: Math.round(performance.now() - inicioBackend),
+              msTotal: Math.round(performance.now() - inicioGeneracion)
+            });
+            this.pruebasService.actualizarPreguntasTest(idTest, [], 'error').subscribe();
           }
         });
       },
@@ -145,7 +181,6 @@ export class CrearTipoTestComponent {
     });
   }
 
-  // Centralización de mensajes para ser consistente con los otros .ts
   showMsg(msg: string, type: 'success' | 'danger' | 'warning' | 'info') {
     this.notif = { show: true, msg, type };
     setTimeout(() => this.notif.show = false, 3000);
@@ -161,6 +196,31 @@ export class CrearTipoTestComponent {
     return contenido.length > this.limiteContenidoIA
       ? contenido.slice(0, this.limiteContenidoIA)
       : contenido;
+  }
+
+  estaEnProceso(item: any): boolean {
+    if (!item) return false;
+
+    if (this.tabActiva === 'apuntes') {
+      return item.contenido === this.textoApunteEnProceso;
+    }
+
+    return item.resumenTexto === this.textoResumenEnProceso;
+  }
+
+  getDescripcionItem(item: any): string {
+    if (this.estaEnProceso(item)) {
+      return this.tabActiva === 'apuntes'
+        ? 'Apunte en proceso de digitalización...'
+        : 'Resumen en proceso de generación...';
+    }
+
+    const contenido = this.tabActiva === 'apuntes' ? item.contenido : item.resumenTexto;
+    return item.descripcion || (contenido ? `${contenido.slice(0, 100)}...` : 'Sin descripción disponible.');
+  }
+
+  trackById(index: number, item: any): string {
+    return item?.id || item?.titulo || index.toString();
   }
 
   getBgColor(categoria: string): string {

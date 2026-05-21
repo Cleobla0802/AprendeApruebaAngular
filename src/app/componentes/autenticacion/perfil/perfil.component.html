@@ -1,102 +1,93 @@
-<!-- perfil.component.html -->
-<div class="container py-5" style="max-width: 600px">
-
-    <h4 class="fw-bold mb-4 text-white">
+<div class="container py-5 px-3">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+      <h4 class="fw-bold mb-4 text-white">
         <i class="bi bi-person-circle me-2"></i>Mi perfil
-    </h4>
+      </h4>
 
-    <div *ngIf="mensajeExito" class="alert alert-success py-2">{{ mensajeExito }}</div>
-    <div *ngIf="mensajeError" class="alert alert-danger py-2">{{ mensajeError }}</div>
+      <div *ngIf="mensajeExito" class="alert alert-success py-2">{{ mensajeExito }}</div>
+      <div *ngIf="mensajeError" class="alert alert-danger py-2">{{ mensajeError }}</div>
 
-    <!-- Info básica -->
-    <div class="card bg-dark border-secondary text-white mb-4">
+      <div class="card bg-dark border-secondary text-white mb-4">
         <div class="card-body">
-            <h6 class="card-subtitle text-white-50 mb-3 text-uppercase" style="font-size:0.75rem">Información de cuenta
-            </h6>
-            <p class="mb-1"><span class="text-white-50 small">Email:</span> {{ usuarioActual?.email }}</p>
+          <h6 class="card-subtitle text-white-50 mb-3 text-uppercase small">Información de cuenta</h6>
+          <p class="mb-1"><span class="text-white-50 small">Email:</span> {{ usuarioActual?.email }}</p>
         </div>
-    </div>
+      </div>
 
-    <!-- Cambiar nombre -->
-    <div class="card bg-dark border-secondary text-white mb-4">
+      <div class="card bg-dark border-secondary text-white mb-4">
         <div class="card-body">
-            <h6 class="card-subtitle text-white-50 mb-3 text-uppercase" style="font-size:0.75rem">Nombre de usuario</h6>
-            <div class="input-group">
-                <input type="text" class="form-control bg-dark text-white border-secondary" [(ngModel)]="nuevoUsername"
-                    placeholder="Tu nombre de usuario" />
-                <button class="btn btn-primary" (click)="guardarUsername()"
-                    [disabled]="loadingUsername || nuevoUsername === usernameActual">
-                    <span *ngIf="loadingUsername" class="spinner-border spinner-border-sm me-1"></span>
-                    Guardar
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Cambiar contraseña (solo email) -->
-    <div class="card bg-dark border-secondary text-white mb-4">
-        <div class="card-body">
-            <h6 class="card-subtitle text-white-50 mb-3 text-uppercase" style="font-size:0.75rem">Contraseña</h6>
-            <p class="text-white-50 small mb-3">Te enviaremos un correo para restablecer tu contraseña.</p>
-            <button class="btn btn-outline-light btn-sm" (click)="resetPassword()">
-                <i class="bi bi-envelope me-2"></i>Enviar correo de recuperación
+          <h6 class="card-subtitle text-white-50 mb-3 text-uppercase small">Nombre de usuario</h6>
+          <div class="input-group">
+            <input type="text" class="form-control bg-dark text-white border-secondary" [(ngModel)]="nuevoUsername"
+              placeholder="Tu nombre de usuario" />
+            <button class="btn btn-primary" (click)="guardarUsername()"
+              [disabled]="loadingUsername || nuevoUsername === usernameActual">
+              <span *ngIf="loadingUsername" class="spinner-border spinner-border-sm me-1"></span>
+              Guardar
             </button>
+          </div>
         </div>
-    </div>
+      </div>
 
-    <!-- Zona peligrosa -->
-    <div class="card border-danger mb-4" style="background-color:#1a0a0a">
+      <div class="card bg-dark border-secondary text-white mb-4">
         <div class="card-body">
-            <h6 class="text-danger text-uppercase mb-2" style="font-size:0.75rem">
-                <i class="bi bi-exclamation-triangle me-1"></i>Zona peligrosa
-            </h6>
-            <p class="text-white-50 small mb-3">Eliminar tu cuenta es una acción permanente e irreversible.</p>
-            <button class="btn btn-danger btn-sm" (click)="abrirModalEliminar()">
-                <i class="bi bi-trash me-2"></i>Eliminar mi cuenta
-            </button>
+          <h6 class="card-subtitle text-white-50 mb-3 text-uppercase small">Contraseña</h6>
+          <p class="text-white-50 small mb-3">Te enviaremos un correo para restablecer tu contraseña.</p>
+          <button class="btn btn-outline-light btn-sm" (click)="resetPassword()">
+            <i class="bi bi-envelope me-2"></i>Enviar correo de restablecimiento
+          </button>
         </div>
-    </div>
+      </div>
 
+      <div class="card border-danger mb-4 bg-danger bg-opacity-10">
+        <div class="card-body">
+          <h6 class="text-danger text-uppercase mb-2 small">
+            <i class="bi bi-exclamation-triangle me-1"></i>Zona peligrosa
+          </h6>
+          <p class="text-white-50 small mb-3">Eliminar tu cuenta es una acción permanente e irreversible.</p>
+          <button class="btn btn-danger btn-sm" (click)="abrirModalEliminar()">
+            <i class="bi bi-trash me-2"></i>Eliminar mi cuenta
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<!-- Modal eliminar cuenta -->
-<div class="modal fade show d-block" tabindex="-1" *ngIf="showDeleteModal" style="background:rgba(0,0,0,0.6)">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content bg-dark text-white border-danger">
+<div class="modal fade show d-block bg-black bg-opacity-75" tabindex="-1" *ngIf="showDeleteModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-white border-danger">
+      <div class="modal-header border-danger">
+        <h5 class="modal-title text-danger">
+          <i class="bi bi-exclamation-triangle me-2"></i>Eliminar cuenta
+        </h5>
+        <button type="button" class="btn-close btn-close-white" (click)="cerrarModalEliminar()"></button>
+      </div>
 
-            <div class="modal-header border-danger">
-                <h5 class="modal-title text-danger">
-                    <i class="bi bi-exclamation-triangle me-2"></i>Eliminar cuenta
-                </h5>
-                <button type="button" class="btn-close btn-close-white" (click)="cerrarModalEliminar()"></button>
-            </div>
+      <div class="modal-body">
+        <p class="text-white-50">Esta acción es <strong class="text-white">irreversible</strong>. Se borrarán todos tus datos.</p>
 
-            <div class="modal-body">
-                <p class="text-white-50">Esta acción es <strong class="text-white">irreversible</strong>. Se borrarán
-                    todos tus datos.</p>
+        <div *ngIf="errorDelete" class="alert alert-danger py-2">{{ errorDelete }}</div>
 
-                <div *ngIf="errorDelete" class="alert alert-danger py-2">{{ errorDelete }}</div>
+        <ng-container *ngIf="!esGoogle">
+          <label class="form-label small text-white-50">Confirma tu contraseña</label>
+          <input type="password" class="form-control bg-dark text-white border-secondary"
+            [(ngModel)]="passwordActual" placeholder="Tu contraseña actual" />
+        </ng-container>
 
-                <ng-container *ngIf="!esGoogle">
-                    <label class="form-label small text-white-50">Confirma tu contraseña</label>
-                    <input type="password" class="form-control bg-dark text-white border-secondary"
-                        [(ngModel)]="passwordActual" placeholder="Tu contraseña actual" />
-                </ng-container>
+        <p *ngIf="esGoogle" class="text-white-50 small mt-2">
+          <i class="bi bi-info-circle me-1"></i>Se abrirá una ventana de Google para confirmar tu identidad.
+        </p>
+      </div>
 
-                <p *ngIf="esGoogle" class="text-white-50 small mt-2">
-                    <i class="bi bi-info-circle me-1"></i>Se abrirá una ventana de Google para confirmar tu identidad.
-                </p>
-            </div>
-
-            <div class="modal-footer border-danger">
-                <button class="btn btn-secondary" (click)="cerrarModalEliminar()"
-                    [disabled]="loadingDelete">Cancelar</button>
-                <button class="btn btn-danger" (click)="confirmarEliminar()" [disabled]="loadingDelete">
-                    <span *ngIf="loadingDelete" class="spinner-border spinner-border-sm me-1"></span>
-                    Confirmar eliminación
-                </button>
-            </div>
-
-        </div>
+      <div class="modal-footer border-danger">
+        <button class="btn btn-secondary" (click)="cerrarModalEliminar()" [disabled]="loadingDelete">Cancelar</button>
+        <button class="btn btn-danger" (click)="confirmarEliminar()" [disabled]="loadingDelete">
+          <span *ngIf="loadingDelete" class="spinner-border spinner-border-sm me-1"></span>
+          Confirmar eliminación
+        </button>
+      </div>
     </div>
+  </div>
 </div>

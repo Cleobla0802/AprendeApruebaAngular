@@ -1,14 +1,11 @@
 import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { FooterComponent } from '../footer/footer.component';
-import { LoginComponent } from '../autenticacion/login/login.component';
 import { CommonModule } from '@angular/common';
-import { ApuntesComponent } from '../apuntes/apuntes.component';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-presentacion',
-  imports: [FooterComponent, LoginComponent, CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink],
   templateUrl: './presentacion.component.html',
   styleUrl: './presentacion.component.scss'
 })

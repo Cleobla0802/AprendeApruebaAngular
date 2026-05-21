@@ -3,7 +3,7 @@
     
     <a class="navbar-brand fw-bold d-flex align-items-center me-0" routerLink="/">
       <img src="/assets/logoTfg.png" alt="A&A" width="35" height="35" class="me-2">
-      <span class="d-inline text-white fs-6 fs-md-5">Aprende & Aprueba</span>
+      <span class="d-inline text-white fs-6 fs-lg-5">Aprende & Aprueba</span>
     </a>
 
     <button class="navbar-toggler border-0 shadow-none" type="button" 
@@ -38,9 +38,9 @@
         </li>
       </ul>
 
-      <div class="d-flex align-items-center justify-content-center justify-content-lg-end gap-3 pt-2 pt-lg-0 border-top border-secondary border-opacity-10 border-lg-0">
+      <div class="d-flex flex-column flex-lg-row align-items-stretch align-items-lg-center justify-content-center justify-content-lg-end gap-2 gap-lg-3 pt-2 pt-lg-0 border-top border-secondary border-opacity-10">
         <ng-container *ngIf="usuarioActual">
-          <div class="d-flex align-items-center gap-2 border-start-lg border-secondary border-opacity-50 ps-lg-3">
+          <div class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center gap-2 border-secondary border-opacity-50 ps-lg-3">
             <div class="me-1 text-end d-sm-block">
               <div class="text-white-50 lh-1 x-small text-uppercase d-none d-lg-block">Hola,</div>
               <div class="text-white fw-bold lh-1 small">{{ userNameDatabase || usuarioActual.displayName || 'Usuario' }}</div>

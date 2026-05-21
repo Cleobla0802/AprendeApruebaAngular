@@ -104,17 +104,16 @@
             </p>
 
             <div class="mt-3 pt-3 border-top border-secondary border-opacity-25 d-flex gap-2">
-              <a [routerLink]="apunte.contenido === 'Generando con IA, espere...' ? null : ['/componentes/apuntes/visualizar-apuntes', apunte.id]"
+              <a [routerLink]="apunte.contenido === 'Generando sus apuntes, espere...' ? null : ['/componentes/apuntes/visualizar-apuntes', apunte.id]"
                  class="btn btn-sm rounded-pill flex-grow-1"
-                 [ngClass]="apunte.contenido === 'Generando con IA, espere...' ? 'btn-outline-secondary disabled' : 'btn-outline-light'">
-                <span *ngIf="apunte.contenido === 'Generando con IA, espere...'">
+                 [ngClass]="apunte.contenido === 'Generando sus apuntes, espere...' ? 'btn-outline-secondary disabled' : 'btn-outline-light'">
+                <span *ngIf="apunte.contenido === 'Generando sus apuntes, espere...'">
                   <span class="spinner-border spinner-border-sm me-1" style="width: 0.6rem; height: 0.6rem;"></span>
                   Procesando...
                 </span>
-                <span *ngIf="apunte.contenido !== 'Generando con IA, espere...'">Ver detalles</span>
+                <span *ngIf="apunte.contenido !== 'Generando sus apuntes, espere...'">Ver detalles</span>
               </a>
               <button class="btn btn-sm btn-outline-danger rounded-circle"
-                      [disabled]="apunte.contenido === 'Generando con IA, espere...'"
                       (click)="solicitarEliminar(apunte.id, apunte.titulo)">
                 <i class="bi bi-trash"></i>
               </button>

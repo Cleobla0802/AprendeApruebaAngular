@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Database, equalTo, listVal, objectVal, orderByChild, push, query, ref, remove, set, update } from '@angular/fire/database';
+import { Database, equalTo, get, listVal, objectVal, orderByChild, push, query, ref, remove, set, update } from '@angular/fire/database';
 import { from, map, Observable } from 'rxjs';
 
 @Injectable({
@@ -39,7 +39,10 @@ export class ResumenesService {
 
   actualizarContenidoResumen(id: string, resumenTexto: string): Observable<void> {
     const resumenRef = ref(this.db, `resumenes/${id}`);
-    return from(update(resumenRef, { resumenTexto }));
+    return from(get(resumenRef).then(snapshot => {
+      if (!snapshot.exists()) return;
+      return update(resumenRef, { resumenTexto });
+    }));
   }
 
   /**

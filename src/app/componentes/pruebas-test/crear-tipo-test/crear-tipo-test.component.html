@@ -6,12 +6,12 @@
     <small class="text-white-50">Esto puede tardar unos segundos...</small>
   </div>
 
-  <div class="d-flex align-items-center mb-4 mb-md-5">
-    <a routerLink="/componentes/pruebas-test" class="btn btn-primary me-3 ">
+  <div class="d-flex flex-column flex-sm-row align-items-center gap-3 mb-4 mb-md-5 text-center text-sm-start">
+    <a routerLink="/componentes/pruebas-test" class="btn btn-primary align-self-start align-self-sm-center">
       <i class="bi bi-arrow-left fs-3"></i>
     </a>
-    <div class="text-center flex-grow-1 me-5">
-      <h1 class="display-6 display-md-5 fw-bold text-white text-uppercase m-0">Creacion de tipo test</h1>
+    <div class="flex-grow-1">
+      <h1 class="display-6 fw-bold text-white text-uppercase m-0">Creacion de tipo test</h1>
       <p class="text-secondary m-0">Selecciona el material para crear su tipo test, apunte o resumen como prefiera</p>
     </div>
   </div>
@@ -52,24 +52,31 @@
 
   <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-4 mb-md-5"
     *ngIf="!cargando && getListaActual().length > 0">
-    <div class="col" *ngFor="let item of getListaActual()">
+    <div class="col" *ngFor="let item of getListaActual(); trackBy: trackById">
       <div (click)="seleccionar(item)"
         class="card h-100 bg-dark text-white shadow-sm border-2 rounded-4 user-select-none"
         [class.border-primary]="seleccionado?.id === item.id" [class.border-secondary]="seleccionado?.id !== item.id"
-        [class.opacity-50]="seleccionado && seleccionado.id !== item.id" role="button">
+        [class.opacity-50]="(seleccionado && seleccionado.id !== item.id) || estaEnProceso(item)"
+        [class.material-en-proceso]="estaEnProceso(item)"
+        [attr.aria-disabled]="estaEnProceso(item)"
+        [attr.role]="estaEnProceso(item) ? null : 'button'">
         <div class="card-body p-4 d-flex flex-column">
           <div class="d-flex justify-content-between align-items-start mb-3">
             <span
               [class]="'badge rounded-pill px-3 py-2 bg-' + getBgColor(item.categoria) + ' bg-opacity-10 text-' + getBgColor(item.categoria)">
               {{ (item.categoria || 'Sin categoría') | titlecase }}
             </span>
-            <i class="bi fs-5" [class.bi-check-circle-fill]="seleccionado?.id === item.id"
+            <span *ngIf="estaEnProceso(item)" class="badge rounded-pill bg-secondary bg-opacity-25 text-white-50 d-flex align-items-center gap-2">
+              <span class="spinner-border spinner-border-sm" style="width: 0.7rem; height: 0.7rem;"></span>
+              En proceso
+            </span>
+            <i *ngIf="!estaEnProceso(item)" class="bi fs-5" [class.bi-check-circle-fill]="seleccionado?.id === item.id"
               [class.text-primary]="seleccionado?.id === item.id" [class.bi-circle]="seleccionado?.id !== item.id"
               [class.text-secondary]="seleccionado?.id !== item.id"></i>
           </div>
           <h5 class="card-title fw-bold mb-2">{{ item.titulo }}</h5>
           <p class="card-text text-secondary small flex-grow-1 opacity-75">
-            {{ item.descripcion || (item.contenido | slice:0:100) + '...' }}
+            {{ getDescripcionItem(item) }}
           </p>
         </div>
       </div>
@@ -103,7 +110,7 @@
         </div>
 
         <div class="d-flex justify-content-center">
-          <button class="btn btn-primary btn-lg rounded-pill px-4 px-md-5 shadow fw-bold text-uppercase w-100 w-md-auto"
+          <button class="btn btn-primary btn-lg rounded-pill px-4 px-md-5 shadow fw-bold text-uppercase w-100"
             (click)="generarTest()" [disabled]="generando || !tituloPersonalizado.trim()">
             <span *ngIf="generando" class="spinner-border spinner-border-sm me-2" role="status"></span>
             {{ generando ? 'Generando Examen...' : 'Crear Test' }}

@@ -62,7 +62,7 @@ export class PerfilComponent implements OnInit {
     if (!this.usuarioActual?.email) return;
     try {
       await this.authService.resetPassword(this.usuarioActual.email);
-      this.mensajeExito = 'Correo de recuperación enviado a ' + this.usuarioActual.email;
+      this.mensajeExito = 'Correo de restablecimiento enviado a ' + this.usuarioActual.email;
     } catch {
       this.mensajeError = 'Error al enviar el correo';
     }

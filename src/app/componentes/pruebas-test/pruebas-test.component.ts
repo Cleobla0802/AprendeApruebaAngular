@@ -134,6 +134,18 @@ export class PruebasTestComponent implements OnInit {
     });
   }
 
+  estaGenerando(test: any): boolean {
+    return test?.estado === 'generando';
+  }
+
+  tieneErrorGeneracion(test: any): boolean {
+    return test?.estado === 'error' || (!test?.estado && (!test?.preguntas || test.preguntas.length === 0));
+  }
+
+  tienePreguntas(test: any): boolean {
+    return Array.isArray(test?.preguntas) && test.preguntas.length > 0;
+  }
+
   getBgColor(categoria: string): string {
     if (!categoria) return 'secondary';
     const normalizada = this.normalizarCategoria(categoria);
