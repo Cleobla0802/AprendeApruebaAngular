@@ -100,7 +100,7 @@ export class CrearTipoTestComponent {
       return;
     }
 
-    if (![5, 10, 15, 20].includes(this.cantidadPreguntas)) this.cantidadPreguntas = 10;
+    if (![5, 10, 15].includes(this.cantidadPreguntas)) this.cantidadPreguntas = 10;
     this.generando = true;
     const inicioGeneracion = performance.now();
 

@@ -101,7 +101,7 @@
         <div class="col-12 col-md-4">
           <label class="form-label small fw-bold text-white text-uppercase">Preguntas</label>
           <div class="btn-group w-100" role="group">
-            <ng-container *ngFor="let n of [5, 10, 15, 20]">
+            <ng-container *ngFor="let n of [5, 10, 15]">
               <input type="radio" class="btn-check" name="preguntas" [id]="'p' + n" [checked]="cantidadPreguntas === n"
                 (click)="cantidadPreguntas = n">
               <label class="btn btn-outline-primary fw-bold" [for]="'p' + n">{{ n }}</label>
