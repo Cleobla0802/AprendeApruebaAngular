@@ -87,10 +87,15 @@
                 {{ (resumen.categoria || 'Sin categoría') | titlecase }}
               </span>
               <div class="d-flex align-items-center gap-2">
-                <span *ngIf="resumen.resumenTexto === 'Generando sus apuntes, espere...'"
+                <span *ngIf="estaGenerando(resumen)"
                       class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 d-flex align-items-center gap-1">
                   <span class="spinner-border spinner-border-sm" style="width: 0.6rem; height: 0.6rem;"></span>
                   Generando...
+                </span>
+                <span *ngIf="tieneError(resumen)"
+                      class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 d-flex align-items-center gap-1">
+                  <i class="bi bi-exclamation-triangle"></i>
+                  Error
                 </span>
                 <small class="text-secondary opacity-75 small">
                   <i class="bi bi-calendar3 me-1"></i>{{ resumen.fecha | date:'dd/MM/yy' }}
@@ -100,18 +105,24 @@
 
             <h5 class="card-title text-white fw-bold mb-2">{{ resumen.titulo }}</h5>
             <p class="card-text text-secondary small flex-grow-1 opacity-75 mb-0">
-              {{ resumen.resumenTexto === 'Generando sus apuntes, espere...' ? 'Resumen en proceso de generación...' : (resumen.descripcion || (resumen.resumenTexto | slice:0:120) + '...') }}
+              {{
+                estaGenerando(resumen)
+                  ? 'Resumen en proceso de generación...'
+                  : (tieneError(resumen)
+                    ? 'No se pudo generar el resumen. Puedes abrirlo para editarlo o borrarlo.'
+                    : (resumen.descripcion || (resumen.resumenTexto | slice:0:120) + '...'))
+              }}
             </p>
 
             <div class="mt-3 pt-3 border-top border-secondary border-opacity-25 d-flex gap-2">
-              <a [routerLink]="resumen.resumenTexto === 'Generando sus apuntes, espere...' ? null : ['/componentes/resumenes/visualizar-resumen', resumen.id]"
+              <a [routerLink]="estaGenerando(resumen) ? null : ['/componentes/resumenes/visualizar-resumen', resumen.id]"
                  class="btn btn-sm rounded-pill flex-grow-1"
-                 [ngClass]="resumen.resumenTexto === 'Generando sus apuntes, espere...' ? 'btn-outline-secondary disabled' : 'btn-outline-light'">
-                <span *ngIf="resumen.resumenTexto === 'Generando sus apuntes, espere...'">
+                 [ngClass]="estaGenerando(resumen) ? 'btn-outline-secondary disabled' : 'btn-outline-light'">
+                <span *ngIf="estaGenerando(resumen)">
                   <span class="spinner-border spinner-border-sm me-1" style="width: 0.6rem; height: 0.6rem;"></span>
                   Procesando...
                 </span>
-                <span *ngIf="resumen.resumenTexto !== 'Generando sus apuntes, espere...'">Ver Detalles</span>
+                <span *ngIf="!estaGenerando(resumen)">Ver Detalles</span>
               </a>
               <button class="btn btn-sm btn-outline-danger rounded-circle"
                       (click)="solicitarEliminar(resumen.id, resumen.titulo)">

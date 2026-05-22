@@ -16,6 +16,8 @@ import { CrearTipoTestComponent } from './componentes/pruebas-test/crear-tipo-te
 import { RealizarTipoTestComponent } from './componentes/pruebas-test/realizar-tipo-test/realizar-tipo-test.component';
 import { PerfilComponent } from './componentes/autenticacion/perfil/perfil.component';
 
+const soloAutenticado = () => redirectUnauthorizedTo('/componentes/autenticacion/login');
+
 export const routes: Routes = [
     {path: 'componentes/presentacion' ,component:PresentacionComponent},
     {path: 'componentes/autenticacion/login' ,component:LoginComponent},
@@ -23,19 +25,19 @@ export const routes: Routes = [
     {path: 'componentes/autenticacion/recuperar-password' ,component:RecuperarPasswordComponent},
     {path: 'componentes/autenticacion/recuperar-password/crear-nueva-password' ,component:CrearNuevaPasswordComponent},
     
-    {path: 'componentes/resumenes' ,component:ResumenesComponent, ...canActivate(()=>redirectUnauthorizedTo('/componentes/autenticacion/login'))},
-    {path: 'componentes/resumenes/crear-resumen' ,component:CrearResumenComponent},
-    {path: 'componentes/resumenes/visualizar-resumen/:id' ,component:VisualizarResumenComponent},
+    {path: 'componentes/resumenes' ,component:ResumenesComponent, ...canActivate(soloAutenticado)},
+    {path: 'componentes/resumenes/crear-resumen' ,component:CrearResumenComponent, ...canActivate(soloAutenticado)},
+    {path: 'componentes/resumenes/visualizar-resumen/:id' ,component:VisualizarResumenComponent, ...canActivate(soloAutenticado)},
 
-    {path: 'componentes/apuntes' ,component:ApuntesComponent, ...canActivate(()=>redirectUnauthorizedTo('/componentes/autenticacion/login'))},
-    {path: 'componentes/apuntes/visualizar-apuntes/:id', component: VisualizarApuntesComponent},
-    {path: 'componentes/apuntes/crear-apuntes', component: CrearApuntesComponent },
+    {path: 'componentes/apuntes' ,component:ApuntesComponent, ...canActivate(soloAutenticado)},
+    {path: 'componentes/apuntes/visualizar-apuntes/:id', component: VisualizarApuntesComponent, ...canActivate(soloAutenticado)},
+    {path: 'componentes/apuntes/crear-apuntes', component: CrearApuntesComponent, ...canActivate(soloAutenticado) },
 
-    {path: 'componentes/pruebas-test', component: PruebasTestComponent, ...canActivate(()=>redirectUnauthorizedTo('/componentes/autenticacion/login')) },
-    {path: 'componentes/pruebas-test/crear-tipo-test', component: CrearTipoTestComponent },
-    {path: 'componentes/pruebas-test/realizar-test/:id', component: RealizarTipoTestComponent },
+    {path: 'componentes/pruebas-test', component: PruebasTestComponent, ...canActivate(soloAutenticado) },
+    {path: 'componentes/pruebas-test/crear-tipo-test', component: CrearTipoTestComponent, ...canActivate(soloAutenticado) },
+    {path: 'componentes/pruebas-test/realizar-test/:id', component: RealizarTipoTestComponent, ...canActivate(soloAutenticado) },
 
-    {path: 'componentes/autenticacion/perfil', component: PerfilComponent, ...canActivate((()=>redirectUnauthorizedTo('/componentes/autenticacion/LoginComponent'))) },
+    {path: 'componentes/autenticacion/perfil', component: PerfilComponent, ...canActivate(soloAutenticado) },
 
     {path: '', redirectTo:'componentes/presentacion', pathMatch:'full'},
     {path: '**', redirectTo:'componentes/presentacion', pathMatch:'full'}

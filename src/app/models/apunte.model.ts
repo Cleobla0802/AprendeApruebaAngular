@@ -5,5 +5,7 @@ export interface Apunte {
     contenido: string;
     categoria: string;
     creadoEn?: string;
+    fecha?: string;
     userId: string;
+    estado?: 'generando' | 'listo' | 'error';
   }

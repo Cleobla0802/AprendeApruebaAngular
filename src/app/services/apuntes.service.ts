@@ -1,61 +1,44 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { from, Observable } from 'rxjs';
-import { Database, equalTo, get, listVal, objectVal, orderByChild, push, query, ref, remove, set, update } from '@angular/fire/database';
+import { Database, equalTo, get, listVal, objectVal, orderByChild, push, query, ref, remove, update } from '@angular/fire/database';
 import { Apunte } from '../models/apunte.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApunteService {
 
-  private apiImgBB = 'https://api.imgbb.com/1/upload';
-  private apiKeyImgBB = 'c7a45042cb4b545d896d5c8730252add';
-
-  private apiBackend = 'https://api-aprende-aprueba-1.onrender.com/api/apuntes';
+  private apiBackend = environment.api.apuntes;
 
   constructor(private http: HttpClient, private db: Database) { }
 
-  /**
-   * FIREBASE: Obtener todos los apuntes del usuario actual
-   * (He cambiado el nombre para que coincida con el error de tu componente)
-   */
   listarApuntesPorUsuario(userId: string): Observable<Apunte[]> {
     const apuntesRef = ref(this.db, 'apuntes');
     const consulta = query(apuntesRef, orderByChild('userId'), equalTo(userId));
-    // keyField: 'id' es vital para que cada objeto traiga su ID de Firebase
     return listVal(consulta, { keyField: 'id' }) as Observable<Apunte[]>;
   }
 
-  guardarApunte(apunte: any): Observable<any> {
+  guardarApunte(apunte: Apunte): Observable<any> {
     const apuntesRef = ref(this.db, 'apuntes');
-    // push crea un nuevo ID único automáticamente en Firebase
     return from(push(apuntesRef, apunte));
   }
 
-  /**
-   * FIREBASE: Obtener un solo apunte por su ID
-   */
   getApunteById(apunteId: string): Observable<Apunte | null> {
     const apunteRef = ref(this.db, `apuntes/${apunteId}`);
     return objectVal(apunteRef, { keyField: 'id' }) as Observable<Apunte | null>;
   }
 
-  actualizarContenidoApunte(id: string, contenido: string): Observable<void> {
-    return this.actualizarApunteFirebase(id, { contenido });
+  actualizarContenidoApunte(id: string, contenido: string, estado: 'generando' | 'listo' | 'error' = 'listo'): Observable<void> {
+    return this.actualizarApunteFirebase(id, { contenido, estado } as Partial<Apunte>);
   }
 
-  /**
-   * FIREBASE: Eliminar un apunte
-   */
   eliminarApunte(id: string): Observable<void> {
     const apunteRef = ref(this.db, `apuntes/${id}`);
     return from(remove(apunteRef));
   }
 
-  /**
-   * FIREBASE: Actualizar datos de un apunte (sin borrar el resto)
-   */
   actualizarApunteFirebase(apunteId: string, datos: Partial<Apunte>): Observable<void> {
     const apunteRef = ref(this.db, `apuntes/${apunteId}`);
     return from(get(apunteRef).then(snapshot => {
@@ -64,21 +47,12 @@ export class ApunteService {
     }));
   }
 
-  /**
-   * HTTP: Subir imagen a ImgBB para obtener una URL pública
-   */
-  subirAImgBB(file: File): Observable<any> {
+  digitalizarArchivoEnBackend(file: File, titulo: string, userId: string, categoria: string): Observable<any> {
     const formData = new FormData();
-    formData.append('image', file);
-    return this.http.post(`${this.apiImgBB}?key=${this.apiKeyImgBB}`, formData);
-  }
-
-  /**
-   * HTTP: Enviar URL al backend para que la IA extraiga el texto
-   */
-  digitalizarEnBackend(titulo: string, url: string, userId: string, categoria: string): Observable<any> {
-    const body = { titulo, url, userId, categoria };
-    // Usamos responseType text porque a veces el backend devuelve el string directo
-    return this.http.post(`${this.apiBackend}/digitalizar`, body, { responseType: 'text' as 'json' }); 
+    formData.append('archivo', file);
+    formData.append('titulo', titulo);
+    formData.append('userId', userId);
+    formData.append('categoria', categoria);
+    return this.http.post(`${this.apiBackend}/digitalizar-archivo`, formData, { responseType: 'text' as 'json' });
   }
 }

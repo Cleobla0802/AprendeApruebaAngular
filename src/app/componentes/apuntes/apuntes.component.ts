@@ -143,6 +143,14 @@ export class ApuntesComponent {
     });
   }
 
+  estaGenerando(apunte: any): boolean {
+    return apunte?.estado === 'generando' || (!apunte?.estado && apunte?.contenido === 'Generando sus apuntes, espere...');
+  }
+
+  tieneError(apunte: any): boolean {
+    return apunte?.estado === 'error';
+  }
+
   getBgColor(categoria: string): string {
     if (!categoria) return 'secondary';
     const normalizada = this.normalizarCategoria(categoria);

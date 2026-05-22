@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Database, equalTo, get, listVal, objectVal, orderByChild, push, query, ref, remove, set, update } from '@angular/fire/database';
 import { from, map, Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ import { from, map, Observable } from 'rxjs';
 export class ResumenesService {
 
   // Añadimos el protocolo https:// y la ruta base de tu controlador de Java
-  private apiUrl = 'https://api-aprende-aprueba-1.onrender.com/api/resumenes';
+  private apiUrl = environment.api.resumenes;
 
   constructor(private db: Database, private http: HttpClient) {}
 
@@ -37,11 +38,11 @@ export class ResumenesService {
     return from(push(resumenesRef, resumen));
   }
 
-  actualizarContenidoResumen(id: string, resumenTexto: string): Observable<void> {
+  actualizarContenidoResumen(id: string, resumenTexto: string, estado: 'generando' | 'listo' | 'error' = 'listo'): Observable<void> {
     const resumenRef = ref(this.db, `resumenes/${id}`);
     return from(get(resumenRef).then(snapshot => {
       if (!snapshot.exists()) return;
-      return update(resumenRef, { resumenTexto });
+      return update(resumenRef, { resumenTexto, estado });
     }));
   }
 

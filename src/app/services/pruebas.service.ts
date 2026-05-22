@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { child, Database, equalTo, get, listVal, objectVal, onValue, orderByChild, push, query, ref, remove, set, update } from '@angular/fire/database';
 import { from, Observable } from 'rxjs';
+import { Pregunta, Test } from '../models/pruebas.model';
 
 @Injectable({
   providedIn: 'root'
@@ -9,15 +10,15 @@ export class PruebasService {
 
 constructor(private db: Database) {}
 
-  listarTestsPorUsuario(uid: string): Observable<any[]> {
+  listarTestsPorUsuario(uid: string): Observable<Test[]> {
     const testsRef = ref(this.db, 'tests');
     const testsQuery = query(testsRef, orderByChild('userId'), equalTo(uid));
-    return listVal(testsQuery, { keyField: 'id' });
+    return listVal(testsQuery, { keyField: 'id' }) as Observable<Test[]>;
   }
 
-  obtenerTestPorId(id: string): Observable<any> {
+  obtenerTestPorId(id: string): Observable<Test | null> {
     const testRef = ref(this.db, `tests/${id}`);
-    return objectVal(testRef, { keyField: 'id' });
+    return objectVal(testRef, { keyField: 'id' }) as Observable<Test | null>;
   }
 
   eliminarTest(id: string): Observable<void> {
@@ -32,20 +33,20 @@ constructor(private db: Database) {}
 
   guardarNota(id: string, nota: number) {
     const testRef = ref(this.db, `tests/${id}`);
-    return from(update(testRef, { calificacion: nota.toFixed(1) }));
+    return from(update(testRef, { calificacion: Number(nota.toFixed(1)) }));
   }
 
-  crearTest(test: any): Observable<any> {
+  crearTest(test: Test): Observable<Test> {
     const testsRef = ref(this.db, 'tests');
     const nuevoTestRef = push(testsRef);
     const id = nuevoTestRef.key;
 
     return from(set(nuevoTestRef, test).then(() => {
-      return { ...test, id: id };
+      return { ...test, id: id || undefined };
     }));
   }
 
-  actualizarPreguntasTest(id: string, preguntas: any[], estado: 'generando' | 'listo' | 'error' = 'listo'): Observable<void> {
+  actualizarPreguntasTest(id: string, preguntas: Pregunta[], estado: 'generando' | 'listo' | 'error' = 'listo'): Observable<void> {
     const testRef = ref(this.db, `tests/${id}`);
     return from(get(testRef).then(snapshot => {
       if (!snapshot.exists()) return;

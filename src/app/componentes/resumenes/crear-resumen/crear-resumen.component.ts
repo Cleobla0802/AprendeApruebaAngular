@@ -5,6 +5,8 @@ import { AuthService } from '../../../services/auth.service';
 import { ApunteService } from '../../../services/apuntes.service';
 import { ResumenesService } from '../../../services/resumenes.service';
 import { Router } from '@angular/router';
+import { environment } from '../../../../environments/environment';
+import { crearHashContenido, prepararContenidoParaIA as limpiarContenidoIA } from '../../../shared/ia-text.util';
 
 @Component({
   selector: 'app-crear-resumen',
@@ -27,6 +29,7 @@ export class CrearResumenComponent implements OnInit {
   notif = { show: false, msg: '', type: 'success' };
   mostrarModalConfirmacion = false;
   accionPendiente: 'guardar' | 'limpiar' | null = null;
+  private readonly limiteContenidoIA = environment.ia.limiteResumen;
 
   categorias = [
     { valor: 'matematicas', nombre: 'Matemáticas' },
@@ -60,7 +63,7 @@ export class CrearResumenComponent implements OnInit {
   }
 
   toggle(a: any) {
-    if (a.contenido === 'Generando sus apuntes, espere...') {
+    if (this.apunteEstaGenerando(a)) {
       this.showMsg('Este apunte todavía se está digitalizando, espera a que termine', 'warning');
       return;
     }
@@ -82,34 +85,58 @@ export class CrearResumenComponent implements OnInit {
     if (!this.nuevoTitulo.trim()) return this.showMsg('Escribe un título para el resumen', 'warning');
 
     const apunteSeleccionado = this.seleccionados[0];
+    const contenidoOriginal = `${apunteSeleccionado.titulo}: ${apunteSeleccionado.contenido}`;
+    const body = this.prepararContenidoParaIA(contenidoOriginal);
+
+    if (!body) return this.showMsg('El apunte seleccionado no tiene contenido suficiente', 'warning');
+
+    const contenidoHash = crearHashContenido(body);
 
     const resumenInicial = {
       titulo: this.nuevoTitulo,
       descripcion: this.nuevaDescripcion,
       resumenTexto: 'Generando sus apuntes, espere...',
+      estado: 'generando',
       categoria: this.nuevaCategoria || 'general',
       userId: this.uid,
-      fecha: new Date().getTime()
+      fecha: new Date().getTime(),
+      idApunteOriginal: apunteSeleccionado.id || '',
+      contenidoHash
     };
 
     this.resS.guardarResumen(resumenInicial).subscribe({
       next: (resumenGuardado: any) => {
         const idResumen = resumenGuardado.key;
+        const inicioIA = performance.now();
 
         this.showMsg('¡Resumen creado! Generando contenido en segundo plano...', 'success');
         this.router.navigate(['/componentes/resumenes'])
 
-        const body = `${apunteSeleccionado.titulo}: ${apunteSeleccionado.contenido}`;
+        console.info('[Resumenes] Inicio de generacion', {
+          idResumen,
+          caracteresOriginales: contenidoOriginal.length,
+          caracteresEnviados: body.length
+        });
 
         this.resS.generarConIA(body).subscribe({
           next: (r) => {
             const contenido = (!r.resumen || r.resumen.trim() === '' || r.resumen === 'null')
               ? 'La IA no pudo generar el resumen. Edita el contenido manualmente o intentelo de nuevo.'
               : r.resumen;
-            this.resS.actualizarContenidoResumen(idResumen, contenido).subscribe();
+            const estado = contenido.startsWith('La IA no pudo') ? 'error' : 'listo';
+            console.info('[Resumenes] Backend IA respondio', {
+              idResumen,
+              estado,
+              msTotal: Math.round(performance.now() - inicioIA)
+            });
+            this.resS.actualizarContenidoResumen(idResumen, contenido, estado).subscribe();
           },
           error: () => {
-            this.resS.actualizarContenidoResumen(idResumen, 'Error al generar con IA. Edita el contenido manualmente.').subscribe();
+            this.resS.actualizarContenidoResumen(
+              idResumen,
+              'Error al generar con IA. Edita el contenido manualmente.',
+              'error'
+            ).subscribe();
           }
         });
       },
@@ -144,6 +171,7 @@ export class CrearResumenComponent implements OnInit {
       titulo: this.nuevoTitulo,
       descripcion: this.nuevaDescripcion,
       resumenTexto: this.resumenResultado,
+      estado: 'listo',
       categoria: this.nuevaCategoria || 'general',
       userId: this.uid,
       fecha: new Date().getTime()
@@ -169,5 +197,13 @@ export class CrearResumenComponent implements OnInit {
 
   volver() {
   this.router.navigate(['/componentes/resumenes']);
+  }
+
+  apunteEstaGenerando(apunte: any): boolean {
+    return apunte?.estado === 'generando' || (!apunte?.estado && apunte?.contenido === 'Generando sus apuntes, espere...');
+  }
+
+  private prepararContenidoParaIA(contenido: string): string {
+    return limpiarContenidoIA(contenido, this.limiteContenidoIA);
   }
 }

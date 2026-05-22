@@ -32,28 +32,28 @@
     
     <div class="col-12 col-md-6 col-xl-4" *ngFor="let a of listaApuntes">
       <div class="card h-100 shadow-sm"
-           [class.bg-dark]="a.contenido !== 'Generando sus apuntes, espere...'"
-           [class.bg-secondary]="a.contenido === 'Generando sus apuntes, espere...'"
-           [class.bg-opacity-10]="a.contenido === 'Generando sus apuntes, espere...'"
+           [class.bg-dark]="!apunteEstaGenerando(a)"
+           [class.bg-secondary]="apunteEstaGenerando(a)"
+           [class.bg-opacity-10]="apunteEstaGenerando(a)"
            [class.border-primary]="seleccionados.includes(a)"
            [class.border-secondary]="!seleccionados.includes(a)"
-           [class.opacity-50]="a.contenido === 'Generando sus apuntes, espere...'"
+           [class.opacity-50]="apunteEstaGenerando(a)"
            (click)="toggle(a)"
-           [attr.role]="a.contenido !== 'Generando sus apuntes, espere...' ? 'button' : null">
+           [attr.role]="!apunteEstaGenerando(a) ? 'button' : null">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-start mb-2">
             <span class="badge bg-secondary bg-opacity-10 text-secondary text-uppercase x-small">{{a.categoria}}</span>
-            <span *ngIf="a.contenido === 'Generando sus apuntes, espere...'"
+            <span *ngIf="apunteEstaGenerando(a)"
                   class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 d-flex align-items-center gap-1">
               <span class="spinner-border spinner-border-sm" style="width: 0.6rem; height: 0.6rem;"></span>
               Digitalizando...
             </span>
-            <i class="bi" *ngIf="a.contenido !== 'Generando sus apuntes, espere...'"
+            <i class="bi" *ngIf="!apunteEstaGenerando(a)"
                [ngClass]="seleccionados.includes(a) ? 'bi-check-circle-fill text-primary' : 'bi-circle text-secondary'"></i>
           </div>
           <h6 class="card-title fw-bold text-white mb-1">{{a.titulo}}</h6>
           <p class="card-text small text-secondary opacity-75 mb-0">
-            {{ a.contenido === 'Generando sus apuntes, espere...' ? 'Apunte en proceso de digitalización...' : (a.descripcion || 'Sin descripción disponible.') }}
+            {{ apunteEstaGenerando(a) ? 'Apunte en proceso de digitalización...' : (a.descripcion || 'Sin descripción disponible.') }}
           </p>
         </div>
       </div>

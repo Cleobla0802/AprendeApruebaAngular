@@ -22,7 +22,7 @@ export class AuthService {
 
   logout() {
     return signOut(this.auth).then(() => {
-      this.router.navigate(['/login']);
+      this.router.navigate(['/componentes/presentacion']);
     });
   }
 
@@ -88,6 +88,6 @@ export class AuthService {
     const uid = currentUser.uid;
     await remove(ref(this.db, `usuarios/${uid}`));
     await deleteUser(currentUser);
-    this.router.navigate(['/login']);
+    this.router.navigate(['/componentes/presentacion']);
   }
 }

@@ -143,4 +143,12 @@ export class ResumenesComponent implements OnInit {
       });
     }
   }
+
+  estaGenerando(resumen: any): boolean {
+    return resumen?.estado === 'generando' || (!resumen?.estado && resumen?.resumenTexto === 'Generando sus apuntes, espere...');
+  }
+
+  tieneError(resumen: any): boolean {
+    return resumen?.estado === 'error';
+  }
 }
