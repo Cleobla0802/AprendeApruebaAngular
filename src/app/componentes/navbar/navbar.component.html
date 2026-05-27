@@ -56,6 +56,21 @@
             </button>
           </div>
         </ng-container>
+
+        <ng-container *ngIf="!usuarioActual">
+          <div class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center gap-2 ps-lg-3">
+            <a routerLink="/componentes/autenticacion/login"
+               routerLinkActive="active"
+               class="btn btn-outline-light rounded-pill px-4 btn-sm shadow-sm">
+              Iniciar sesión
+            </a>
+            <a routerLink="/componentes/autenticacion/sigin"
+               routerLinkActive="active"
+               class="btn btn-primary rounded-pill px-4 btn-sm shadow-sm">
+              Registrarse
+            </a>
+          </div>
+        </ng-container>
       </div>
 
     </div>
