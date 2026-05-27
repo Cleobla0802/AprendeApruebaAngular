@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
-import { UserCredential } from 'firebase/auth';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -61,11 +60,10 @@ export class LoginComponent {
     this.loading = true;
     
     this.authService.loginWithGoogle()
-      .then((user: UserCredential) => {
+      .then(() => {
         this.router.navigate(['/componentes/apuntes']);
       })
-      .catch((error: any) => {
-        console.log(error);
+      .catch(() => {
         this.loading = false;
         this.errores = true;
         this.mensajeError = 'Error al conectar con Google.';

@@ -85,7 +85,6 @@ export class CrearApuntesComponent {
     this.cargando = true;
     this.mensajeFeedback = null;
 
-    const inicio = performance.now();
     const archivoParaSubir = await this.comprimirImagen(this.archivoSeleccionado);
 
     const apunteInicial: Apunte = {
@@ -102,17 +101,11 @@ export class CrearApuntesComponent {
       next: (apunteGuardado: any) => {
         const idApunte = apunteGuardado.key;
 
-        console.info('[Apuntes] Apunte inicial guardado', {
-          idApunte,
-          ms: Math.round(performance.now() - inicio),
-          kbImagenComprimida: Math.round(archivoParaSubir.size / 1024)
-        });
-
         this.cargando = false;
         this.apunteCreado = true;
         setTimeout(() => this.router.navigate(['/componentes/apuntes']), 2500);
 
-        this.digitalizarApunte(idApunte, archivoParaSubir, inicio);
+        this.digitalizarApunte(idApunte, archivoParaSubir);
       },
       error: () => {
         this.cargando = false;
@@ -121,7 +114,7 @@ export class CrearApuntesComponent {
     });
   }
 
-  private digitalizarApunte(idApunte: string, archivo: File, inicio: number): void {
+  private digitalizarApunte(idApunte: string, archivo: File): void {
     this.apunteService.digitalizarArchivoEnBackend(
       archivo,
       this.datosApunte.titulo.trim(),
@@ -129,17 +122,9 @@ export class CrearApuntesComponent {
       this.datosApunte.categoria
     ).subscribe({
       next: (respuestaRaw: string) => {
-        console.info('[Apuntes] Digitalizacion directa completada', {
-          idApunte,
-          msTotal: Math.round(performance.now() - inicio)
-        });
         this.guardarResultadoDigitalizacion(idApunte, respuestaRaw);
       },
       error: () => {
-        console.warn('[Apuntes] Digitalizacion directa fallida', {
-          idApunte,
-          ms: Math.round(performance.now() - inicio)
-        });
         this.apunteService.actualizarContenidoApunte(
           idApunte,
           'Error al digitalizar. Edita el contenido manualmente.',

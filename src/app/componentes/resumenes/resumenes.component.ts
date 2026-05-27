@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ResumenesService } from '../../services/resumenes.service';
-import { Auth } from '@angular/fire/auth';
 import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -61,8 +60,7 @@ export class ResumenesComponent implements OnInit {
         this.listaResumenes = data;
         this.cargando = false;
       },
-      error: (err: any) => {
-        console.error("Error al recuperar resúmenes", err);
+      error: () => {
         this.cargando = false;
       }
     });
@@ -135,9 +133,8 @@ export class ResumenesComponent implements OnInit {
           setTimeout(() => this.notif.show = false, 2500);
           this.cancelarEliminar();
         },
-        error: (err: any) => {
+        error: () => {
           this.notif = { show: true, msg: 'Error al eliminar el resumen.', type: 'danger' };
-          console.error(err);
           this.cancelarEliminar();
         }
       });

@@ -76,8 +76,7 @@ export class CrearTipoTestComponent {
         this.testsExistentes = tests;
         this.cargando = false;
       },
-      error: (err) => {
-        console.error('Error al cargar material', err);
+      error: () => {
         this.cargando = false;
       }
     });
@@ -128,7 +127,7 @@ export class CrearTipoTestComponent {
       return;
     }
 
-    this.crearTestConIA(textoOriginal, textoAProcesar, contenidoHash);
+    this.crearTestConIA(textoAProcesar, contenidoHash);
   }
 
   private crearTestDesdeCache(testCacheado: Test, contenidoHash: string): void {
@@ -161,16 +160,8 @@ export class CrearTipoTestComponent {
     });
   }
 
-  private crearTestConIA(textoOriginal: string, textoAProcesar: string, contenidoHash: string): void {
+  private crearTestConIA(textoAProcesar: string, contenidoHash: string): void {
     this.generando = true;
-    const inicioGeneracion = performance.now();
-
-    console.info('[TipoTest] Inicio de generacion', {
-      cantidadPreguntas: this.cantidadPreguntas,
-      tipoMaterial: this.tabActiva,
-      caracteresOriginales: textoOriginal.length,
-      caracteresEnviados: textoAProcesar.length
-    });
 
     const testInicial: Test = {
       userId: this.userId,
@@ -198,11 +189,6 @@ export class CrearTipoTestComponent {
 
         this.testsExistentes = [...this.testsExistentes, testGuardado];
 
-        console.info('[TipoTest] Test inicial guardado en Firebase', {
-          idTest,
-          ms: Math.round(performance.now() - inicioGeneracion)
-        });
-
         this.generando = false;
         this.testCreado = true;
         setTimeout(() => this.router.navigate(['/componentes/pruebas-test']), 2500);
@@ -214,26 +200,14 @@ export class CrearTipoTestComponent {
           categoria: this.seleccionado?.categoria || 'general',
           cantidadPreguntas: this.cantidadPreguntas
         };
-        const inicioBackend = performance.now();
 
         this.http.post<{ preguntas?: Pregunta[] }>(this.apiBackend, payload).subscribe({
           next: (testDeIA) => {
             const preguntas = (testDeIA.preguntas || []).slice(0, this.cantidadPreguntas);
             const estado = preguntas.length > 0 ? 'listo' : 'error';
-            console.info('[TipoTest] Backend IA respondio', {
-              preguntasRecibidas: testDeIA.preguntas?.length || 0,
-              preguntasGuardadas: preguntas.length,
-              estado,
-              msBackend: Math.round(performance.now() - inicioBackend),
-              msTotal: Math.round(performance.now() - inicioGeneracion)
-            });
             this.pruebasService.actualizarPreguntasTest(idTest, preguntas, estado).subscribe();
           },
           error: () => {
-            console.warn('[TipoTest] Error del backend IA', {
-              msBackend: Math.round(performance.now() - inicioBackend),
-              msTotal: Math.round(performance.now() - inicioGeneracion)
-            });
             this.pruebasService.actualizarPreguntasTest(idTest, [], 'error').subscribe();
           }
         });
