@@ -8,8 +8,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-visualizar-resumen',
   imports: [CommonModule, FormsModule],
-  templateUrl: './visualizar-resumen.component.html',
-  styleUrl: './visualizar-resumen.component.scss'
+  templateUrl: './visualizar-resumen.component.html'
 })
 export class VisualizarResumenComponent implements OnInit {
   resumenId: string | null = null;
