@@ -73,7 +73,7 @@
     </div>
 
     <div class="col-12 col-lg-8">
-      <div class="card bg-black border-secondary border-opacity-25 rounded-4 shadow-sm overflow-hidden h-100">
+      <div class="card bg-black border-secondary border-opacity-25 rounded-4 shadow-sm h-100 summary-editor-card">
         <div class="card-header bg-dark bg-opacity-50 border-secondary border-opacity-25 py-3 d-flex justify-content-between align-items-center">
           <small class="fw-bold text-primary text-uppercase tracking-wider">Cuerpo del Resumen</small>
           <span class="badge bg-dark border border-secondary border-opacity-25 text-white fw-normal">
@@ -83,7 +83,7 @@
 
         <textarea 
           [(ngModel)]="resumen.resumenTexto"
-          class="form-control bg-transparent text-white border-0 p-4 shadow-none custom-scrollbar" 
+          class="form-control bg-transparent text-white border-0 p-4 shadow-none custom-scrollbar summary-editor-textarea" 
           rows="10"
           placeholder="El contenido generado aparecerá aquí...">
         </textarea>
