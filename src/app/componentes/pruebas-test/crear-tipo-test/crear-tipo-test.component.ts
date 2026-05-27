@@ -32,6 +32,7 @@ export class CrearTipoTestComponent {
   seleccionado: MaterialSeleccionable | null = null;
   cargando = true;
   generando = false;
+  testCreado = false;
   userId = '';
   tituloPersonalizado = '';
   cantidadPreguntas = 10;
@@ -153,8 +154,8 @@ export class CrearTipoTestComponent {
       next: (testGuardado) => {
         this.generando = false;
         this.testsExistentes = [...this.testsExistentes, testGuardado];
-        this.showMsg('Test creado al instante reutilizando preguntas ya generadas.', 'success');
-        setTimeout(() => this.router.navigate(['/componentes/pruebas-test']), 900);
+        this.testCreado = true;
+        setTimeout(() => this.router.navigate(['/componentes/pruebas-test']), 2500);
       },
       error: () => this.handleError('Error al reutilizar el test guardado')
     });
@@ -203,8 +204,8 @@ export class CrearTipoTestComponent {
         });
 
         this.generando = false;
-        this.showMsg('Test creado. Generando preguntas en segundo plano...', 'success');
-        setTimeout(() => this.router.navigate(['/componentes/pruebas-test']), 1200);
+        this.testCreado = true;
+        setTimeout(() => this.router.navigate(['/componentes/pruebas-test']), 2500);
 
         const payload = {
           contenido: textoAProcesar,

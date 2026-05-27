@@ -15,6 +15,7 @@ import { Apunte } from '../../../models/apunte.model';
 })
 export class CrearApuntesComponent {
   cargando = false;
+  apunteCreado = false;
   archivoSeleccionado: File | null = null;
   userId: string | null = null;
 
@@ -108,8 +109,8 @@ export class CrearApuntesComponent {
         });
 
         this.cargando = false;
-        this.mostrarMensaje('Apunte creado. Digitalizando en segundo plano...', 'success');
-        setTimeout(() => this.router.navigate(['/componentes/apuntes']), 1000);
+        this.apunteCreado = true;
+        setTimeout(() => this.router.navigate(['/componentes/apuntes']), 2500);
 
         this.digitalizarApunte(idApunte, archivoParaSubir, inicio);
       },
@@ -150,10 +151,11 @@ export class CrearApuntesComponent {
 
   private guardarResultadoDigitalizacion(idApunte: string, respuestaRaw: string): void {
     const contenidoFinal = this.extraerTextoDigitalizado(respuestaRaw).trim();
-    const estado = contenidoFinal ? 'listo' : 'error';
+    const esErrorIA = contenidoFinal.toLowerCase().startsWith('error al digitalizar');
+    const estado = contenidoFinal && !esErrorIA ? 'listo' : 'error';
     this.apunteService.actualizarContenidoApunte(
       idApunte,
-      contenidoFinal || 'La IA no pudo digitalizar el apunte. Edita el contenido manualmente.',
+      estado === 'listo' ? contenidoFinal : 'La IA no pudo digitalizar el apunte. Edita el contenido manualmente.',
       estado
     ).subscribe();
   }
@@ -223,6 +225,13 @@ export class CrearApuntesComponent {
       reader.onerror = () => resolve(file);
       reader.readAsDataURL(file);
     });
+  }
+
+  cancelarImagen(): void {
+    this.archivoSeleccionado = null;
+    this.mensajeFeedback = null;
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    if (fileInput) fileInput.value = '';
   }
 
   mostrarMensaje(texto: string, tipo: 'success' | 'danger' | 'info'): void {

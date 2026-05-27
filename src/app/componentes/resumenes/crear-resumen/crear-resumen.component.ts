@@ -17,6 +17,7 @@ import { crearHashContenido, prepararContenidoParaIA as limpiarContenidoIA } fro
 export class CrearResumenComponent implements OnInit {
   cargando = false; 
   generandoIA = false; 
+  resumenCreado = false;
   uid = '';
   resumenResultado = ''; 
   nuevaCategoria = 'matematicas';
@@ -109,8 +110,8 @@ export class CrearResumenComponent implements OnInit {
         const idResumen = resumenGuardado.key;
         const inicioIA = performance.now();
 
-        this.showMsg('¡Resumen creado! Generando contenido en segundo plano...', 'success');
-        this.router.navigate(['/componentes/resumenes'])
+        this.resumenCreado = true;
+        setTimeout(() => this.router.navigate(['/componentes/resumenes']), 2500);
 
         console.info('[Resumenes] Inicio de generacion', {
           idResumen,
