@@ -55,8 +55,8 @@ export class PruebasTestComponent implements OnInit {
     this.cargando = true;
     this.testService.listarTestsPorUsuario(uid).subscribe({
       next: (data) => {
-        this.listaTestsOriginal = data;
-        this.listaTests = data;
+        this.listaTestsOriginal = data.map(test => this.normalizarTest(test));
+        this.listaTests = this.listaTestsOriginal;
         this.cargando = false;
       },
       error: (err) => {
@@ -144,6 +144,18 @@ export class PruebasTestComponent implements OnInit {
 
   tienePreguntas(test: any): boolean {
     return Array.isArray(test?.preguntas) && test.preguntas.length > 0;
+  }
+
+  private normalizarTest(test: any): any {
+    const calificacion = test.calificacion !== undefined
+      ? Number(test.calificacion)
+      : (test.ultimaNota !== undefined ? Number(test.ultimaNota) / 10 : undefined);
+
+    return {
+      ...test,
+      calificacion,
+      completado: test.completado || calificacion !== undefined
+    };
   }
 
   getBgColor(categoria: string): string {

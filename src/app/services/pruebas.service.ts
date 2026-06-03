@@ -33,7 +33,12 @@ constructor(private db: Database) {}
 
   guardarNota(id: string, nota: number) {
     const testRef = ref(this.db, `tests/${id}`);
-    return from(update(testRef, { calificacion: Number(nota.toFixed(1)) }));
+    const calificacion = Number(nota.toFixed(1));
+    return from(update(testRef, {
+      calificacion,
+      ultimaNota: Math.round(calificacion * 10),
+      completado: true
+    }));
   }
 
   crearTest(test: Test): Observable<Test> {
