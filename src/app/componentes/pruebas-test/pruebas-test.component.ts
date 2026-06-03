@@ -59,8 +59,7 @@ export class PruebasTestComponent implements OnInit {
         this.listaTests = this.listaTestsOriginal;
         this.cargando = false;
       },
-      error: (err) => {
-        console.error("Error al recuperar tests", err);
+      error: () => {
         this.cargando = false;
       }
     });

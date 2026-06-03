@@ -38,7 +38,7 @@
         </li>
       </ul>
 
-      <div class="d-flex flex-column flex-lg-row align-items-stretch align-items-lg-center justify-content-center justify-content-lg-end gap-2 gap-lg-3 pt-2 pt-lg-0 border-top border-secondary border-opacity-10">
+      <div class="d-flex flex-column flex-lg-row align-items-stretch align-items-lg-center justify-content-center justify-content-lg-end gap-2 gap-lg-3 pt-2 pt-lg-0 border-top border-secondary border-opacity-10 ms-lg-auto">
         <ng-container *ngIf="usuarioActual">
           <div class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center gap-2 border-secondary border-opacity-50 ps-lg-3">
             <div class="me-1 text-end d-sm-block">
@@ -54,6 +54,21 @@
             <button (click)="logout()" class="btn btn-danger rounded-pill px-4 btn-sm shadow-sm">
               <i class="bi bi-box-arrow-right d-lg-none me-2"></i>Logout
             </button>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="!usuarioActual">
+          <div class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center justify-content-lg-end gap-2 ps-lg-3">
+            <a routerLink="/componentes/autenticacion/login"
+               routerLinkActive="active"
+               class="btn btn-outline-light rounded-pill px-4 btn-sm shadow-sm">
+              Iniciar sesión
+            </a>
+            <a routerLink="/componentes/autenticacion/sigin"
+               routerLinkActive="active"
+               class="btn btn-primary rounded-pill px-4 btn-sm shadow-sm">
+              Registrarse
+            </a>
           </div>
         </ng-container>
       </div>

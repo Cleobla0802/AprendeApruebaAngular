@@ -46,7 +46,6 @@ export class ApuntesComponent {
         this.obtenerApuntes(user.uid);
       } else {
         this.cargando = false;
-        console.warn("No hay usuario autenticado");
       }
     });
   }
@@ -59,8 +58,7 @@ export class ApuntesComponent {
         this.listaApuntes = data;
         this.cargando = false;
       },
-      error: (err) => {
-        console.error("Error al recuperar apuntes", err);
+      error: () => {
         this.cargando = false;
       }
     });

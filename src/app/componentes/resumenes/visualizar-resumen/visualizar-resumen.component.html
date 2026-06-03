@@ -1,5 +1,5 @@
-<div *ngIf="notif.show" 
-     class="alert alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow-lg z-3 alert-{{notif.type}}" 
+<div *ngIf="notif.show"
+     class="alert alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow-lg alert-{{notif.type}} z-3"
      role="alert">
   <div class="d-flex align-items-center gap-2">
     <i class="bi" [ngClass]="notif.type === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'"></i>
@@ -8,93 +8,75 @@
   </div>
 </div>
 
-<div class="container-fluid py-3 py-md-5 text-light" *ngIf="!cargando && resumen; else cargandoTemplate">
-
-  <div class="mb-4 mb-md-5 d-flex flex-wrap align-items-center justify-content-between gap-3">
-    <div>
-      <h1 class="display-5 fw-bold text-white mb-2 text-uppercase">Editor de Resumen</h1>
-      <p class="text-white mb-0">Modifica el contenido del resumen y ajusta los detalles</p>
-    </div>
-    <div class="d-flex gap-3">
-      <button class="btn btn-outline-primary rounded-pill px-4 fw-bold border-2" (click)="volver()">
-        <i class="bi bi-arrow-left me-2"></i>VOLVER
-      </button>
-      <button class="btn btn-primary rounded-pill px-4 shadow fw-bold border-0" (click)="guardar()" [disabled]="guardando">
-        <span *ngIf="guardando" class="spinner-border spinner-border-sm me-2"></span>
-        <i *ngIf="!guardando" class="bi bi-cloud-check me-2"></i>GUARDAR CAMBIOS
-      </button>
-    </div>
-  </div>
-
+<div class="container-fluid py-3 py-md-5" *ngIf="!cargando && resumen; else cargandoTemplate">
   <div class="row g-4">
+
     <div class="col-12 col-lg-4">
-      <div class="card bg-dark border-secondary border-opacity-25 rounded-4 shadow-sm h-100">
-        <div class="card-header border-secondary border-opacity-25 bg-secondary bg-opacity-10 p-4">
-          <h6 class="mb-0 fw-bold text-white text-uppercase tracking-widest small">Configuración</h6>
-        </div>
-
+      <div class="card bg-secondary bg-opacity-10 text-white rounded-4 border-0 shadow">
         <div class="card-body p-4">
+
           <div class="mb-4">
-            <label class="form-label small fw-bold text-white text-uppercase mb-2">Título del resumen</label>
-            <input type="text" [(ngModel)]="resumen.titulo" 
-                   class="form-control bg-black text-white border-secondary border-opacity-50 shadow-none py-2">
+            <label class="form-label small fw-bold text-white text-uppercase">Titulo</label>
+            <input type="text" class="form-control bg-dark text-white border-secondary shadow-none"
+                   [(ngModel)]="resumen.titulo">
           </div>
 
           <div class="mb-4">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-              <label class="form-label small fw-bold text-white text-uppercase m-0">Descripción</label>
-              <span class="badge" [ngClass]="resumen.descripcion?.length > 140 ? 'text-danger' : 'text-white'">
-                {{ resumen.descripcion?.length || 0 }}/150
-              </span>
-            </div>
-            <textarea [(ngModel)]="resumen.descripcion" 
-                      class="form-control bg-black text-white border-secondary border-opacity-50 shadow-none" 
-                      rows="3" 
-                      maxlength="150"
-                      placeholder="Escribe una breve descripción..."></textarea>
-          </div>
-
-          <div class="mb-4">
-            <label class="form-label small fw-bold text-white text-uppercase mb-2">Categoría</label>
-            <select class="form-select bg-black text-white border-secondary border-opacity-50 shadow-none py-2" 
-                    [(ngModel)]="resumen.categoria">
+            <label class="form-label small fw-bold text-white text-uppercase">Categoria</label>
+            <select class="form-select bg-dark text-white border-secondary shadow-none" [(ngModel)]="resumen.categoria">
               <option *ngFor="let cat of categorias" [value]="cat.valor">{{ cat.nombre }}</option>
             </select>
           </div>
 
-          <div class="mt-4 pt-4 border-top border-secondary border-opacity-25">
-            <div class="d-flex align-items-center text-secondary small opacity-75">
+          <div class="mb-4">
+            <label class="form-label small fw-bold text-white text-uppercase">Descripcion</label>
+            <textarea class="form-control bg-dark text-white border-secondary shadow-none"
+                      rows="4" maxlength="150" [(ngModel)]="resumen.descripcion"></textarea>
+            <div class="d-flex justify-content-end mt-1">
+              <small [ngClass]="(resumen.descripcion?.length || 0) >= 150 ? 'text-danger' : 'text-white'">
+                {{ resumen.descripcion?.length || 0 }}/150
+              </small>
+            </div>
+          </div>
+
+          <div class="mt-2 pt-3 border-top border-secondary border-opacity-25">
+            <div class="d-flex align-items-center text-secondary small opacity-75 mb-3">
               <i class="bi bi-calendar3 me-2"></i>
               <span class="text-white">Creado el {{ resumen.fecha | date:'dd MMM, yyyy' }}</span>
             </div>
+            <button class="btn btn-primary w-100 rounded-pill mb-2" (click)="guardar()" [disabled]="guardando">
+              <span *ngIf="guardando" class="spinner-border spinner-border-sm me-2"></span>
+              Guardar Cambios
+            </button>
+            <button class="btn btn-outline-primary w-100 rounded-pill" (click)="volver()">
+              Volver
+            </button>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="col-12 col-lg-8">
-      <div class="card bg-black border-secondary border-opacity-25 rounded-4 shadow-sm overflow-hidden h-100">
-        <div class="card-header bg-dark bg-opacity-50 border-secondary border-opacity-25 py-3 d-flex justify-content-between align-items-center">
-          <small class="fw-bold text-primary text-uppercase tracking-wider">Cuerpo del Resumen</small>
+    <div class="col-12 col-lg-8 d-flex">
+      <div class="card bg-dark text-white rounded-4 border-secondary shadow overflow-hidden w-100">
+        <div class="bg-black bg-opacity-50 p-3 border-bottom border-secondary border-opacity-25 d-flex justify-content-between align-items-center">
+          <small class="fw-bold text-primary text-uppercase ms-2">Contenido del Resumen</small>
           <span class="badge bg-dark border border-secondary border-opacity-25 text-white fw-normal">
             {{ resumen.resumenTexto?.split(' ').length || 0 }} palabras
           </span>
         </div>
-
-        <textarea 
-          [(ngModel)]="resumen.resumenTexto"
-          class="form-control bg-transparent text-white border-0 p-4 shadow-none custom-scrollbar" 
-          rows="10"
-          placeholder="El contenido generado aparecerá aquí...">
-        </textarea>
+        <textarea [(ngModel)]="resumen.resumenTexto"
+                  class="form-control bg-transparent text-white border-0 p-4 shadow-none flex-grow-1 h-100 custom-scrollbar"
+                  rows="20"
+                  placeholder="El contenido generado aparecera aqui..."></textarea>
       </div>
     </div>
+
   </div>
 </div>
 
 <ng-template #cargandoTemplate>
-  <div class="container min-vh-100 d-flex flex-column align-items-center justify-content-center">
+  <div class="d-flex flex-column align-items-center justify-content-center py-5 min-vh-100">
     <div class="spinner-border text-primary mb-3" role="status"></div>
-    <p class="text-secondary fw-bold text-uppercase small tracking-widest">Sincronizando con Firebase...</p>
+    <p class="text-secondary">Cargando resumen...</p>
   </div>
 </ng-template>

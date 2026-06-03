@@ -1,9 +1,16 @@
 <div class="container py-3 py-md-5 position-relative">
-  <div *ngIf="generando"
-    class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-75 d-flex flex-column align-items-center justify-content-center z-3">
-    <div class="spinner-border text-primary mb-3" role="status"></div>
-    <p class="text-white fw-bold mb-1 text-uppercase">Generando tipo test</p>
-    <small class="text-white-50">Esto puede tardar unos segundos...</small>
+  <div *ngIf="testCreado"
+    class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-75 d-flex align-items-center justify-content-center z-3 px-3">
+    <div class="card bg-dark border border-success text-center shadow-lg w-100" style="max-width: 420px;">
+      <div class="card-body p-4 p-md-5">
+        <i class="bi bi-check-circle-fill text-success display-1 d-block mb-3"></i>
+        <h2 class="h4 text-white fw-bold mb-2">Tipo test creado</h2>
+        <p class="text-secondary mb-4">Te llevamos a tus tests.</p>
+        <div class="progress bg-black" role="progressbar" aria-label="Redirigiendo">
+          <div class="progress-bar progress-bar-striped progress-bar-animated bg-success w-100"></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="d-flex flex-column flex-sm-row align-items-center gap-3 mb-4 mb-md-5 text-center text-sm-start">
@@ -111,7 +118,7 @@
 
         <div class="d-flex justify-content-center">
           <button class="btn btn-primary btn-lg rounded-pill px-4 px-md-5 shadow fw-bold text-uppercase w-100"
-            (click)="generarTest()" [disabled]="generando || !tituloPersonalizado.trim()">
+            (click)="generarTest()" [disabled]="generando || testCreado || !tituloPersonalizado.trim()">
             <span *ngIf="generando" class="spinner-border spinner-border-sm me-2" role="status"></span>
             {{ generando ? 'Generando Examen...' : 'Crear Test' }}
           </button>

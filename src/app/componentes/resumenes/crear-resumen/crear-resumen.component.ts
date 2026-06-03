@@ -17,6 +17,7 @@ import { crearHashContenido, prepararContenidoParaIA as limpiarContenidoIA } fro
 export class CrearResumenComponent implements OnInit {
   cargando = false; 
   generandoIA = false; 
+  resumenCreado = false;
   uid = '';
   resumenResultado = ''; 
   nuevaCategoria = 'matematicas';
@@ -107,16 +108,9 @@ export class CrearResumenComponent implements OnInit {
     this.resS.guardarResumen(resumenInicial).subscribe({
       next: (resumenGuardado: any) => {
         const idResumen = resumenGuardado.key;
-        const inicioIA = performance.now();
 
-        this.showMsg('¡Resumen creado! Generando contenido en segundo plano...', 'success');
-        this.router.navigate(['/componentes/resumenes'])
-
-        console.info('[Resumenes] Inicio de generacion', {
-          idResumen,
-          caracteresOriginales: contenidoOriginal.length,
-          caracteresEnviados: body.length
-        });
+        this.resumenCreado = true;
+        setTimeout(() => this.router.navigate(['/componentes/resumenes']), 2500);
 
         this.resS.generarConIA(body).subscribe({
           next: (r) => {
@@ -124,11 +118,6 @@ export class CrearResumenComponent implements OnInit {
               ? 'La IA no pudo generar el resumen. Edita el contenido manualmente o intentelo de nuevo.'
               : r.resumen;
             const estado = contenido.startsWith('La IA no pudo') ? 'error' : 'listo';
-            console.info('[Resumenes] Backend IA respondio', {
-              idResumen,
-              estado,
-              msTotal: Math.round(performance.now() - inicioIA)
-            });
             this.resS.actualizarContenidoResumen(idResumen, contenido, estado).subscribe();
           },
           error: () => {

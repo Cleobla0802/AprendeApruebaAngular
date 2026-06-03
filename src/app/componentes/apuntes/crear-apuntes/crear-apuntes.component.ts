@@ -15,6 +15,7 @@ import { Apunte } from '../../../models/apunte.model';
 })
 export class CrearApuntesComponent {
   cargando = false;
+  apunteCreado = false;
   archivoSeleccionado: File | null = null;
   userId: string | null = null;
 
@@ -84,7 +85,6 @@ export class CrearApuntesComponent {
     this.cargando = true;
     this.mensajeFeedback = null;
 
-    const inicio = performance.now();
     const archivoParaSubir = await this.comprimirImagen(this.archivoSeleccionado);
 
     const apunteInicial: Apunte = {
@@ -101,17 +101,11 @@ export class CrearApuntesComponent {
       next: (apunteGuardado: any) => {
         const idApunte = apunteGuardado.key;
 
-        console.info('[Apuntes] Apunte inicial guardado', {
-          idApunte,
-          ms: Math.round(performance.now() - inicio),
-          kbImagenComprimida: Math.round(archivoParaSubir.size / 1024)
-        });
-
         this.cargando = false;
-        this.mostrarMensaje('Apunte creado. Digitalizando en segundo plano...', 'success');
-        setTimeout(() => this.router.navigate(['/componentes/apuntes']), 1000);
+        this.apunteCreado = true;
+        setTimeout(() => this.router.navigate(['/componentes/apuntes']), 2500);
 
-        this.digitalizarApunte(idApunte, archivoParaSubir, inicio);
+        this.digitalizarApunte(idApunte, archivoParaSubir);
       },
       error: () => {
         this.cargando = false;
@@ -120,7 +114,7 @@ export class CrearApuntesComponent {
     });
   }
 
-  private digitalizarApunte(idApunte: string, archivo: File, inicio: number): void {
+  private digitalizarApunte(idApunte: string, archivo: File): void {
     this.apunteService.digitalizarArchivoEnBackend(
       archivo,
       this.datosApunte.titulo.trim(),
@@ -128,17 +122,9 @@ export class CrearApuntesComponent {
       this.datosApunte.categoria
     ).subscribe({
       next: (respuestaRaw: string) => {
-        console.info('[Apuntes] Digitalizacion directa completada', {
-          idApunte,
-          msTotal: Math.round(performance.now() - inicio)
-        });
         this.guardarResultadoDigitalizacion(idApunte, respuestaRaw);
       },
       error: () => {
-        console.warn('[Apuntes] Digitalizacion directa fallida', {
-          idApunte,
-          ms: Math.round(performance.now() - inicio)
-        });
         this.apunteService.actualizarContenidoApunte(
           idApunte,
           'Error al digitalizar. Edita el contenido manualmente.',
@@ -150,10 +136,11 @@ export class CrearApuntesComponent {
 
   private guardarResultadoDigitalizacion(idApunte: string, respuestaRaw: string): void {
     const contenidoFinal = this.extraerTextoDigitalizado(respuestaRaw).trim();
-    const estado = contenidoFinal ? 'listo' : 'error';
+    const esErrorIA = contenidoFinal.toLowerCase().startsWith('error al digitalizar');
+    const estado = contenidoFinal && !esErrorIA ? 'listo' : 'error';
     this.apunteService.actualizarContenidoApunte(
       idApunte,
-      contenidoFinal || 'La IA no pudo digitalizar el apunte. Edita el contenido manualmente.',
+      estado === 'listo' ? contenidoFinal : 'La IA no pudo digitalizar el apunte. Edita el contenido manualmente.',
       estado
     ).subscribe();
   }
@@ -223,6 +210,13 @@ export class CrearApuntesComponent {
       reader.onerror = () => resolve(file);
       reader.readAsDataURL(file);
     });
+  }
+
+  cancelarImagen(): void {
+    this.archivoSeleccionado = null;
+    this.mensajeFeedback = null;
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    if (fileInput) fileInput.value = '';
   }
 
   mostrarMensaje(texto: string, tipo: 'success' | 'danger' | 'info'): void {
