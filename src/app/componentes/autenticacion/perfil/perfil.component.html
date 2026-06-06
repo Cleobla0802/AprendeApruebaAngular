@@ -20,7 +20,7 @@
           <h6 class="card-subtitle text-white-50 mb-3 text-uppercase small">Nombre de usuario</h6>
           <div class="input-group">
             <input type="text" class="form-control bg-dark text-white border-secondary" [(ngModel)]="nuevoUsername"
-              placeholder="Tu nombre de usuario" />
+              placeholder="Tu nombre de usuario" maxlength="15" />
             <button class="btn btn-primary" (click)="guardarUsername()"
               [disabled]="loadingUsername || nuevoUsername === usernameActual">
               <span *ngIf="loadingUsername" class="spinner-border spinner-border-sm me-1"></span>

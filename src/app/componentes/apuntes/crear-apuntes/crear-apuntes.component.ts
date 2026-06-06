@@ -29,11 +29,11 @@ export class CrearApuntesComponent {
   };
 
   categorias = [
-    { valor: 'matematicas', nombre: 'Matematicas' },
+    { valor: 'matematicas', nombre: 'Matemáticas' },
     { valor: 'ciencias', nombre: 'Ciencias' },
-    { valor: 'ingles', nombre: 'Ingles' },
+    { valor: 'ingles', nombre: 'Inglés' },
     { valor: 'historia', nombre: 'Historia' },
-    { valor: 'tecnologia', nombre: 'Tecnologia' }
+    { valor: 'tecnologia', nombre: 'Tecnología' }
   ];
 
   constructor(

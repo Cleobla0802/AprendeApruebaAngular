@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Auth, authState, createUserWithEmailAndPassword, deleteUser, EmailAuthProvider, GoogleAuthProvider, reauthenticateWithCredential, reauthenticateWithPopup, signInWithEmailAndPassword, signInWithPopup, signOut, User, UserCredential } from '@angular/fire/auth';
 import { Database, get, ref, remove, set, update } from '@angular/fire/database';
 import { Router } from '@angular/router';
-import { sendPasswordResetEmail } from 'firebase/auth';
+import { confirmPasswordReset, sendPasswordResetEmail } from 'firebase/auth';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -48,6 +48,10 @@ export class AuthService {
 
   resetPassword(email: string): Promise<void> {
     return sendPasswordResetEmail(this.auth, email);
+  }
+
+  confirmPasswordReset(oobCode: string, newPassword: string): Promise<void> {
+    return confirmPasswordReset(this.auth, oobCode, newPassword);
   }
 
   signInWithEmailAndPassword(email: string, password: string) {
