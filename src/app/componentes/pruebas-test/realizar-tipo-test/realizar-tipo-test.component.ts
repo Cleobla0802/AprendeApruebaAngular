@@ -70,6 +70,7 @@ export class RealizarTipoTestComponent implements OnInit {
   }
 
   calcularResultado() {
+    if (!this.test?.preguntas?.length) return;
     let aciertos = 0;
     this.test.preguntas.forEach((p: any, i: number) => {
       if (this.respuestasUsuario[i] === p.respuestaCorrecta) aciertos++;

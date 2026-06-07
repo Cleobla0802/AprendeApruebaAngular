@@ -24,25 +24,20 @@ export class RecuperarPasswordComponent {
   constructor(private authService: AuthService) {}
 
   enviarEmail() {
-  if (!this.email) return;
+  if (!this.email.trim()) return;
   this.cargando = true;
 
-  this.authService.checkEmailEnDatabase(this.email)
-    .then((existe) => {
-      if (!existe) {
-        this.mostrarNotif('Este correo no está registrado en nuestro sistema.', 'danger');
-        this.cargando = false;
-        return;
-      }
-      return this.authService.resetPassword(this.email).then(() => {
-        this.mostrarNotif('¡Correo enviado! Revisa tu bandeja de entrada.', 'success');
-        this.email = '';
-      });
+  this.authService.resetPassword(this.email.trim())
+    .then(() => {
+      this.mostrarNotif('¡Correo enviado! Revisa tu bandeja de entrada.', 'success');
+      this.email = '';
     })
     .catch((error) => {
       switch (error.code) {
         case 'auth/invalid-email':
           this.mostrarNotif('El formato del correo no es válido.', 'danger');
+          break;
+        case 'auth/user-not-found':
           break;
         case 'auth/too-many-requests':
           this.mostrarNotif('Demasiados intentos. Inténtalo más tarde.', 'danger');

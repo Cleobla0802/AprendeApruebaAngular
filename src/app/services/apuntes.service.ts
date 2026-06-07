@@ -42,7 +42,7 @@ export class ApunteService {
   actualizarApunteFirebase(apunteId: string, datos: Partial<Apunte>): Observable<void> {
     const apunteRef = ref(this.db, `apuntes/${apunteId}`);
     return from(get(apunteRef).then(snapshot => {
-      if (!snapshot.exists()) return;
+      if (!snapshot.exists()) return Promise.reject(new Error('El apunte no existe'));
       return update(apunteRef, datos);
     }));
   }

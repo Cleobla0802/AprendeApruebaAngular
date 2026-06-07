@@ -136,7 +136,7 @@
                 <span class="small text-muted" *ngIf="test.calificacion === undefined">0%</span>
               </div>
               <div class="progress bg-secondary bg-opacity-10">
-                <div *ngIf="test.calificacion"
+                <div *ngIf="test.calificacion !== undefined && test.calificacion !== null"
                      class="progress-bar progress-bar-striped"
                      [class.bg-success]="test.calificacion >= 5"
                      [class.bg-danger]="test.calificacion < 5"

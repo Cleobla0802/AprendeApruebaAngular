@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Database, onValue, ref } from '@angular/fire/database';
 import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
 
@@ -11,25 +11,31 @@ import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit, OnDestroy {
 
   usuarioActual: User | null = null;
   userNameDatabase: string | null = null;
+  private unsubscribeAuth: (() => void) | null = null;
+  private unsubscribeValue: (() => void) | null = null;
 
   constructor(
     private auth: Auth, 
     private db: Database, 
-    private authService: AuthService, 
-    private router: Router
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
-    onAuthStateChanged(this.auth, (user) => {
+    this.unsubscribeAuth = onAuthStateChanged(this.auth, (user) => {
       this.usuarioActual = user;
+
+      if (this.unsubscribeValue) {
+        this.unsubscribeValue();
+        this.unsubscribeValue = null;
+      }
       
       if (user) {
         const userRef = ref(this.db, `usuarios/${user.uid}/username`);
-        onValue(userRef, (snapshot) => {
+        this.unsubscribeValue = onValue(userRef, (snapshot) => {
           this.userNameDatabase = snapshot.val();
         });
       } else {
@@ -38,8 +44,12 @@ export class NavbarComponent {
     });
   }
 
+  ngOnDestroy() {
+    if (this.unsubscribeAuth) this.unsubscribeAuth();
+    if (this.unsubscribeValue) this.unsubscribeValue();
+  }
+
   logout() {
     this.authService.logout();
-    this.router.navigate(['componentes/presentacion']);
   }
 }

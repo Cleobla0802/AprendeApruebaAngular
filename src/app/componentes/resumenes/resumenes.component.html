@@ -110,7 +110,7 @@
                   ? 'Resumen en proceso de generación...'
                   : (tieneError(resumen)
                     ? 'No se pudo generar el resumen. Puedes abrirlo para editarlo o borrarlo.'
-                    : (resumen.descripcion || (resumen.resumenTexto | slice:0:120) + '...'))
+                    : (resumen.descripcion || 'Sin descripción.'))
               }}
             </p>
 

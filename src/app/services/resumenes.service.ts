@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment';
 })
 export class ResumenesService {
 
-  // Añadimos el protocolo https:// y la ruta base de tu controlador de Java
+  // Añadimos el protocolo https:// y la ruta base de el controlador de Java
   private apiUrl = environment.api.resumenes;
 
   constructor(private db: Database, private http: HttpClient) {}
@@ -41,7 +41,7 @@ export class ResumenesService {
   actualizarContenidoResumen(id: string, resumenTexto: string, estado: 'generando' | 'listo' | 'error' = 'listo'): Observable<void> {
     const resumenRef = ref(this.db, `resumenes/${id}`);
     return from(get(resumenRef).then(snapshot => {
-      if (!snapshot.exists()) return;
+      if (!snapshot.exists()) return Promise.reject(new Error('El resumen no existe'));
       return update(resumenRef, { resumenTexto, estado });
     }));
   }
@@ -74,7 +74,7 @@ export class ResumenesService {
   }
 
   /**
-   * IA: Habla con tu Backend en Render para procesar el texto
+   * Habla con el Backend en Render para procesar el texto
    */
   generarConIA(contenido: string): Observable<{ resumen: string }> {
     return this.http.post<{ resumen: string }>(`${this.apiUrl}/generar`, { contenido });

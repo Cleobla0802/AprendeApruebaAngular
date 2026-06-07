@@ -23,12 +23,7 @@ constructor(private db: Database) {}
 
   eliminarTest(id: string): Observable<void> {
     const testRef = ref(this.db, `tests/${id}`);
-    return new Observable(observer => {
-      remove(testRef).then(() => {
-        observer.next();
-        observer.complete();
-      });
-    });
+    return from(remove(testRef).then(() => {}));
   }
 
   guardarNota(id: string, nota: number) {
