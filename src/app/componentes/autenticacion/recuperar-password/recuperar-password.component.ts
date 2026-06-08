@@ -33,6 +33,7 @@ export class RecuperarPasswordComponent {
       this.email = '';
     })
     .catch((error) => {
+      console.error('Error al restablecer contraseña:', error);
       switch (error.code) {
         case 'auth/invalid-email':
           this.mostrarNotif('El formato del correo no es válido.', 'danger');
@@ -41,6 +42,9 @@ export class RecuperarPasswordComponent {
           break;
         case 'auth/too-many-requests':
           this.mostrarNotif('Demasiados intentos. Inténtalo más tarde.', 'danger');
+          break;
+        case 'auth/network-request-failed':
+          this.mostrarNotif('Error de conexión. Comprueba tu conexión a internet.', 'danger');
           break;
         default:
           this.mostrarNotif('No se pudo procesar la solicitud.', 'danger');
