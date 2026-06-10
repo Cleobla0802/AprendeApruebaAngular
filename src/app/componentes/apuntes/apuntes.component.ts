@@ -17,7 +17,6 @@ export class ApuntesComponent {
   cargando = true;
   buscarApunte: string = '';
 
-  // Estado de los botones de categorías
   filtrosCategorias: any = {
     matematicas: false,
     ciencias: false,
@@ -64,7 +63,6 @@ export class ApuntesComponent {
     });
   }
 
-  // Se activa al escribir en el buscador o pulsar un checkbox
   filtrarApuntes() {
     const texto = this.buscarApunte.toLowerCase().trim();
     const categoriasActivas = Object.keys(this.filtrosCategorias).filter(cat => this.filtrosCategorias[cat]);
@@ -89,7 +87,6 @@ export class ApuntesComponent {
       .replace(/[\u0300-\u036f]/g, '');
   }
 
-  // Método para los checkboxes
   toggleCategoria(cat: string) {
     this.filtrosCategorias[cat] = !this.filtrosCategorias[cat];
     this.filtrarApuntes();
@@ -111,26 +108,21 @@ export class ApuntesComponent {
     if (!this.apunteAEliminarId) return;
     const id = this.apunteAEliminarId;
 
-    // Llamamos al servicio para eliminar
     this.apunteService.eliminarApunte(id).subscribe({
       next: () => {
-        // 1. Filtramos la lista local para que el elemento desaparezca al instante
         this.listaApuntesOriginal = this.listaApuntesOriginal.filter(a => a.id !== id);
         this.filtrarApuntes();
 
-        // 2. Mostramos la notificación verde de éxito
         this.notif = { 
           show: true, 
           msg: '¡Borrado con éxito!', 
           type: 'success' 
         };
 
-        // 3. La ocultamos automáticamente tras 2.5 segundos
         setTimeout(() => this.notif.show = false, 2500);
         this.cancelarEliminar();
       },
       error: () => {
-        // Si algo falla (ej. sin internet), avisamos en rojo
         this.notif = { 
           show: true, 
           msg: 'Error: No se pudo eliminar el elemento.', 

@@ -36,7 +36,6 @@ export class RealizarTipoTestComponent implements OnInit {
       this.testService.obtenerTestPorId(id).subscribe({
         next: (data) => {
           if (data) {
-            // Unimos el ID de la URL con los datos de Firebase
             this.test = { id, ...data };
           } else {
             this.mostrarNotif('No se encontró el test en la base de datos.', 'warning');
@@ -78,7 +77,6 @@ export class RealizarTipoTestComponent implements OnInit {
 
     this.nota = (aciertos / this.test.preguntas.length) * 10;
 
-    // Guardamos la nota usando el ID que inyectamos en ngOnInit
     this.testService.guardarNota(this.test.id, this.nota).subscribe({
       next: () => {
         this.testFinalizado = true;

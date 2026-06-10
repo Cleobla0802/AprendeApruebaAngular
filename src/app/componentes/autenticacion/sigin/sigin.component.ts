@@ -62,7 +62,6 @@ registerForm: FormGroup;
           }
         });
     } else {
-      // Forzamos que se vean los alerts rojos de Bootstrap si el formulario es inválido
       this.registerForm.markAllAsTouched();
     }
   }

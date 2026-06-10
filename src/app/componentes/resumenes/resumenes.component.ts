@@ -18,7 +18,6 @@ export class ResumenesComponent implements OnInit {
   buscarResumen: string = '';
   usuarioActual: any = null;
 
-  // Objeto para notificaciones de Bootstrap
   notif = { 
     show: false, 
     msg: '', 
@@ -124,11 +123,9 @@ export class ResumenesComponent implements OnInit {
     if (this.usuarioActual) {
       this.resumenService.eliminarResumen(this.usuarioActual.uid, id).subscribe({
         next: () => {
-          // Actualizamos la lista local
           this.listaResumenesOriginal = this.listaResumenesOriginal.filter((r: any) => r.id !== id);
           this.filtrarResumenes();
           
-          // Feedback visual
           this.notif = { show: true, msg: '¡Resumen eliminado con éxito!', type: 'success' };
           setTimeout(() => this.notif.show = false, 2500);
           this.cancelarEliminar();

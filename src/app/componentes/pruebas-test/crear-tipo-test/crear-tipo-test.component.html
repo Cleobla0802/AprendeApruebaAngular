@@ -24,7 +24,7 @@
   </div>
 
   <div class="row justify-content-center mb-4 mb-md-5">
-    <div class="col-12 col-md-8 col-lg-6">
+    <div class="col-12 col-md-8 col-lg-6 col-xl-5 col-xxl-4">
       <div class="btn-group w-100 shadow-sm border border-secondary border-opacity-25 rounded-pill overflow-hidden"
         role="group">
         <input type="radio" class="btn-check" name="tab" id="tab1" checked
@@ -57,7 +57,7 @@
     </p>
   </div>
 
-  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-4 mb-md-5"
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xxl-4 g-4 mb-4 mb-md-5"
     *ngIf="!cargando && getListaActual().length > 0">
     <div class="col" *ngFor="let item of getListaActual(); trackBy: trackById">
       <div (click)="seleccionar(item)"
@@ -107,11 +107,11 @@
         </div>
         <div class="col-12 col-md-4">
           <label class="form-label small fw-bold text-white text-uppercase">Preguntas</label>
-          <div class="btn-group w-100" role="group">
+          <div class="d-flex flex-wrap gap-1 justify-content-center">
             <ng-container *ngFor="let n of [5, 10, 15]">
               <input type="radio" class="btn-check" name="preguntas" [id]="'p' + n" [checked]="cantidadPreguntas === n"
                 (click)="cantidadPreguntas = n">
-              <label class="btn btn-outline-primary fw-bold" [for]="'p' + n">{{ n }}</label>
+              <label class="btn btn-outline-primary fw-bold btn-sm px-3" [for]="'p' + n">{{ n }}</label>
             </ng-container>
           </div>
         </div>

@@ -24,7 +24,6 @@ export class LoginComponent {
   constructor(private authService: AuthService, private router: Router) { }
 
   login() {
-    // Si el formulario es válido, procedemos
     if (this.loginForm.valid) {
       this.loading = true;
       this.errores = false;
@@ -40,7 +39,6 @@ export class LoginComponent {
           this.loading = false;
           this.errores = true;
           
-          // Errores de Firebase (Servidor)
           if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password') {
             this.mensajeError = 'Credenciales incorrectas. Revisa el correo o la contraseña.';
           } else if (error.code === 'auth/too-many-requests') {
@@ -50,7 +48,6 @@ export class LoginComponent {
           }
         });
     } else {
-      // Si el usuario le da a "Entrar" y falta algo, forzamos que salgan los alerts rojos de bootstrap
       this.loginForm.markAllAsTouched();
     }
   }

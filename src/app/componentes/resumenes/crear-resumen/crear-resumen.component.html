@@ -44,7 +44,7 @@
       <p class="text-secondary small">Crea un apunte primero para poder generar un resumen.</p>
     </div>
     
-    <div class="col-12 col-md-6 col-xl-4" *ngFor="let a of listaApuntes">
+    <div class="col-12 col-md-6 col-xl-4 col-xxl-3" *ngFor="let a of listaApuntes">
       <div class="card h-100 shadow-sm"
            [class.bg-dark]="!apunteEstaGenerando(a)"
            [class.bg-secondary]="apunteEstaGenerando(a)"
@@ -74,7 +74,7 @@
     </div>
   </div>
 
-  <div class="col-12 col-lg-4 mx-auto">
+  <div class="col-12 col-lg-4 col-xl-3 mx-auto">
     <div class="card bg-dark border-secondary p-3 p-md-4 shadow rounded-4">
       <h6 class="text-white mb-4 fw-bold text-uppercase small tracking-wider">
         <i class="bi bi-sliders me-2 text-primary"></i>Configuración

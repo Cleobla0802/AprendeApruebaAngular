@@ -45,7 +45,6 @@ export class VisualizarResumenComponent implements OnInit {
     this.resS.getResumenById(this.resumenId!).subscribe({
       next: (data) => {
         this.resumen = data;
-        // Inicializamos la descripción si no existe para evitar errores en el .length del HTML
         if (!this.resumen.descripcion) {
           this.resumen.descripcion = '';
         }
@@ -61,7 +60,6 @@ export class VisualizarResumenComponent implements OnInit {
   guardar() {
     if (!this.resumenId || !this.resumen) return;
 
-    // --- VALIDACIONES ANTES DE GUARDAR ---
     if (!this.resumen.titulo?.trim()) {
       return this.showMsg('El título no puede estar vacío', 'warning');
     }
@@ -72,8 +70,6 @@ export class VisualizarResumenComponent implements OnInit {
 
     this.guardando = true;
 
-    // Enviamos el objeto 'resumen' completo. 
-    // Firebase actualizará título, descripción y resumenTexto automáticamente.
     this.resS.actualizarResumen(this.resumenId, this.resumen).subscribe({
       next: () => {
         this.guardando = false;
@@ -88,7 +84,6 @@ export class VisualizarResumenComponent implements OnInit {
 
   showMsg(msg: string, type: 'success' | 'danger' | 'warning' | 'info') {
     this.notif = { show: true, msg, type };
-    // Si es un error, lo dejamos un poco más de tiempo
     const tiempo = type === 'danger' ? 4000 : 2500;
     setTimeout(() => this.notif.show = false, tiempo);
   }

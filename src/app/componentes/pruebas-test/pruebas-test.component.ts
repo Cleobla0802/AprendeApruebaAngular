@@ -17,7 +17,6 @@ export class PruebasTestComponent implements OnInit {
   cargando = true;
   buscarTest: string = '';
 
-  // Filtros de categorías
   filtrosCategorias: any = {
     matematicas: false,
     ciencias: false,
@@ -26,7 +25,6 @@ export class PruebasTestComponent implements OnInit {
     tecnologia: false
   };
 
-  // Notificación
   notif = { 
     show: false, 
     msg: '', 
@@ -107,11 +105,9 @@ export class PruebasTestComponent implements OnInit {
 
     this.testService.eliminarTest(id).subscribe({
       next: () => {
-        // 1. Filtrar localmente para que desaparezca de la vista al momento
         this.listaTestsOriginal = this.listaTestsOriginal.filter(t => t.id !== id);
         this.filtrarTests();
 
-        // 2. Notificación de éxito (2.5s como en Apuntes)
         this.notif = { 
           show: true, 
           msg: '¡Prueba borrada con éxito!', 
@@ -121,7 +117,6 @@ export class PruebasTestComponent implements OnInit {
         this.cancelarEliminar();
       },
       error: () => {
-        // Notificación de error en rojo
         this.notif = { 
           show: true, 
           msg: 'Error: No se pudo eliminar la prueba.', 
